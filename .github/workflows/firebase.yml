@@ -46,6 +46,6 @@ jobs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install
     - name: Build Production
-      run: yarn build:prod
+      run: yarn build
     - name: Deploy to firebase
       run: yarn firebase deploy --token ${{ secrets.FIREBASE_TOKEN }}
