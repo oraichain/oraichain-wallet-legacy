@@ -46,7 +46,7 @@ jobs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install
     - name: COPY ENV
-      run: cp .env.example .env
+      run: cp env.example .env
     - name: Build Production
       run: yarn build
       env:
