@@ -113,7 +113,6 @@ const App = ({ user, updateUser }) => {
   };
 
   if (i18n.options.resources[locale]) {
-    console.log('match params: ', match);
     if (i18n.language !== locale) {
       changeLanguage(locale);
     }

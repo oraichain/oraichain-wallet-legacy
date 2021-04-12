@@ -22,7 +22,7 @@ export const openPinWrap = () => {
   $('.pin-wrap').addClass('open');
 };
 
-const PinWrap = ({ pinType, updateUser, onChildKey }) => {
+const PinWrap = ({ pinType, updateUser, onChildKey, closePopup }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation();
   let input = '',
@@ -145,7 +145,6 @@ const PinWrap = ({ pinType, updateUser, onChildKey }) => {
         try {
           let decrypted = CryptoJS.AES.decrypt(encryptedMnemonics, input);
           let decryptedMnemonics = decrypted.toString(CryptoJS.enc.Utf8);
-          console.log(decryptedMnemonics);
 
           if (decryptedMnemonics === '') {
             // wrong
@@ -163,6 +162,9 @@ const PinWrap = ({ pinType, updateUser, onChildKey }) => {
               updateUser({ name: account, address });
               if (window.stdSignMsgByPayload) {
                 history.push(`/${i18n.language}/transaction`);
+              } else if (closePopup) {
+                window.opener.postMessage({ address, account}, "*");
+                window.close();
               } else {
                 history.push(`/${i18n.language}/`);
               }
