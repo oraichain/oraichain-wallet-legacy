@@ -21,10 +21,14 @@ const Query = () => {
 
   const queryContract = async () => {
     try {
-      const input = Buffer.from(schema ? JSON.stringify(formData) : inputContract).toString('base64');
+      const input = Buffer.from(
+        schema ? JSON.stringify(formData) : inputContract
+      ).toString('base64');
       setBlocking(true);
       const address = $('#contract_address').val().trim();
-      const data = await fetch(`${cosmos.url}/wasm/v1beta1/contract/${address}/smart/${input}`).then((res) => res.text());
+      const data = await fetch(
+        `${cosmos.url}/wasm/v1beta1/contract/${address}/smart/${input}`
+      ).then((res) => res.text());
       $('#tx-json').text(data);
     } catch (ex) {
       alert(ex.message);
@@ -36,7 +40,9 @@ const Query = () => {
   const onSchemaFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    $('#filename-schema').html(`<strong>${file.name} (${getFileSize(file.size)})</strong>`);
+    $('#filename-schema').html(
+      `<strong>${file.name} (${getFileSize(file.size)})</strong>`
+    );
     const blob = new Blob([file]);
     const fileBuffer = await blob.arrayBuffer();
     const schemaBody = Buffer.from(fileBuffer).toString();
@@ -62,23 +68,42 @@ const Query = () => {
 
           <div className="field">
             <label className="file-upload">
-              <input type="file" id="schema-file" onChange={onSchemaFileChange} />
-              <i className="fa fa-cloud-upload" /> <small id="filename-schema">Query Schema File</small>
-              {schema && <i className="fa fa-trash" onClick={clearSchemaFile} />}
+              <input
+                type="file"
+                id="schema-file"
+                onChange={onSchemaFileChange}
+              />
+              <i className="fa fa-cloud-upload" />{' '}
+              <small id="filename-schema">Query Schema File</small>
+              {schema && (
+                <i className="fa fa-trash" onClick={clearSchemaFile} />
+              )}
             </label>
           </div>
-          {schema && <Form schema={schema} formData={formData} onChange={({ formData }) => setFormData(formData)} />}
+          {schema && (
+            <Form
+              schema={schema}
+              formData={formData}
+              onChange={({ formData }) => setFormData(formData)}
+            />
+          )}
 
           {!schema && (
             <div className="field">
               <span>Input</span>
-              <Editor theme="vs-dark" height={100} defaultLanguage="json" value={inputContract} onChange={inputContractChange} />
+              <Editor
+                theme="vs-dark"
+                height={100}
+                defaultLanguage="json"
+                value={inputContract}
+                onChange={inputContractChange}
+              />
             </div>
           )}
         </div>
         <div className="tx-btn-wrap btn-center">
           <button type="button" onClick={queryContract} id="allowBtn">
-            Continue <i className="fa fa-arrow-right" />
+            Continue <i className="fa fa-angle-right" />
           </button>
         </div>
       </div>

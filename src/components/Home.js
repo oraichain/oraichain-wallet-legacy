@@ -7,7 +7,7 @@ const Home = () => {
   const { t, i18n } = useTranslation();
 
   return (
-    <div className="menu">
+    <div className="menu" style={{ marginTop: '10vh' }}>
       <Link to={`/${i18n.language}/contract/query`} className="button full">
         {t('interact')}
       </Link>

@@ -29,19 +29,23 @@ export const isMnemonicsValid = (mnemonics, disablechecksum = false) => {
 export const getFileSize = (size) => {
   const fileSize = size.toString();
   if (fileSize.length < 4) return `${fileSize} bytes`;
-  if (fileSize.length < 7) return `${Math.round(+fileSize / 1024).toFixed(2)} kb`;
+  if (fileSize.length < 7)
+    return `${Math.round(+fileSize / 1024).toFixed(2)} kb`;
   return `${(Math.round(+fileSize / 1024) / 1000).toFixed(2)} MB`;
 };
 
+const selectColor = '#394B59';
 export const customStyles = {
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected ? 'rgb(255 255 255 / 16%)' : 'rgb(33 33 33)',
+    backgroundColor: state.isSelected ? 'rgb(255 255 255 / 16%)' : selectColor,
     color: '#eee'
   }),
   control: (provided, state) => ({
     ...provided,
-    backgroundColor: 'rgb(33 33 33)'
+    borderWidth: 0,
+    boxShadow: '0 0 0 1px rgb(16 22 26 / 40%)',
+    backgroundColor: selectColor
   }),
   dropdownIndicator: (provided, state) => ({
     ...provided,
@@ -49,7 +53,7 @@ export const customStyles = {
   }),
   menu: (provided, state) => ({
     ...provided,
-    backgroundColor: 'rgb(33 33 33)',
+    backgroundColor: selectColor,
     border: '1px solid rgb(144 202 249 / 50%)'
   }),
   singleValue: (provided, state) => {
@@ -66,7 +70,10 @@ export const customStyles = {
 };
 
 export const getPassword = () => {
-  return window.jQuery('input[type=password]').val() || localStorage.getItem('password');
+  return (
+    window.jQuery('input[type=password]').val() ||
+    localStorage.getItem('password')
+  );
 };
 
 export const getChildkeyFromDecrypted = (decrypted) => {

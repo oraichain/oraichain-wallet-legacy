@@ -29,7 +29,9 @@ const Execute = ({ user }) => {
 
     const msgSendAny = new message.google.protobuf.Any({
       type_url: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
-      value: message.cosmwasm.wasm.v1beta1.MsgExecuteContract.encode(msgSend).finish()
+      value: message.cosmwasm.wasm.v1beta1.MsgExecuteContract.encode(
+        msgSend
+      ).finish()
     });
 
     return new message.cosmos.tx.v1beta1.TxBody({
@@ -39,7 +41,9 @@ const Execute = ({ user }) => {
 
   const onChildKey = async (childKey) => {
     try {
-      const input = Buffer.from(schema ? JSON.stringify(formData) : inputContract).toString('base64');
+      const input = Buffer.from(
+        schema ? JSON.stringify(formData) : inputContract
+      ).toString('base64');
       setBlocking(true);
       const address = $('#contract_address').val().trim();
       const txBody = getHandleMessage(address, input);
@@ -55,7 +59,9 @@ const Execute = ({ user }) => {
   const onSchemaFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    $('#filename-schema').html(`<strong>${file.name} (${getFileSize(file.size)})</strong>`);
+    $('#filename-schema').html(
+      `<strong>${file.name} (${getFileSize(file.size)})</strong>`
+    );
     const blob = new Blob([file]);
     const fileBuffer = await blob.arrayBuffer();
     const schemaBody = Buffer.from(fileBuffer).toString();
@@ -81,23 +87,42 @@ const Execute = ({ user }) => {
 
           <div className="field">
             <label className="file-upload">
-              <input type="file" id="schema-file" onChange={onSchemaFileChange} />
-              <i className="fa fa-cloud-upload" /> <small id="filename-schema">Handle Schema File</small>
-              {schema && <i className="fa fa-trash" onClick={clearSchemaFile} />}
+              <input
+                type="file"
+                id="schema-file"
+                onChange={onSchemaFileChange}
+              />
+              <i className="fa fa-cloud-upload" />{' '}
+              <small id="filename-schema">Handle Schema File</small>
+              {schema && (
+                <i className="fa fa-trash" onClick={clearSchemaFile} />
+              )}
             </label>
           </div>
-          {schema && <Form schema={schema} formData={formData} onChange={({ formData }) => setFormData(formData)} />}
+          {schema && (
+            <Form
+              schema={schema}
+              formData={formData}
+              onChange={({ formData }) => setFormData(formData)}
+            />
+          )}
 
           {!schema && (
             <div className="field">
               <span>Input</span>
-              <Editor theme="vs-dark" height={100} defaultLanguage="json" value={inputContract} onChange={inputContractChange} />
+              <Editor
+                theme="vs-dark"
+                height={100}
+                defaultLanguage="json"
+                value={inputContract}
+                onChange={inputContractChange}
+              />
             </div>
           )}
         </div>
         <div className="tx-btn-wrap btn-center">
           <button type="button" onClick={openPinWrap} id="allowBtn">
-            Continue <i className="fa fa-arrow-right" />
+            Continue <i className="fa fa-angle-right" />
           </button>
         </div>
       </div>

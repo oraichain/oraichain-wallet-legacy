@@ -24,7 +24,12 @@ const SignIn = ({ history }) => {
 
     if ($.trim(password) === '') {
       $('#formInfoMessage').hide();
-      $('#errorOnSignIn').show().find('span').text('Could not retrieve account stored in Keychain. Press the button below the Import Wallet.');
+      $('#errorOnSignIn')
+        .show()
+        .find('span')
+        .text(
+          'Could not retrieve account stored in Keychain. Press the button below the Import Wallet.'
+        );
       return;
     }
 
@@ -36,12 +41,22 @@ const SignIn = ({ history }) => {
       <h2>{t('signIn')}</h2>
       <form className="keystation-form">
         <InputWrap label={t('walletName')}>
-          <input className="input__field input__field--fumi input-account" type="text" />
+          <input
+            className="input__field input__field--fumi input-account"
+            type="text"
+          />
         </InputWrap>
 
-        <input style={{ display: 'none' }} type="password" autoComplete="current-password" tabIndex={-1} spellCheck="false" />
+        <input
+          style={{ display: 'none' }}
+          type="password"
+          autoComplete="current-password"
+          tabIndex={-1}
+          spellCheck="false"
+        />
         <p id="formInfoMessage" className="information-text">
-          <i className="fa fa-fw fa-question-circle" /> {t('unableIncognitoMode')}
+          <i className="fa fa-fw fa-question-circle" />{' '}
+          {t('unableIncognitoMode')}
         </p>
         <p id="errorOnSignIn" className="error">
           <i className="fa fa-fw fa-exclamation-circle" /> <span />
@@ -50,11 +65,38 @@ const SignIn = ({ history }) => {
           {t('next')}
         </button>
       </form>
-      <Link to={`/${i18n.language}/import${queryStringParse.signInFromScan ? '?signInFromScan=true' : ''}`}>{t('importWallet')}</Link>
+      <Link
+        to={`/${i18n.language}/import${
+          queryStringParse.signInFromScan ? '?signInFromScan=true' : ''
+        }`}
+      >
+        {t('importWallet')}
+      </Link>
       &nbsp;&nbsp;|&nbsp;&nbsp;
-      <Link to={`/${i18n.language}/import-privatekey${queryStringParse.signInFromScan ? '?signInFromScan=true' : ''}`}>{t('importPrivateKey')}</Link>
-      <a className="disableChecksum" style={{ position: 'fixed', bottom: 0, left: 0, color: '#fff' }}></a>
-      <PinWrap show={false} pinType="signin" closePopup={queryStringParse.signInFromScan} />
+      <Link
+        to={`/${i18n.language}/import-privatekey${
+          queryStringParse.signInFromScan ? '?signInFromScan=true' : ''
+        }`}
+      >
+        {t('importPrivateKey')}
+      </Link>
+      &nbsp;&nbsp;|&nbsp;&nbsp;
+      <Link
+        to={`/${i18n.language}/create-wallet${
+          queryStringParse.signInFromScan ? '?signInFromScan=true' : ''
+        }`}
+      >
+        {t('createWallet')}
+      </Link>
+      <a
+        className="disableChecksum"
+        style={{ position: 'fixed', bottom: 0, left: 0, color: '#fff' }}
+      ></a>
+      <PinWrap
+        show={false}
+        pinType="signin"
+        closePopup={queryStringParse.signInFromScan}
+      />
     </div>
   );
 };

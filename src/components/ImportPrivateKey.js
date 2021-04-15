@@ -4,7 +4,12 @@ import { Link, Route, useHistory } from 'react-router-dom';
 import PinWrap from './PinWrap';
 
 import { InputWrap } from './common';
-import { cleanMnemonics, isMnemonicsValid, countWords, getPassword } from '../utils';
+import {
+  cleanMnemonics,
+  isMnemonicsValid,
+  countWords,
+  getPassword
+} from '../utils';
 
 const ImportPrivateKey = () => {
   const cosmos = window.cosmos;
@@ -58,8 +63,12 @@ const ImportPrivateKey = () => {
     }
 
     // Check encrypted mnemonic phrase and pasted value
-    if (document.getElementById('encrypted-import').innerText !== getPassword()) {
-      $('.notification-modal').text('Encrypted mnemonic phrase does not match.');
+    if (
+      document.getElementById('encrypted-import').innerText !== getPassword()
+    ) {
+      $('.notification-modal').text(
+        'Encrypted mnemonic phrase does not match.'
+      );
       $('.notification-modal').show();
       setTimeout(function () {
         $('.notification-modal').hide();
@@ -84,19 +93,29 @@ const ImportPrivateKey = () => {
 
   return (
     <div>
-      <h2>Import Wallet</h2>
+      <h2>{t('importWallet')}</h2>
       {/* 1. Account Name, Private Key */}
       <form id="import-form1" className="keystation-form" noValidate>
         <InputWrap label="Wallet Name">
-          <input className="input__field input__field--fumi input-account" id="account" type="text" />
+          <input
+            className="input__field input__field--fumi input-account"
+            id="account"
+            type="text"
+          />
         </InputWrap>
 
         <InputWrap label="Private Key">
-          <input className="input__field input__field--fumi input-mnemonics" id="privatekey" type="text" defaultValue={''} />
+          <input
+            className="input__field input__field--fumi input-mnemonics"
+            id="privatekey"
+            type="text"
+            defaultValue={''}
+          />
         </InputWrap>
 
         <p id="formInfoMessage" className="information-text">
-          <i className="fa fa-fw fa-question-circle" /> Enter private key. Private key is encrypted and stored in Keychain.
+          <i className="fa fa-fw fa-question-circle" /> Enter private key.
+          Private key is encrypted and stored in Keychain.
         </p>
         <p id="errorOnImport" className="error">
           {/* error msg */}
@@ -112,8 +131,15 @@ const ImportPrivateKey = () => {
 
       {/* 2 end */}
       {/* 3. re-enter */}
-      <div className="notification-modal">{/* Encrypted private key phrase is copied. */}</div>
-      <form id="import-form2" method="GET" className="keystation-form re-enter-form" noValidate>
+      <div className="notification-modal">
+        {/* Encrypted private key phrase is copied. */}
+      </div>
+      <form
+        id="import-form2"
+        method="GET"
+        className="keystation-form re-enter-form"
+        noValidate
+      >
         <p>Please copy and paste the private key encryption below.</p>
         <div className="pw-nnemonics">
           <div>
@@ -131,10 +157,24 @@ const ImportPrivateKey = () => {
         </div>
 
         <InputWrap label="Encrypted mnemonic phrase">
-          <input className="input__field input__field--fumi" id="hidden-account" type="text" name="account" style={{ display: 'none' }} defaultValue />
-          <input className="input__field input__field--fumi input-password" type="password" autoComplete="new-password" />
+          <input
+            className="input__field input__field--fumi"
+            id="hidden-account"
+            type="text"
+            name="account"
+            style={{ display: 'none' }}
+            defaultValue
+          />
+          <input
+            className="input__field input__field--fumi input-password"
+            type="password"
+            autoComplete="new-password"
+          />
         </InputWrap>
-        <a href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5" target="_blank">
+        <a
+          href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5"
+          target="_blank"
+        >
           <i className="fa fa-fw fa-question-circle" />
           Why do I have to encrypt my private key?
         </a>

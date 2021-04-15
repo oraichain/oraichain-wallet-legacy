@@ -4,6 +4,7 @@
   "unableIncognitoMode": "Unavailable in guest mode or incognito mode",
   "next": "Next",
   "importWallet": "Import Wallet",
+  "createWallet": "Create Wallet",
   "sign": "Sign Transaction",
   "from": "From",
   "to": "To",

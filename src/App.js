@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Redirect, Switch, useLocation, useRouteMatch, useHistory } from 'react-router';
+import {
+  Route,
+  Redirect,
+  Switch,
+  useLocation,
+  useRouteMatch,
+  useHistory
+} from 'react-router';
 import { pathToRegexp, compile } from 'path-to-regexp';
 import { useTranslation } from 'react-i18next';
 import Select from 'react-select';
@@ -11,6 +18,7 @@ import SignIn from './components/SignIn';
 import Send from './components/Send';
 import Import from './components/Import';
 import ImportPrivateKey from './components/ImportPrivateKey';
+import CreateWallet from './components/CreateWallet';
 import Session from './components/Session';
 import Home from './components/Home';
 import Transaction from './components/Transaction';
@@ -28,9 +36,14 @@ import { customStyles } from './utils';
 import './App.css';
 
 const url = new window.URL(window.location.href);
-const network = url.searchParams.get('payload') || window.localStorage.getItem('wallet.network') || 'Oraichain';
+const network =
+  url.searchParams.get('payload') ||
+  window.localStorage.getItem('wallet.network') ||
+  'Oraichain';
 const path = url.searchParams.get('path');
-const lcd = url.searchParams.get('lcd') || (networks[network]?.lcd ?? 'http://localhost:1317');
+const lcd =
+  url.searchParams.get('lcd') ||
+  (networks[network]?.lcd ?? 'http://localhost:1317');
 // init cosmos version
 const cosmos = new Cosmos(lcd, network);
 const symbol = networks[network]?.denom ?? 'orai';
@@ -89,7 +102,20 @@ const options = Object.keys(networks).map((value) => ({
 }));
 
 const PrivateRoute = ({ component: Component, isLoggedIn, ...rest }) => {
-  return <Route {...rest} render={(props) => (isLoggedIn ? <Component {...props} /> : <Redirect to={{ pathname: '/signin', state: { from: props.location } }} />)} />;
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        isLoggedIn ? (
+          <Component {...props} />
+        ) : (
+          <Redirect
+            to={{ pathname: '/signin', state: { from: props.location } }}
+          />
+        )
+      }
+    />
+  );
 };
 
 const App = ({ user, updateUser }) => {
@@ -98,7 +124,10 @@ const App = ({ user, updateUser }) => {
   const match = useRouteMatch();
   const { locale } = match.params;
   const { t, i18n } = useTranslation();
-  const [selectedOption, setSelectedOption] = useState({ value: network, label: network });
+  const [selectedOption, setSelectedOption] = useState({
+    value: network,
+    label: network
+  });
   const isLoggedIn = !!user;
 
   const changeNetwork = (option) => {
@@ -129,7 +158,13 @@ const App = ({ user, updateUser }) => {
               <img src="/img/full-logo-dark.png" alt="Home" width={145} />
             </Link>
           </h1>
-          <Select styles={customStyles} defaultValue={selectedOption} onChange={changeNetwork} options={options} className="select" />
+          <Select
+            styles={customStyles}
+            defaultValue={selectedOption}
+            onChange={changeNetwork}
+            options={options}
+            className="select"
+          />
         </div>
         <div className="keystation-url-info">
           <strong>
@@ -142,29 +177,82 @@ const App = ({ user, updateUser }) => {
         <Switch>
           <Route path={`${match.url}/signin`} component={SignIn} />
           <Route path={`${match.url}/import`} component={Import} />
-          <Route path={`${match.url}/import-privatekey`} component={ImportPrivateKey} />
-          <PrivateRoute exact isLoggedIn={isLoggedIn} path={`${match.url}/`} component={Home} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/contract/query`} component={ContractQuery} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/contract/execute`} component={ContractExecute} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/contract/deploy`} component={ContractDeploy} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/provider/set`} component={ScriptSet} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/provider/edit`} component={ScriptEdit} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/airequest/set`} component={RequestSet} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/airequest/get`} component={RequestGet} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/send`} component={Send} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/transaction`} component={Transaction} />
-          <PrivateRoute isLoggedIn={isLoggedIn} path={`${match.url}/session`} component={Session} />
+          <Route
+            path={`${match.url}/import-privatekey`}
+            component={ImportPrivateKey}
+          />
+          <Route path={`${match.url}/create-wallet`} component={CreateWallet} />
+          <PrivateRoute
+            exact
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/`}
+            component={Home}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/contract/query`}
+            component={ContractQuery}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/contract/execute`}
+            component={ContractExecute}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/contract/deploy`}
+            component={ContractDeploy}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/provider/set`}
+            component={ScriptSet}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/provider/edit`}
+            component={ScriptEdit}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/airequest/set`}
+            component={RequestSet}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/airequest/get`}
+            component={RequestGet}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/send`}
+            component={Send}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/transaction`}
+            component={Transaction}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/session`}
+            component={Session}
+          />
           {isLoggedIn ? null : <Redirect from="*" to="/signin" />}
         </Switch>
       </div>
       <div className="footer">
         <div>
           <Link to={generateLanguage('vn', location)}>
-            <button onClick={() => changeLanguage('vn')}>{getUnicodeFlagIcon('VN')}</button>
+            <button onClick={() => changeLanguage('vn')}>
+              {getUnicodeFlagIcon('VN')}
+            </button>
           </Link>
 
           <Link to={generateLanguage('en', location)}>
-            <button onClick={() => changeLanguage('en')}>{getUnicodeFlagIcon('US')}</button>
+            <button onClick={() => changeLanguage('en')}>
+              {getUnicodeFlagIcon('US')}
+            </button>
           </Link>
         </div>
 
@@ -174,7 +262,11 @@ const App = ({ user, updateUser }) => {
           </button>
         )}
 
-        <a href="https://github.com/oraichain/cosmosjs.git" target="_blank">
+        <a
+          href="https://github.com/oraichain/cosmosjs.git"
+          target="_blank"
+          rel="noreferrer"
+        >
           <button>
             <i className="fa fa-fw fa-github" />
           </button>
