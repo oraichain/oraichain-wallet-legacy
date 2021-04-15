@@ -6,10 +6,24 @@ const CreateWallet = () => {
   const cosmos = window.cosmos;
   const { t, i18n } = useTranslation();
   const $ = window.jQuery;
+  let mnemonic;
   const createWallet = () => {
-    const mnemonic = cosmos.generateMnemonic();
-    $('#mnemonics').text(mnemonic);
+    // default as backend
+    mnemonic = cosmos.generateMnemonic(256);
+    $('#mnemonics').text('*'.repeat(mnemonic.length));
     $('#mnemonics-input').val(mnemonic);
+  };
+
+  const toggleMnemonic = () => {
+    $('#mnemonics').css('opacity', 0);
+    setTimeout(() => {
+      if ($('#mnemonics').text().match(/\*+/)) {
+        $('#mnemonics').text(mnemonic);
+      } else {
+        $('#mnemonics').text('*'.repeat(mnemonic.length));
+      }
+      $('#mnemonics').css('opacity', 1);
+    }, 500);
   };
 
   const copyAddress = () => {
@@ -37,18 +51,10 @@ const CreateWallet = () => {
           go to import page.
         </p>
 
-        <div className="pw-nnemonics">
-          <div style={{ border: 0 }}>
-            <div
-              id="mnemonics"
-              readOnly
-              disabled
-              style={{
-                width: 'calc(100% - 80px)',
-                color: 'rgb(167 182 194 / 60%)'
-              }}
-            />
-            <button type="button" onClick={copyAddress}>
+        <div className="pw-nnemonics view">
+          <div>
+            <div id="mnemonics" readOnly disabled></div>
+            <button onClick={copyAddress}>
               <i className="fa fa-files-o" />
               <input
                 type="text"
@@ -57,6 +63,7 @@ const CreateWallet = () => {
               />
               Copy
             </button>
+            <i className="fa fa-eye" onClick={toggleMnemonic}></i>
           </div>
         </div>
 

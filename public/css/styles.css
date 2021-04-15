@@ -612,6 +612,26 @@ button[type='submit'] .fa:before {
   word-break: break-all;
 }
 
+.pw-nnemonics.view > div {
+  border: 0;
+  padding-bottom: 20px;
+  position: relative;
+}
+
+.pw-nnemonics.view .fa-eye {
+  position: absolute;
+  bottom: 5px;
+  right: 90px;
+  cursor: pointer;
+}
+
+.pw-nnemonics.view #mnemonics {
+  width: calc(100% - 80px);
+  color: rgb(167 182 194 / 60%);
+  word-break: break-all;
+  transition: opacity 0.5s ease-in-out;
+}
+
 #encrypted-import-for-copy {
   position: absolute;
   top: 0;
