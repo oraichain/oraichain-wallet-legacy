@@ -7,7 +7,7 @@ import _ from 'lodash';
 import Big from 'big.js';
 
 import PinWrap, { openPinWrap } from './PinWrap';
-import { getTxBodySend, getTxBodyMultiSend, getTxBodyDelegate, getTxCreateValidator, getTxBodyUndelegate, getTxBodyMsgWithdrawDelegatorReward } from './utils';
+import { getTxBodySend, getTxBodyMultiSend, getTxBodyDelegate, getTxCreateValidator, getTxBodyUndelegate, getTxBodyMsgWithdrawDelegatorReward } from '../utils';
 
 const Transaction = ({ user, history }) => {
   const $ = window.jQuery;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import BlockUi from 'react-block-ui';
+import queryString from 'query-string';
 import 'react-block-ui/style.css';
 import bech32 from 'bech32';
 import { getFileSize } from '../../utils';
@@ -13,7 +14,7 @@ import * as actions from '../../actions';
 import Cosmos from '@oraichain/cosmosjs';
 const message = Cosmos.message;
 
-const CreateAIRequest = ({ user, updateRequestId }) => {
+const CreateAIRequest = ({ user, updateRequestId, history }) => {
     const $ = window.jQuery;
     const { t, i18n } = useTranslation();
     const [blocking, setBlocking] = useState(false);
@@ -22,6 +23,7 @@ const CreateAIRequest = ({ user, updateRequestId }) => {
     const [outputFile, setOutputFile] = useState('');
     const [showInput, setShowInput] = useState(true);
     const [showOutput, setShowOutput] = useState(true);
+    const queryStringParse = queryString.parse(history.location.search) || {};
     const cosmos = window.cosmos;
 
     const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';/{}|\\":<>\?]/);
@@ -118,6 +120,7 @@ const CreateAIRequest = ({ user, updateRequestId }) => {
             }
             openPinWrap();
         } catch (err) {
+            console.log(err)
             alert('unexpected error from the server: ', err);
             return;
         }
@@ -144,7 +147,7 @@ const CreateAIRequest = ({ user, updateRequestId }) => {
             oracle_script_name: oscriptName,
             creator: accAddress,
             validator_count: new Long(valCount),
-            fees: requestFees,
+            fees: `${requestFees}orai`,
             input: Buffer.from(input),
             expected_output: Buffer.from(expectedOutput)
         });
@@ -165,9 +168,8 @@ const CreateAIRequest = ({ user, updateRequestId }) => {
             setBlocking(true);
             // will allow return childKey from Pin
             const txBody = getTxBody(childKey);
-            console.log('tx body: ', txBody);
             // higher gas limit
-            const res = await cosmos.submit(childKey, txBody, 'BROADCAST_MODE_BLOCK');
+            const res = await cosmos.submit(childKey, txBody, 'BROADCAST_MODE_BLOCK', 0, 300000);
             if (res.tx_response.code !== 0) {
                 alert(res.tx_response.raw_log);
                 return;
@@ -176,6 +178,12 @@ const CreateAIRequest = ({ user, updateRequestId }) => {
             $('#tx-json').text(res.tx_response.raw_log + '\n' + 'request id: ' + requestId);
             // check if the broadcast message is successful or not
             updateRequestId({ requestId });
+            if (queryStringParse.signInFromScan) {
+                window.opener.postMessage(res.tx_response, "*");
+                window.close();
+              } else {
+                $('#tx-json').text(res.tx_response.raw_log);
+              }
         } catch (ex) {
             alert(ex.message);
             return;
@@ -192,28 +200,29 @@ const CreateAIRequest = ({ user, updateRequestId }) => {
                 <input style={{ display: 'none' }} type="password" autoComplete="current-password" tabIndex={-1} spellCheck="false" />
                 <div className="keystation-tx-info" id="tx-info">
                     <h3 className="send">Set</h3>
-                    <span>{t('creator')}</span>
-                    <p>{user.address} </p>
-                    <div className="field">
-                        <span>{t('oracleScriptName')}</span>
-                        <input id="oscript-name" />
+                    <div class="mb-3">
+                        <label class="form-label">{t('creator')}</label>
+                        <p>{user.address} </p>
                     </div>
-                    <div className="field">
-                        <span>{t('description')}</span>
-                        <input id="des" />
+                    <div class="mb-3">
+                        <label class="form-label">{t('oracleScriptName')}</label>
+                        <input type="text" class="form-control" id="oscript-name" />
                     </div>
-
-                    <div className="field">
-                        <span>{t('validatorCount')}</span>
-                        <input id="validator-count" />
+                    <div class="mb-3">
+                        <label class="form-label">{t('description')}</label>
+                        <input type="text" class="form-control" id="des" />
                     </div>
-                    <div className="field">
-                        <span>{t('requestFees')}</span>
-                        <input id="request-fees" />
+                    <div class="mb-3">
+                        <label class="form-label">{t('validatorCount')}</label>
+                        <input type="text" class="form-control" id="validator-count" />
                     </div>
-                    <div className="field">
-                        <span>{t('input')}</span>
-                        <input id="input" onInput={onType} />
+                    <div class="mb-3">
+                        <label class="form-label">{t('requestFees')}</label>
+                        <input type="text" class="form-control" id="request-fees" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">{t('input')}</label>
+                        <input type="text" class="form-control" id="input" onInput={onType}/>
                         {showInput && (
                             <label className="file-upload">
                                 <input type="file" id="input-file" onChange={onFileChange} />
@@ -221,9 +230,9 @@ const CreateAIRequest = ({ user, updateRequestId }) => {
                             </label>
                         )}
                     </div>
-                    <div className="field">
-                        <span>{t('output')}</span>
-                        <input id="expected-output" onInput={onType} />
+                    <div class="mb-3">
+                        <label class="form-label">{t('output')}</label>
+                        <input type="text" class="form-control" id="expected-output" onInput={onType}/>
                         {showOutput && (
                             <label className="file-upload">
                                 <input type="file" id="output-file" onChange={onFileChange} />
@@ -231,8 +240,10 @@ const CreateAIRequest = ({ user, updateRequestId }) => {
                             </label>
                         )}
                     </div>
-                    <span>{t('memo')}</span>
-                    <textarea id="memo"></textarea>
+                    <div class="mb-3">
+                        <label class="form-label">{t('memo')}</label>
+                        <textarea id="memo" class="form-control"></textarea>
+                    </div>
                 </div>
                 <div className="tx-btn-wrap btn-center">
                     <button type="button" onClick={handleSet} id="allowBtn">
