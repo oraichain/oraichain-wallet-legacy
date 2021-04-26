@@ -5,7 +5,12 @@ import queryString from 'query-string';
 import PinWrap from './PinWrap';
 
 import { InputWrap } from './common';
-import { cleanMnemonics, isMnemonicsValid, countWords, getPassword } from '../utils';
+import {
+  cleanMnemonics,
+  isMnemonicsValid,
+  countWords,
+  getPassword
+} from '../utils';
 
 const Import = () => {
   const { t, i18n } = useTranslation();
@@ -31,7 +36,11 @@ const Import = () => {
       return;
     }
 
-    if (countWords($.trim(mnemonics)) !== 12 && countWords($.trim(mnemonics)) !== 16 && countWords($.trim(mnemonics)) !== 24) {
+    if (
+      countWords($.trim(mnemonics)) !== 12 &&
+      countWords($.trim(mnemonics)) !== 16 &&
+      countWords($.trim(mnemonics)) !== 24
+    ) {
       $('#formInfoMessage').hide();
       $('#errorOnImport').show().find('span').text('Mnemonics is not valid.');
       // TODO: Check validation of mnemonics
@@ -40,7 +49,10 @@ const Import = () => {
 
     if (!isMnemonicsValid(mnemonics)) {
       $('#formInfoMessage').hide();
-      $('#errorOnImport').show().find('span').text('Invalid mnemonics checksum error.');
+      $('#errorOnImport')
+        .show()
+        .find('span')
+        .text('Invalid mnemonics checksum error.');
       // TODO: Check validation of mnemonics
       return;
     }
@@ -71,8 +83,12 @@ const Import = () => {
     }
 
     // Check encrypted mnemonic phrase and pasted value
-    if (document.getElementById('encrypted-import').innerText !== getPassword()) {
-      $('.notification-modal').text('Encrypted mnemonic phrase does not match.');
+    if (
+      document.getElementById('encrypted-import').innerText !== getPassword()
+    ) {
+      $('.notification-modal').text(
+        'Encrypted mnemonic phrase does not match.'
+      );
       $('.notification-modal').show();
       setTimeout(function () {
         $('.notification-modal').hide();
@@ -80,7 +96,11 @@ const Import = () => {
       return;
     }
 
-    history.push(`/${i18n.language}/session${queryStringParse.signInFromScan ? '?signInFromScan=true' : ''}`);
+    history.push(
+      `/${i18n.language}/session${
+        queryStringParse.signInFromScan ? '?signInFromScan=true' : ''
+      }`
+    );
   };
 
   const copyAddress = () => {
@@ -97,19 +117,28 @@ const Import = () => {
 
   return (
     <div>
-      <h2>Import Wallet</h2>
+      <h2>{t('importWallet')}</h2>
       {/* 1. Account Name, Mnemonics */}
       <form id="import-form1" className="keystation-form" noValidate>
         <InputWrap label="Wallet Name">
-          <input className="input__field input__field--fumi input-account" id="account" type="text" />
+          <input
+            className="input__field input__field--fumi input-account"
+            id="account"
+            type="text"
+          />
         </InputWrap>
 
         <InputWrap label="Mnemonics">
-          <textarea className="input__field input__field--fumi input-mnemonics" id="mnemonics" defaultValue={''} />
+          <textarea
+            className="input__field input__field--fumi input-mnemonics"
+            id="mnemonics"
+            defaultValue={''}
+          />
         </InputWrap>
 
         <p id="formInfoMessage" className="information-text">
-          <i className="fa fa-fw fa-question-circle" /> Enter 12 / 16 / 24 words including spaces. Mnemonic phrase is encrypted and stored in Keychain.
+          <i className="fa fa-fw fa-question-circle" /> Enter 12 / 16 / 24 words
+          including spaces. Mnemonic phrase is encrypted and stored in Keychain.
         </p>
         <p id="errorOnImport" className="error">
           {/* error msg */}
@@ -125,8 +154,15 @@ const Import = () => {
 
       {/* 2 end */}
       {/* 3. re-enter */}
-      <div className="notification-modal">{/* Encrypted mnemonic phrase is copied. */}</div>
-      <form id="import-form2" method="GET" className="keystation-form re-enter-form" noValidate>
+      <div className="notification-modal">
+        {/* Encrypted mnemonic phrase is copied. */}
+      </div>
+      <form
+        id="import-form2"
+        method="GET"
+        className="keystation-form re-enter-form"
+        noValidate
+      >
         <p>Please copy and paste the mnemonic encryption below.</p>
         <div className="pw-nnemonics">
           <div>
@@ -144,10 +180,24 @@ const Import = () => {
         </div>
 
         <InputWrap label="Encrypted mnemonic phrase">
-          <input className="input__field input__field--fumi" id="hidden-account" type="text" name="account" style={{ display: 'none' }} defaultValue />
-          <input className="input__field input__field--fumi input-password" type="password" autoComplete="new-password" />
+          <input
+            className="input__field input__field--fumi"
+            id="hidden-account"
+            type="text"
+            name="account"
+            style={{ display: 'none' }}
+            defaultValue
+          />
+          <input
+            className="input__field input__field--fumi input-password"
+            type="password"
+            autoComplete="new-password"
+          />
         </InputWrap>
-        <a href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5" target="_blank">
+        <a
+          href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5"
+          target="_blank"
+        >
           <i className="fa fa-fw fa-question-circle" />
           Why do I have to encrypt my mnemonic phrase?
         </a>

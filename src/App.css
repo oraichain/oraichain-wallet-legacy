@@ -4,7 +4,6 @@
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
-  padding-bottom: 60px;
 }
 
 .inner {
@@ -42,6 +41,9 @@
   padding: 0;
   margin: 8px 0;
   width: 100%;
+  background: rgb(16 22 26 / 50%);
+  box-shadow: 0 0 0 1px rgb(16 22 26 / 40%);
+  border-radius: 3px;
 }
 .button {
   color: rgb(255 255 255);
@@ -49,15 +51,17 @@
   font-size: 0.875rem;
   min-width: 64px;
   box-sizing: border-box;
-  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
   font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
   font-weight: 500;
   line-height: 1.75;
   border-radius: 4px;
   letter-spacing: 0.02857em;
   text-transform: uppercase;
-  border: 1px solid rgb(144 202 249 / 50%);
-  color: rgb(144 202 249);
+  border: 1px solid rgb(72 175 240 / 50%);
+  color: rgb(72 175 240);
   padding: 5px 15px;
   text-align: center;
   text-decoration: none;
@@ -79,7 +83,7 @@
 .keystation-form input,
 .keystation-form textarea {
   width: 100%;
-  background: rgb(66 66 66);
+  background: inherit;
   /* border-radius: 6px; */
 }
 
@@ -90,7 +94,6 @@
 .keystation-form textarea {
   height: 120px;
   line-height: 1.6;
-  border: 1px solid #999;
   color: #fff;
 }
 
@@ -99,8 +102,9 @@
   border-color: #9c6cff;
 } */
 
+.keystation-form input:-internal-autofill-selected,
 .keystation-form input:valid {
-  background-color: inherit;
+  background-color: inherit !important;
 }
 
 .keystation-form .icon--fumi {
@@ -128,10 +132,10 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: -1px 2px 4px 0px rgb(0 0 0 / 20%), 0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+  box-shadow: -1px 2px 4px 0px rgb(0 0 0 / 20%),
+    0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
   bottom: 0;
   left: 0;
-  background-color: rgb(51 51 51);
   padding: 0 10px;
   color: rgb(255 255 255);
 }

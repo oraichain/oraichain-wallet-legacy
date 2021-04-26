@@ -60,7 +60,9 @@ const Deploy = ({ user, updateContractAddress }) => {
 
     const msgSendAny = new message.google.protobuf.Any({
       type_url: '/cosmwasm.wasm.v1beta1.MsgInstantiateContract',
-      value: message.cosmwasm.wasm.v1beta1.MsgInstantiateContract.encode(msgSend).finish()
+      value: message.cosmwasm.wasm.v1beta1.MsgInstantiateContract.encode(
+        msgSend
+      ).finish()
     });
 
     return new message.cosmos.tx.v1beta1.TxBody({
@@ -79,7 +81,13 @@ const Deploy = ({ user, updateContractAddress }) => {
       // will allow return childKey from Pin
       const txBody1 = getStoreMessage(wasmBody);
       // higher gas limit
-      const res1 = await cosmos.submit(childKey, txBody1, 'BROADCAST_MODE_BLOCK', 0, 2000000);
+      const res1 = await cosmos.submit(
+        childKey,
+        txBody1,
+        'BROADCAST_MODE_BLOCK',
+        0,
+        2000000
+      );
 
       if (res1.tx_response.code !== 0) {
         alert(res1.tx_response.raw_log);
@@ -87,14 +95,26 @@ const Deploy = ({ user, updateContractAddress }) => {
       }
 
       // next instantiate code
-      const codeId = res1.tx_response.logs[0].events[0].attributes.find((attr) => attr.key === 'code_id').value;
-      const input = Buffer.from(schema ? JSON.stringify(formData) : inputContract).toString('base64');
+      const codeId = res1.tx_response.logs[0].events[0].attributes.find(
+        (attr) => attr.key === 'code_id'
+      ).value;
+      const input = Buffer.from(
+        schema ? JSON.stringify(formData) : inputContract
+      ).toString('base64');
       const txBody2 = getInstantiateMessage(codeId, input, label);
-      const res2 = await cosmos.submit(childKey, txBody2, 'BROADCAST_MODE_BLOCK');
-      const contractAddress = res2.tx_response.logs[0].events[0].attributes.find((attr) => attr.key === 'contract_address').value;
+      const res2 = await cosmos.submit(
+        childKey,
+        txBody2,
+        'BROADCAST_MODE_BLOCK'
+      );
+      const contractAddress = res2.tx_response.logs[0].events[0].attributes.find(
+        (attr) => attr.key === 'contract_address'
+      ).value;
       $('#address').val(contractAddress);
       updateContractAddress(contractAddress);
-      $('#tx-json').text(`${res1.tx_response.raw_log}\n\n${res2.tx_response.raw_log}`);
+      $('#tx-json').text(
+        `${res1.tx_response.raw_log}\n\n${res2.tx_response.raw_log}`
+      );
     } catch (ex) {
       alert(ex.message);
     } finally {
@@ -118,13 +138,17 @@ const Deploy = ({ user, updateContractAddress }) => {
       fileBuffer = await blob.arrayBuffer();
     }
     setWasmBody(Buffer.from(fileBuffer).toString('base64'));
-    $('#filename').html(`<strong>${file.name} (${getFileSize(fileBuffer.byteLength)})</strong>`);
+    $('#filename').html(
+      `<strong>${file.name} (${getFileSize(fileBuffer.byteLength)})</strong>`
+    );
   };
 
   const onSchemaFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    $('#filename-schema').html(`<strong>${file.name} (${getFileSize(file.size)})</strong>`);
+    $('#filename-schema').html(
+      `<strong>${file.name} (${getFileSize(file.size)})</strong>`
+    );
     const blob = new Blob([file]);
     const fileBuffer = await blob.arrayBuffer();
     const schemaBody = Buffer.from(fileBuffer).toString();
@@ -149,8 +173,21 @@ const Deploy = ({ user, updateContractAddress }) => {
     <BlockUi tag="div" blocking={blocking}>
       <ContractMenu selected="deploy" />
       <form className="keystation-form" id="interact-form">
-        <input style={{ display: 'none' }} type="text" tabIndex={-1} spellCheck="false" name="account" defaultValue={user.name} />
-        <input style={{ display: 'none' }} type="password" autoComplete="current-password" tabIndex={-1} spellCheck="false" />
+        <input
+          style={{ display: 'none' }}
+          type="text"
+          tabIndex={-1}
+          spellCheck="false"
+          name="account"
+          defaultValue={user.name}
+        />
+        <input
+          style={{ display: 'none' }}
+          type="password"
+          autoComplete="current-password"
+          tabIndex={-1}
+          spellCheck="false"
+        />
         <div className="keystation-tx-info" id="tx-info">
           <div className="field">
             <span>Label</span>
@@ -160,25 +197,49 @@ const Deploy = ({ user, updateContractAddress }) => {
           <div className="field">
             <label className="file-upload">
               <input type="file" id="wasm-file" onChange={onFileChange} />
-              <i className="fa fa-cloud-upload" /> <small id="filename">Wasm File</small> {wasmBody && <i className="fa fa-trash" onClick={clearWasmFile} />}
+              <i className="fa fa-cloud-upload" />{' '}
+              <small id="filename">Wasm File</small>{' '}
+              {wasmBody && (
+                <i className="fa fa-trash" onClick={clearWasmFile} />
+              )}
             </label>
             <label className="file-upload ml-10">
-              <input type="file" id="schema-file" onChange={onSchemaFileChange} />
-              <i className="fa fa-cloud-upload" /> <small id="filename-schema">Init Schema File</small> {schema && <i className="fa fa-trash" onClick={clearSchemaFile} />}
+              <input
+                type="file"
+                id="schema-file"
+                onChange={onSchemaFileChange}
+              />
+              <i className="fa fa-cloud-upload" />{' '}
+              <small id="filename-schema">Init Schema File</small>{' '}
+              {schema && (
+                <i className="fa fa-trash" onClick={clearSchemaFile} />
+              )}
             </label>
           </div>
-          {schema && <Form schema={schema} formData={formData} onChange={({ formData }) => setFormData(formData)} />}
+          {schema && (
+            <Form
+              schema={schema}
+              formData={formData}
+              onChange={({ formData }) => setFormData(formData)}
+            />
+          )}
 
           {!schema && (
             <div className="field">
               <span>Init Input</span>
-              <Editor theme="vs-dark" height={100} defaultLanguage="json" value={inputContract} onChange={inputContractChange} />
+              <Editor
+                theme="vs-dark"
+                height={100}
+                defaultLanguage="json"
+                value={inputContract}
+                onChange={inputContractChange}
+              />
             </div>
           )}
         </div>
         <div className="tx-btn-wrap btn-center">
           <button type="button" onClick={openPinWrap} id="allowBtn">
-            Continue <i className="fa fa-arrow-right" />
+            Continue <i className="fa fa-angle-right" />
           </button>
         </div>
 
