@@ -1,0 +1,39 @@
+.choose-fee {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	width: 100%;
+	padding: 8px;
+
+	.fee-item {
+		width: 31%;
+		padding: 8px 10px;
+		border: 1px solid #2B5072;
+		border-radius: 6px;
+		cursor: pointer;
+		.title {
+			font-family: Roboto;
+			font-size: 16px;
+			line-height: 150%;
+			// @include media("<medium") {
+			// 	font-size: 14px;
+			// }
+		}
+		.amount {
+			font-family: Roboto;
+			font-size: 14px;
+			line-height: 150%;
+			.amount-number {
+				// @include media("<medium") {
+				// 	display: block;
+				// }
+			}
+		}
+	}
+
+	.active {
+		border: 1px solid #2B5072;
+		color: #F6F7FB;
+		background: #1A87FF;
+	}
+}

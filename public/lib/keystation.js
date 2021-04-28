@@ -31,7 +31,7 @@ function FindLeftScreenBoundry() {
 window.leftScreenBoundry = FindLeftScreenBoundry;
 
 function PopupCenter(url, title, w, h) {
-  var newWindow = window.open(
+  const newWindow = window.open(
     url,
     title,
     'resizable=1, scrollbars=1, fullscreen=0, height=' + h + ', width=' + w + ', screenX=' + window.leftScreenBoundry + ' , left=' + window.leftScreenBoundry + ', toolbar=0, menubar=0, status=1'
@@ -70,7 +70,7 @@ class Keystation {
 
   openWindow(type = 'transaction', payload = '', account = '') {
     // The account parameter is required for users having multiple keychain accounts.
-    var apiUrl = this.getApiUrl(type);
+    const apiUrl = this.getApiUrl(type);
 
     const url =
       this.keystationUrl +

@@ -13,8 +13,8 @@ const SignIn = ({ history }) => {
   const queryStringParse = queryString.parse(history.location.search) || {};
 
   function showPin() {
-    var account = $('.input-account').val();
-    var password = getPassword();
+    const account = $('.input-account').val();
+    const password = getPassword();
 
     if ($.trim(account) === '') {
       $('#formInfoMessage').hide();

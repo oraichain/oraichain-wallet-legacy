@@ -2,18 +2,21 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import BlockUi from "react-block-ui";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import queryString from "query-string";
 import "react-block-ui/style.css";
 import bech32 from "bech32";
-import { getFileSize } from "../../utils";
 import KSUID from "ksuid";
-import PinWrap, { openPinWrap } from "../PinWrap";
 import Long from "long";
-import RequestMenu from "./RequestMenu";
-import * as actions from "../../actions";
 import Cosmos from "@oraichain/cosmosjs";
+
+import { Fee, Gas } from "../common/Fee";
+import PinWrap, { openPinWrap } from "../PinWrap";
+import RequestMenu from "./RequestMenu";
+import { getFileSize } from "../../utils";
+import * as actions from "../../actions";
 
 const message = Cosmos.message;
 
@@ -26,8 +29,13 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   const [outputFile, setOutputFile] = useState("");
   const [showInput, setShowInput] = useState(true);
   const [showOutput, setShowOutput] = useState(true);
+  const [gas, setGas] = useState(200000);
+  const [fee, setFee] = useState(0);
+  const [minFee, setMinFee] = useState({ estimate_fee: 0 });
   const queryStringParse = queryString.parse(history.location.search) || {};
   const cosmos = window.cosmos;
+
+  console.log(fee)
 
   const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';/{}|\\":<>\?]/);
 
@@ -96,12 +104,7 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   const {
     onChange: onExpectedOutputChange,
     ...inputExpectedOutputRest
-  } = register("expected_output", {
-    required: {
-      value: true,
-      message: "Output value mustn't be null",
-    },
-  });
+  } = register("expected_output");
   const { onChange: onValCountChange, ...inputValCountRest } = register(
     "validator_count",
     {
@@ -120,6 +123,16 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   const { onChange: onOutputFileChange, ...inputOutputFileRest } = register(
     "output_file"
   );
+
+  useEffect(() => {
+     async function getMinFee() {
+        const result = await axios.get('https://api.scan.orai.io/v1/min_gas');
+        if (result && result.data) {
+          setMinFee(result.data);
+        }
+     }
+     getMinFee();
+  }, [])
 
   useEffect(() => {
     const handler = (e, file) => {
@@ -160,7 +173,6 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
       }
     } else {
       let output = $("#expected-output").val();
-      console.log("output: ", output);
       // if empty = 0 then show file option
       if (output.length === 0) {
         setShowOutput(true);
@@ -169,7 +181,6 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
         setOutputFile("");
       }
     }
-    console.log("hello world");
   };
 
   const processFile = async (file, id) => {
@@ -200,7 +211,6 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
       const data = await fetch(
         `${cosmos.url}/provider/oscript/${oscriptName}`
       ).then((res) => res.json());
-      console.log("data: ", data);
       if (data.code !== undefined) {
         alert("current name of the script is not found");
         return;
@@ -211,7 +221,6 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
       let memo = value?.memo?.trim();
       let input = value?.input?.trim();
       let expectedOutput = value?.expected_output?.trim();
-      console.log(oscriptName, description, valCount, memo, "zzzzzzz");
       if (
         pattern.test(oscriptName) ||
         pattern.test(description) ||
@@ -278,8 +287,8 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
         childKey,
         txBody,
         "BROADCAST_MODE_BLOCK",
-        0,
-        300000
+        fee * 1000000,
+        gas
       );
       if (res.tx_response.code !== 0) {
         alert(res.tx_response.raw_log);
@@ -524,6 +533,8 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
               {...inputMemoRest}
             ></textarea>
           </div>
+          <Gas gas={gas} onChangeGas={setGas} />
+          <Fee minFee={minFee} handleChooseFee={setFee} />
         </div>
         <div className="tx-btn-wrap btn-center">
           <button type="submit" id="allowBtn">
