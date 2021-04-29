@@ -8,7 +8,7 @@ import configureStore, { history } from './configureStore';
 import { I18nextProvider } from 'react-i18next';
 import i18n from './i18n';
 import App from './App';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 

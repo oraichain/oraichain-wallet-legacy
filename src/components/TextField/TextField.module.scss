@@ -1,0 +1,15 @@
+.text-field {
+    width: 100%;
+
+    &-line {
+        padding: 24px 0;
+        color: rgba(24, 24, 25, 0.9);
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 140%;
+        border: none;
+        border-bottom: 1px solid #E4E4E4;
+    }
+}
