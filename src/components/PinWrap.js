@@ -13,7 +13,7 @@ export const openPinWrap = () => {
 
   if ($.trim(password) === '') {
     alert(
-      'You cannot sign transactions.\n1. Check your browser is in private mode.\n2. Type "chrome://settings/passwords" into your browser and press Enter to toggle the switch "Offer to save passwords" to the on.'
+      'You cannot sign transactions.\n1. Don\'t use browser in private mode.\n2. Type "chrome://settings/passwords" into your browser and press Enter to toggle the switch "Offer to save passwords" to the on.'
     );
     window.location.href = '/import';
     return;
