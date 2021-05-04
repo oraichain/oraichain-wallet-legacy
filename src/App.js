@@ -4,6 +4,7 @@ import AuthLayout from "src/components/AuthLayout";
 import SignIn from "src/components/SignIn/SignIn";
 import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
+import SendTokens from "src/components/SendTokens";
 
 const App = ({}) => {
   return (
@@ -13,6 +14,11 @@ const App = ({}) => {
           <AuthLayout>
             <SignIn />
           </AuthLayout>
+        </Route>
+        <Route path="/send-tokens">
+          <MainLayout>
+            <SendTokens />
+          </MainLayout>
         </Route>
         <Route path="/">
           <MainLayout>

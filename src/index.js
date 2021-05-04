@@ -12,6 +12,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 
+window.$ = window.jQuery = require('jquery')
+
 const store = configureStore();
 
 const render = (Component) =>

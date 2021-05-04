@@ -43,6 +43,7 @@ const MainLayout = ({ children }) => {
 
                 </div>
             </nav>
+            {children}
         </div>
     );
 };
