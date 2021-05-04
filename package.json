@@ -6,6 +6,7 @@
     "@hookform/error-message": "^2.0.0",
     "@monaco-editor/react": "^4.0.11",
     "@oraichain/cosmosjs": "^0.0.53",
+    "@reduxjs/toolkit": "^1.5.1",
     "@rjsf/core": "^2.5.0",
     "antd": "^4.15.3",
     "axios": "^0.21.1",
@@ -20,6 +21,7 @@
     "isomorphic-fetch": "^3.0.0",
     "jquery": "^3.6.0",
     "ksuid": "^2.0.0",
+    "lodash": "^4.17.21",
     "node-sass": "^5.0.0",
     "path-to-regexp": "^6.2.0",
     "query-string": "^7.0.0",
@@ -37,6 +39,8 @@
     "react-scripts": "4.0.3",
     "react-select": "^4.2.1",
     "redux": "^4.0.5",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0",
     "web-vitals": "^1.0.1"
   },
   "devDependencies": {
