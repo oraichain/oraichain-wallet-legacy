@@ -104,7 +104,7 @@ export const menuSlice = createSlice({
                 },
             },
             allIds: Object.values(subMenuItemIds),
-            activeId: subMenuItemIds.QUERY
+            activeId: null,
         },
     },
     reducers: {
