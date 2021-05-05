@@ -1,52 +1,10 @@
 .main-layout {
-    :global(.main-layout-navbar) {
-        background-color: #1B57F0;
-        ;
-    }
-
-    :global(.nav-item) {
-        padding-left: 30px;
-    }
-
     &-main {
         display: flex;
         flex-direction: row;
         justify-content: flex-start;
         align-items: flex-start;
     }
-}
-
-.logo {
-    display: inline-block;
-    width: 32px;
-    height: auto;
-}
-
-.search-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    height: 100%;
-
-    &-icon {
-        color: #FFFFFF;
-        width: 21px;
-        height: auto;
-    }
-}
-
-.navbar-toggler-icon {
-    display: inline-block;
-    color: white;
-}
-
-.nav-link-icon {
-    display: inline-block;
-    width: 24px;
-    height: 24px;
-    object-fit: cover;
-    border-radius: 100%;
 }
 
 .content {

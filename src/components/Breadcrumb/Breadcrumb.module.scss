@@ -1,0 +1,52 @@
+.breadcrumb-wrapper {
+    :global(.breadcrumb) {
+        padding: 20px 30px 20px;
+        background-color: #192B40;
+        border-radius: 0;
+    }
+
+    :global(.breadcrumb-item+.breadcrumb-item::before) {
+        color: #D7D7D7;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+    }
+}
+
+.breadcrumb-text {
+    color: #D7D7D7;
+    font-family: Source Sans Pro;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+
+    &-active {
+        color: #F6F7FB;
+        font-family: Source Sans Pro;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 150%;
+    }
+}
+
+.breadcrumb-link {
+    color: #D7D7D7;
+    font-family: Source Sans Pro;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+
+    &:hover {
+        color: #D7D7D7;
+    }
+
+    &-active {
+        color: #F6F7FB;
+        font-family: Source Sans Pro;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 150%;
+    }
+}
