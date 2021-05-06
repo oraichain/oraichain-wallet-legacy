@@ -4,9 +4,14 @@ import { Link } from "react-router-dom";
 import cn from "classnames/bind";
 import PropTypes from "prop-types";
 import { useForm, FormProvider, useFormContext } from "react-hook-form";
+import Field from "src/components/Field";
 import TextField from "src/components/TextField";
+import ErrorText from "src/components/ErrorText";
+import Suggestion from "src/components/Suggestion";
+import Button from "src/components/Button";
+import OrDivider from "src/components/OrDivider";
+import ButtonGroup from "src/components/ButtonGroup/ButtonGroup";
 import styles from "./SignIn.module.scss";
-import logoUrl from "src/images/logo.png";
 
 const cx = cn.bind(styles);
 
@@ -15,36 +20,52 @@ const SignIn = () => {
     const onSubmit = (data) => console.log(data);
 
     return (
-        <div className={cx("sign-in")}>
-            <div className="container h-100">
-                <div className="row h-100">
-                    <div className="col-md-6 h-100 d-flex justify-content-center align-items-center">
-                        <div className={cx("title")}>
-                            <img className={cx("title-logo")} src={logoUrl} alt="" />
-                            <span className={cx("title-text")}>Oraiscan</span>
-                        </div>
-                    </div>
-                    <div className="col-md-6 h-100 d-flex justify-content-center align-items-center">
-                        <div className={cx("card")}>
-                            <div className={cx("card-header")}>Sign In</div>
-                            <div className={cx("card-body")}>
-                                <FormProvider {...methods} >
-                                    <form onSubmit={methods.handleSubmit(onSubmit)}>
-                                        <TextField type="text" variant="line" name="walletName" placeholder="Walletname" />
+        <div className={cx("card")}>
+            <div className={cx("card-header")}>Sign In</div>
+            <div className={cx("card-body")}>
+                <FormProvider {...methods} >
+                    <form onSubmit={methods.handleSubmit(onSubmit)}>
+                        <Field
+                            title="Walletname"
+                            input={<TextField type="text" variant="light" name="walletName" placeholder="" />}
+                            error={<ErrorText>Nhập vào tên wallet</ErrorText>}
+                        />
+                        <Suggestion text="Unavailable in guest mode or incognito mode" />
+                        <Button variant="primary" size="lg" onClick={() => {
 
-                                    </form>
-                                </FormProvider>
-                            </div>
-                        </div>
+                        }}>
+                            Next
+                        </Button>
+                    </form>
+                </FormProvider>
+                <OrDivider />
+                <ButtonGroup className={cx("button-group")}>
+                    <Button variant="outline-primary" size="lg" onClick={() => {
+
+                    }}>
+                        Import Wallet
+                    </Button>
+                    <Button variant="outline-success" size="lg" onClick={() => {
+
+                    }}>
+                        Import Private Key
+                    </Button>
+                </ButtonGroup>
+            </div>
+            <div className={cx("card-footer")}>
+                <div className={cx("question")}>
+                    <div className={cx("question-text")}>
+                        Dont have a wallet?
                     </div>
+                    <Link to="/sign_up" className={cx("question-link")}>Create Wallet</Link>
                 </div>
             </div>
+
         </div>
     );
 };
 
 SignIn.propTypes = {
-    toggleSearchArea: PropTypes.func,
 };
 SignIn.defaultProps = {};
 

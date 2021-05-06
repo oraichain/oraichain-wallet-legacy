@@ -1,3 +1,48 @@
 .auth-layout {
+    width: 100vw;
+    height: 100vh;
+    background-image: url("../../images/sigin_bg.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
 
+    &-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    &-body {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        height: 100%;
+    }
+}
+
+.brand {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+
+    &-logo {
+        display: inline-block;
+        width: 70px;
+        height: auto;
+        margin-right: 16px;
+    }
+
+    &-name {
+        color: #ffffff;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 32px;
+        line-height: 150%;
+    }
 }
