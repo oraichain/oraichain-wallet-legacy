@@ -1,0 +1,19 @@
+.field {
+    &-title {
+        margin-bottom: 6px;
+        color: #181818;
+        font-family: Source Sans Pro;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 150%;
+    }
+
+    &-input {
+        margin-bottom: 8px;
+    }
+
+    &-error {
+        margin-bottom: 16px;
+    }
+}

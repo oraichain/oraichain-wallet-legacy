@@ -1,15 +1,25 @@
 .text-field {
+    box-sizing: border-box;
     width: 100%;
+    font-family: Source Sans Pro;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
 
-    &-line {
-        padding: 24px 0;
-        color: rgba(24, 24, 25, 0.9);
-        font-family: Roboto;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 14px;
-        line-height: 140%;
-        border: none;
-        border-bottom: 1px solid #E4E4E4;
+    &-light {
+        padding: 15px 20px;
+        color: #181818;
+        background: #FFFFFF;
+        border: 1px solid #E0E0E0;
+        border-radius: 5px;
+
+        &:focus-visible {
+            outline: none;
+        }
+
+        &:focus {
+            background: #EEEEEE;
+        }
     }
 }

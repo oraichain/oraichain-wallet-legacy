@@ -1,0 +1,58 @@
+.button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    &-primary {
+        color: #FFFFFF;
+        background: #1A87FF;
+
+    }
+
+    &-outline-primary {
+        color: #181818;
+        background: #FFFFFF;
+        border: 1px solid #1A87FF;
+
+        &:hover {
+            color: #FFFFFF;
+            background: #1A87FF;
+        }
+    }
+
+    &-outline-success {
+        color: #181818;
+        background: #FFFFFF;
+        border: 1px solid #22B59A;
+
+        &:hover {
+            color: #FFFFFF;
+            background: #22B59A;
+        }
+    }
+
+    &-lg {
+        display: flex;
+        padding-top: 13px;
+        padding-bottom: 13px;
+        border-radius: 24px;
+        font-family: Source Sans Pro;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 150%;
+    }
+
+    &-sm {
+        display: inline-flex;
+        padding: 8px 24px;
+        font-family: Source Sans Pro;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 150%;
+        border-radius: 4px;
+    }
+}
