@@ -17,7 +17,10 @@ const cx = cn.bind(styles);
 
 const SignIn = () => {
     const methods = useForm();
-    const onSubmit = (data) => console.log(data);
+    const { register, handleSubmit, watch, formState: { errors } } = methods;
+    const onSubmit = () => {
+        console.log(methods.getValues())
+    };
 
     return (
         <div className={cx("card")}>
@@ -27,13 +30,11 @@ const SignIn = () => {
                     <form onSubmit={methods.handleSubmit(onSubmit)}>
                         <Field
                             title="Walletname"
-                            input={<TextField type="text" variant="light" name="walletName" placeholder="" />}
+                            input={<TextField type="text" variant="light" name="walletName" placeholder="" {...register("walletName")} />}
                             error={<ErrorText>Nhập vào tên wallet</ErrorText>}
                         />
                         <Suggestion text="Unavailable in guest mode or incognito mode" />
-                        <Button variant="primary" size="lg" onClick={() => {
-
-                        }}>
+                        <Button variant="primary" size="lg" onClick={onSubmit}>
                             Next
                         </Button>
                     </form>

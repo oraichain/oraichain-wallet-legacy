@@ -35,8 +35,6 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   const queryStringParse = queryString.parse(history.location.search) || {};
   const cosmos = window.cosmos;
 
-  console.log(fee)
-
   const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';/{}|\\":<>\?]/);
 
   const {

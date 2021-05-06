@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import styles from "./TextField.module.scss";
 const cx = cn.bind(styles);
 
-const TextField = ({type, variant, name, placeholder}) => {
-    return <input className={cx("text-field", "text-field-" + variant)} type={type} name={name} placeholder={placeholder}/>;
+const TextField = ({type, variant, name, placeholder, ...rest}) => {
+    return <input className={cx("text-field", "text-field-" + variant)} type={type} name={name} placeholder={placeholder} {...rest} />;
 };
 
 TextField.propTypes = {
