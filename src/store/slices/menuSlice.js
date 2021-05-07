@@ -43,7 +43,7 @@ export const menuSlice = createSlice({
                     icon: <GraphIcon />,
                     activeIcon: <ActiveGraphIcon />,
                     text: "Send Tokens",
-                    url: "/send_tokens",
+                    url: "/send-tokens",
                 },
                 [menuItemIds.INTERACT_WITH_PROVIDER_SCRIPTS]: {
                     id: menuItemIds.INTERACT_WITH_PROVIDER_SCRIPTS,
