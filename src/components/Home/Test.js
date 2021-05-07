@@ -22,6 +22,10 @@ import { getFileSize } from "src/utils";
 import * as actions from "src/actions";
 import FormInput from "src/components/common/FormInput/FormInput";
 
+import styles from "./Test.scss";
+import cn from "classnames/bind";
+const cx = cn.bind(styles);
+
 const message = Cosmos.message;
 
 const CreateAIRequest = ({ user, updateRequestId, history }) => {
@@ -29,17 +33,18 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   const { t, i18n } = useTranslation();
   const [blocking, setBlocking] = useState(false);
   const [isOScript, setIsOScript] = useState(false);
-  const [inputFile, setInputFile] = useState("");
-  const [outputFile, setOutputFile] = useState("");
+  const [inputFile, setInputFile] = useState(null);
+  const [outputFile, setOutputFile] = useState(null);
   const [showInput, setShowInput] = useState(true);
   const [showOutput, setShowOutput] = useState(true);
   const [gas, setGas] = useState(200000);
   const [fee, setFee] = useState(0);
   const [minFee, setMinFee] = useState({ estimate_fee: 0 });
-  //   const queryStringParse = queryString.parse(history.location.search) || {};
+  const queryStringParse = queryString.parse(history?.location?.search) || {};
   const cosmos = window.cosmos;
 
   console.log(fee);
+  console.log(inputFile, "aaaaa");
 
   const pattern = new RegExp(/[~`!#$%\^&*+=\-\[\]\\';/{}|\\":<>\?]/);
 
@@ -49,13 +54,14 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
       exclusive: false,
       message: "Value mustn't be null and should be JSON",
       test(value) {
-        if (!_.isNil(value)) {
+        if (!_.isNil(inputFile)) {
+          return true;
+        } else if (!_.isNil(value)) {
           try {
             let obj = JSON.parse(value);
             if (obj && typeof obj === "object") {
               return true;
             }
-            return false;
           } catch (error) {
             return false;
           }
@@ -66,10 +72,8 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   });
 
   const validationSchemaForm = yup.object().shape({
-    input: yup
-      .string()
-      .required("Input value is required")
-      .shouldBeJSON("shouldBeJSON"),
+    input: yup.string().shouldBeJSON("shouldBeJSON"),
+    expected_output: yup.string().shouldBeJSON("shouldBeJSON"),
     oscript_name: yup.string().required("Name field is required"),
     des: yup.string().required("Description field is required"),
     request_fees: yup.number().required("Fees field is required"),
@@ -82,43 +86,14 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   const {
     handleSubmit,
     getValues,
-    setValue,
     formState: { errors },
-    setError,
-    clearErrors,
     trigger,
+    register,
   } = methods;
 
-  // const { onChange: onAccountChange, ...inputAccountRest } = register(
-  //   "account"
-  // );
-  // const { onChange: onPasswordChange, ...inputPasswordRest } = register(
-  //   "password"
-  // );
+  console.log(getValues("input_file"), "!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
-  // const { onChange: onMemoChange, ...inputMemoRest } = register("memo");
-  // const {
-  //   onChange: onExpectedOutputChange,
-  //   ...inputExpectedOutputRest
-  // } = register("expected_output");
-  // const { onChange: onValCountChange, ...inputValCountRest } = register(
-  //   "validator_count",
-  //   {
-  //     validate: (value) => {
-  //       return !isNaN(value) || "Validator count value must be Number!";
-  //     },
-  //     required: {
-  //       value: true,
-  //       message: "Validator count value mustn't be null",
-  //     },
-  //   }
-  // );
-  // const { onChange: onInputFileChange, ...inputInputFileRest } = register(
-  //   "input_file"
-  // );
-  // const { onChange: onOutputFileChange, ...inputOutputFileRest } = register(
-  //   "output_file"
-  // );
+  const { onChange: onMemoChange, ...inputMemoRest } = register("memo");
 
   useEffect(() => {
     async function getMinFee() {
@@ -132,7 +107,7 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
 
   useEffect(() => {
     const handler = (e, file) => {
-      processFile(file);
+      processFile(file, e.target.name);
     };
     $("#filename").on("file", handler);
     return () => {
@@ -141,45 +116,42 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   }, []);
 
   const clearFile = (e) => {
-    if (e.target.id === "trash-output") {
+    if (e.target.name === "trash_output") {
       $("#filename").text("Output file");
-      $("#output-file").val("");
-      setOutputFile("");
+      setOutputFile(null);
     } else {
       $("#filename").text("Input file");
-      $("#input-file").val("");
-      setInputFile("");
+      setInputFile(null);
     }
-    e.preventDefault();
   };
 
   const onFileChange = (e) => {
-    return processFile(e.target.files[0], e.target.id);
+    return processFile(e.target.files[0], e.target.name);
   };
 
   const onType = (e) => {
-    if (e.target.id === "input") {
-      let input = $("#input").val();
+    if (e.target.name === "input") {
+      let input = e.target.value;
       // if empty = 0 then show file option
-      if (input.length === 0) {
+      if (input?.length === 0) {
         setShowInput(true);
       } else {
         setShowInput(false);
-        setInputFile("");
+        setInputFile(null);
       }
     } else {
-      let output = $("#expected-output").val();
+      let output = e.target.value;
       // if empty = 0 then show file option
-      if (output.length === 0) {
+      if (output?.length === 0) {
         setShowOutput(true);
       } else {
         setShowOutput(false);
-        setOutputFile("");
+        setOutputFile(null);
       }
     }
   };
 
-  const processFile = async (file, id) => {
+  const processFile = async (file, name) => {
     if (!file) return;
 
     let fileBuffer;
@@ -189,11 +161,10 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
       const blob = new Blob([file]);
       fileBuffer = await blob.arrayBuffer();
     }
-
     let buffer = Buffer.from(fileBuffer).toString();
-    if (id === "input-file") {
+    if (name === "input_file") {
       setInputFile(buffer);
-    } else if (id === "output-file") {
+    } else if (name === "output_file") {
       setOutputFile(buffer);
     }
     $("#filename").html(
@@ -202,7 +173,6 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   };
 
   const handleSet = async (value) => {
-    console.log(value, "kkkkkkkkkkkkkkkkkkkkkkk");
     const oscriptName = value?.oscript_name?.trim();
     try {
       const data = await fetch(
@@ -298,8 +268,7 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
       );
       // check if the broadcast message is successful or not
       updateRequestId({ requestId });
-      //   if (queryStringParse.signInFromScan) {
-      if (1) {
+      if (queryStringParse.signInFromScan) {
         window.opener.postMessage(res.tx_response, "*");
         window.close();
       } else {
@@ -314,17 +283,13 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
   };
 
   const onSubmit = (data) => {
-    console.log("zzzzzzzz");
     handleSet(data);
   };
 
-  const onError = (err) => {
-    console.log(err, "oooooooooooo");
-  };
+  const onError = (err) => {};
 
   const handleClickSubmit = async () => {
     await trigger();
-    console.log(errors, "oowqeqweqweewq");
     if (errors && Object?.values?.(errors)?.length === 0)
       return onSubmit(getValues());
     else return;
@@ -334,145 +299,189 @@ const CreateAIRequest = ({ user, updateRequestId, history }) => {
     <BlockUi tag="div" blocking={blocking}>
       <RequestMenu selected="set" />
       <FormProvider {...methods}>
-        <form
-          onSubmit={handleSubmit(onSubmit, onError)}
-          className="keystation-form"
-        >
-          {/* <input
-            style={{ display: "none" }}
-            type="text"
-            tabIndex={-1}
-            spellCheck="false"
-            defaultValue={user.name}
-            onChange={(e) => {
-              onAccountChange(e);
-            }}
-            {...inputAccountRest}
-          />
-          <input
-            style={{ display: "none" }}
-            type="password"
-            autoComplete="current-password"
-            tabIndex={-1}
-            spellCheck="false"
-            onChange={(e) => {
-              onPasswordChange(e);
-            }}
-            {...inputPasswordRest}
-          /> */}
-          <div className="keystation-tx-info" id="tx-info">
-            <h3 className="send">Set</h3>
-            <div class="mb-3">
-              <label class="form-label">{t("creator")}</label>
-              {/* <p>{user.address} </p> */}
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{t("oracleScriptName")}</label>
-              <FormInput name="oscript_name" errorobj={errors} />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{t("description")}</label>
-              <FormInput name="des" errorobj={errors} />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{t("validatorCount")}</label>
-              <FormInput name="validator_count" errorobj={errors} />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{t("requestFees")}</label>
-              <FormInput name="request_fees" errorobj={errors} />
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{t("input")}</label>
-              <FormInput name="input" errorobj={errors} />
-              {showInput && (
-                <label className="file-upload">
-                  {/* <input
-                    type="file"
-                    id="input-file"
-                    onChange={(e) => {
-                      onFileChange(e);
-                      onInputFileChange(e);
-                    }}
-                    {...inputInputFileRest}
+        <div className={cx("set-request")}>
+          <form
+            onSubmit={handleSubmit(onSubmit, onError)}
+            className="keystation-form"
+          >
+            <FormInput
+              classNameCustom={`form-control, ${cx("account-input")}`}
+              name="account"
+              errorobj={errors}
+            />
+            <FormInput
+              classNameCustom={`form-control, ${cx("password-input")}`}
+              name="password"
+              errorobj={errors}
+              autoComplete="current-password"
+            />
+            <div className="keystation-tx-info" id="tx-info">
+              <h3 className="send">Set</h3>
+
+              <div className={cx("row", "row-custom")}>
+                <div class="col-4 text-right">{t("creator")}</div>
+                <div class="col-4">
+                  <p>{user?.address} </p>
+                </div>
+              </div>
+
+              <div className={cx("row", "row-custom")}>
+                <div class="col-4 text-right">{t("oracleScriptName")}</div>
+                <div class="col-4">
+                  <FormInput
+                    classNameCustom={`form-control, ${cx(
+                      "form-control-custom"
+                    )}`}
+                    name="oscript_name"
+                    errorobj={errors}
                   />
-                  <ErrorMessage
-                    errors={errors}
-                    name="input"
-                    render={({ message }) => (
-                      <p style={{ color: "red" }}>{message}</p>
-                    )}
-                  /> */}
-                  <i className="fa fa-cloud-upload" />{" "}
-                  <small id="filename">Input file json</small>{" "}
-                  {inputFile && (
-                    <i
-                      className="fa fa-trash"
-                      id="trash-input"
-                      onClick={clearFile}
+                </div>
+              </div>
+
+              <div className={cx("row", "row-custom")}>
+                <div class="col-4 text-right">{t("description")}</div>
+                <div class="col-4">
+                  <FormInput
+                    classNameCustom={`form-control, ${cx(
+                      "form-control-custom"
+                    )}`}
+                    name="des"
+                    errorobj={errors}
+                  />
+                </div>
+              </div>
+
+              <div className={cx("row", "row-custom")}>
+                <div class="col-4 text-right">{t("validatorCount")}</div>
+                <div class="col-4">
+                  <FormInput
+                    classNameCustom={`form-control, ${cx(
+                      "form-control-custom"
+                    )}`}
+                    name="validator_count"
+                    errorobj={errors}
+                  />
+                </div>
+              </div>
+
+              <div className={cx("row", "row-custom")}>
+                <div class="col-4 text-right">{t("requestFees")}</div>
+                <div class="col-4">
+                  <FormInput
+                    classNameCustom={`form-control, ${cx(
+                      "form-control-custom"
+                    )}`}
+                    name="request_fees"
+                    errorobj={errors}
+                  />
+                </div>
+              </div>
+
+              <div className={cx("row", "row-custom")}>
+                <div class="col-4 text-right">{t("input")}</div>
+                <div class="col-4">
+                  {_.isNil(inputFile) && (
+                    <FormInput
+                      classNameCustom={`form-control, ${cx(
+                        "form-control-custom"
+                      )}`}
+                      name="input"
+                      errorobj={errors}
+                      onInput={onType}
                     />
                   )}
-                </label>
-              )}
-            </div>
-            <div class="mb-3">
-              <label class="form-label">{t("output")}</label>
-              <FormInput name="expected_output" errorobj={errors} />
-              {showOutput && (
-                <label className="file-upload">
-                  {/* <input
-                    type="file"
-                    id="output-file"
-                    onChange={(e) => {
-                      onFileChange(e);
-                      onOutputFileChange(e);
-                    }}
-                    {...inputOutputFileRest}
-                  />
-                  <ErrorMessage
-                    errors={errors}
-                    name="expected_output"
-                    render={({ message }) => (
-                      <p style={{ color: "red" }}>{message}</p>
-                    )}
-                  /> */}
-                  <i className="fa fa-cloud-upload" />{" "}
-                  <small id="filename">Output file json</small>{" "}
-                  {/* {outputFile && (
-                    <i
-                      className="fa fa-trash"
-                      id="trash-output"
-                      onClick={clearFile}
-                      onChange={(e) => {
-                        onFileChange();
-                        onOutputFileChange(e);
-                      }}
-                      {...inputOutputFileRest}
+                  {showInput && (
+                    <>
+                      <FormInput
+                        classNameCustom={`form-control,${cx("file")}`}
+                        name="input_file"
+                        errorobj={errors}
+                        type="file"
+                        onChange={onFileChange}
+                      />
+                      <i className="fa fa-cloud-upload" />
+                      <small id="filename">Input file json</small>
+                      {inputFile && (
+                        <i
+                          className="fa fa-trash"
+                          name="trash_output"
+                          onClick={clearFile}
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className={cx("row", "row-custom")}>
+                <div class="col-4 text-right">{t("output")}</div>
+                <div class="col-4">
+                  {_.isNil(outputFile) && (
+                    <FormInput
+                      classNameCustom={`form-control, ${cx(
+                        "form-control-custom"
+                      )}`}
+                      name="expected_output"
+                      errorobj={errors}
+                      onInput={onType}
                     />
-                  )} */}
-                </label>
-              )}
+                  )}
+                  {showOutput && (
+                    <>
+                      <FormInput
+                        classNameCustom={`form-control, ${cx(
+                          "form-control-custom"
+                        )}, ${cx("file")}`}
+                        name="output_file"
+                        errorobj={errors}
+                        type="file"
+                        onChange={onFileChange}
+                      />
+                      <i className="fa fa-cloud-upload" />
+                      <small id="filename">Output file json</small>
+                      {outputFile && (
+                        <i
+                          className="fa fa-trash"
+                          name="trash_output"
+                          onClick={clearFile}
+                        />
+                      )}
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className={cx("row", "row-custom")}>
+                <div class="col-4 text-right">{t("memo")}</div>
+                <div class="col-4">
+                  <textarea
+                    id="memo"
+                    class={`form-control, ${cx("form-control-custom")}`}
+                    onChange={(e) => {
+                      onMemoChange(e);
+                    }}
+                    {...inputMemoRest}
+                  ></textarea>
+                </div>
+              </div>
+              <div className={`text-center, ${cx("row", "row-custom")}`}>
+                <div className={"offset-2 col-7"}>
+                  <Gas gas={gas} onChangeGas={setGas} />
+                  <Fee minFee={minFee} handleChooseFee={setFee} />
+                  <div class={`offset-6 col-4, ${cx("last-row-custom")}`}>
+                    <button
+                      onClick={handleClickSubmit}
+                      class="btn btn-primary"
+                      type="submit"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label">{t("memo")}</label>
-              {/* <textarea
-                id="memo"
-                class="form-control"
-                onChange={(e) => {
-                  onMemoChange(e);
-                }}
-                {...inputMemoRest}
-              ></textarea> */}
-            </div>
-            <Gas gas={gas} onChangeGas={setGas} />
-            <Fee minFee={minFee} handleChooseFee={setFee} />
-          </div>
-          <div className="tx-btn-wrap btn-center">
-            <button onClick={handleClickSubmit} type="submit">
-              Submit
-            </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </FormProvider>
 
       <div className="keystation-tx-json" id="tx-json"></div>

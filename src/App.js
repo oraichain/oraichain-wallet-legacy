@@ -9,8 +9,9 @@ import SignIn from "src/components/SignIn/SignIn";
 import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
 import SendTokens from "src/components/SendTokens";
+import "antd/dist/antd.css";
 
-const App = ({ }) => {
+const App = ({}) => {
   let persistor = persistStore(store);
 
   return (
