@@ -1,0 +1,136 @@
+
+.pin-info {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    background: #EAEAEA;
+  }
+  
+  .pin-display {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+  }
+  
+  .keypad {
+    padding: 16px;
+    background: white;
+  }
+  
+  .keypad--row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .keypad--button {
+    font-family: "Montserrat", sans-serif;
+    height: 48px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 100ms ease-out;
+  }
+  .keypad--button:active {
+    background: #EAEAEA;
+  }
+  
+  .confirmation-dots {
+    margin-bottom: 48px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .confirmation-dots.error {
+    animation-name: shake;
+    animation-duration: 300ms;
+  }
+  .confirmation-dots svg {
+    height: 24px;
+    max-height: 24px;
+    width: 139px;
+  }
+  .confirmation-dots .pin-circle {
+    transition: all 100ms ease-out;
+    fill: white;
+    stroke-width: 2px;
+    stroke: black;
+    outline-offset: -2px;
+    outline-width: 2px;
+  }
+  .confirmation-dots .pin-circle.entered {
+    fill: black;
+  }
+  .confirmation-dots .pin-circle.success {
+    fill: green;
+    stroke: green;
+  }
+  .confirmation-dots .pin-circle.error {
+    fill: red;
+    stroke: red;
+  }
+  
+  .circle-lock--container {
+    height: 72px;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+  }
+  
+  .circle-lock {
+    width: 80px;
+    height: 80px;
+    background: white;
+    border-radius: 1000px;
+    position: relative;
+    top: -40px;
+    box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.12);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+  .circle-lock .lock-icon {
+    color: #333;
+  }
+  
+  .page-title {
+    font-size: 28px;
+    line-height: 32px;
+    text-align: center;
+    font-weight: 700;
+  }
+  
+  .pin-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  @keyframes shake {
+    10%, 90% {
+      transform: translate3d(-1px, 0, 0);
+    }
+    20%, 80% {
+      transform: translate3d(2px, 0, 0);
+    }
+    30%, 50%, 70% {
+      transform: translate3d(-4px, 0, 0);
+    }
+    40%, 60% {
+      transform: translate3d(4px, 0, 0);
+    }
+  }

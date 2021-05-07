@@ -9,10 +9,10 @@ import SignIn from "src/components/SignIn/SignIn";
 import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
 import SendTokens from "src/components/SendTokens";
+import Pin from "src/components/Pin";
 
 const App = ({ }) => {
   let persistor = persistStore(store);
-
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -26,6 +26,11 @@ const App = ({ }) => {
             <Route path="/send-tokens">
               <MainLayout>
                 <SendTokens />
+              </MainLayout>
+            </Route>
+            <Route path="/pin">
+              <MainLayout>
+                <Pin />
               </MainLayout>
             </Route>
             <Route path="/">
