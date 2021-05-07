@@ -1,18 +1,12 @@
+.pin-wrapper {
 
-.pin-info {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: white;
-    background: #EAEAEA;
-  }
-  
   .pin-display {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    width: 18%;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     background: white;
   }
   
@@ -106,20 +100,6 @@
     color: #333;
   }
   
-  .page-title {
-    font-size: 28px;
-    line-height: 32px;
-    text-align: center;
-    font-weight: 700;
-  }
-  
-  .pin-info {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
   @keyframes shake {
     10%, 90% {
       transform: translate3d(-1px, 0, 0);
@@ -134,3 +114,4 @@
       transform: translate3d(4px, 0, 0);
     }
   }
+}

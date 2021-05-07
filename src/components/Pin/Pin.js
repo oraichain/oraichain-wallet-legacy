@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { ReactComponent as ArrowRightIcon } from "src/assets/icons/arrow-right.svg";
 import Cosmos from "@oraichain/cosmosjs";
+import { ArrowBack, Lock } from '@material-ui/icons';
 import Big from 'big.js';
 
 import PinWrap, { openPinWrap } from "src/components/PinWrap";
@@ -22,11 +23,11 @@ const SendTokens = () => {
     const user = useSelector(state => state.user);
     
 
-    return <div className={cx("send-token")}>
+    return <div className={cx("pin-wrapper")}>
         <div className={cx("pin-display")}>
           <div className={cx("circle-lock--container")}>
             <div className={cx("circle-lock")}>
-              <i className={cx("material-icons lock-icon")}>lock</i>
+              <Lock />
             </div>
           </div>
           <div className={cx("confirmation-dots")}>
@@ -56,9 +57,9 @@ const SendTokens = () => {
               <div className={cx("keypad--button")} data-value="9">9</div>
             </div>
             <div className={cx("keypad--row")}>
-              <div className={cx("keypad--button keyboard--button__back-arrow")}><i className={cx("material-icons")}>arrow_back</i></div>
+              <div className={cx("keypad--button")}><ArrowBack /></div>
               <div className={cx("keypad--button")} data-value="0">0</div>
-              <div className={cx("keypad--button keyboard--button__x")}>x</div>
+              <div className={cx("keypad--button")}>x</div>
             </div>
           </div>
         </div>
