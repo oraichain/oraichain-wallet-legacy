@@ -100,7 +100,8 @@ const Swap = ({ user }) => {
         ).then((res) => res.text());
         setBalance(JSON.parse(data).data.balance);
       } catch (ex) {
-        alert(ex.message);
+        console.log("cannot find contract address")
+        setBalance(0);
       } finally {
         setBlocking(false);
       }

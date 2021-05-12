@@ -44,7 +44,7 @@ const network =
 const path = url.searchParams.get('path');
 const lcd =
   url.searchParams.get('lcd') ||
-  (networks[network]?.lcd ?? 'http://localhost:1317');
+  (networks[network]?.lcd ?? 'https://testnet-lcd.orai.io');
 // init cosmos version
 const cosmos = new Cosmos(lcd, network);
 const symbol = networks[network]?.denom ?? 'orai';
