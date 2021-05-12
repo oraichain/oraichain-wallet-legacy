@@ -7,7 +7,7 @@ import 'react-block-ui/style.css';
 import Cosmos from '@oraichain/cosmosjs';
 import PinWrap, { openPinWrap } from './PinWrap';
 const message = Cosmos.message;
-const contract = "orai1g2qdlrysa5vg87ywrvswjy3st943a42gcu224w";
+const contractDefault = "orai1g2qdlrysa5vg87ywrvswjy3st943a42gcu224w";
 
 const Swap = ({ user }) => {
   const $ = window.jQuery;
@@ -22,7 +22,8 @@ const Swap = ({ user }) => {
   const onWithdraw = () => {
     // will allow return childKey from Pin
     const amount = $('#amount').val().trim();
-    const msgSend = getWithdrawMessage(amount);
+    const contract = $('#contract').val().trim();
+    const msgSend = getWithdrawMessage(contract, amount);
     setTxBody(getTxBody(msgSend));
     openPinWrap();
   }
@@ -30,17 +31,30 @@ const Swap = ({ user }) => {
   const onSwap = () => {
     // will allow return childKey from Pin
     const amount = $('#amount').val().trim();
-    const msgSend = getSwapMessage(amount);
+    const contract = $('#contract').val().trim();
+    const msgSend = getSwapMessage(contract, amount);
     setTxBody(getTxBody(msgSend));
     openPinWrap();
   }
 
-  const getWithdrawMessage = (amount) => {
+  const getWithdrawMessage = (contract, amount) => {
     const msg = Buffer.from(JSON.stringify({ withdraw: { amount: amount } }));
     const msgSend = new message.cosmwasm.wasm.v1beta1.MsgExecuteContract({
       contract,
       msg,
       sender: user.address === "" ? null : user.address,
+    });
+    return msgSend
+  };
+
+  const getSwapMessage = (contract, amount) => {
+    const msg = Buffer.from(JSON.stringify({ swap: {} }));
+    const sent_funds = amount ? [{ denom: cosmos.bech32MainPrefix, amount }] : null;
+    const msgSend = new message.cosmwasm.wasm.v1beta1.MsgExecuteContract({
+      contract,
+      msg,
+      sender: user.address === "" ? null : user.address,
+      sent_funds,
     });
     return msgSend
   };
@@ -55,18 +69,6 @@ const Swap = ({ user }) => {
       messages: [msgSendAny]
     });
   }
-
-  const getSwapMessage = (amount) => {
-    const msg = Buffer.from(JSON.stringify({ swap: {} }));
-    const sent_funds = amount ? [{ denom: cosmos.bech32MainPrefix, amount }] : null;
-    const msgSend = new message.cosmwasm.wasm.v1beta1.MsgExecuteContract({
-      contract,
-      msg,
-      sender: user.address === "" ? null : user.address,
-      sent_funds,
-    });
-    return msgSend
-  };
 
   const onChildKey = async (childKey) => {
     try {
@@ -85,6 +87,7 @@ const Swap = ({ user }) => {
     try {
       const data = await fetch(`${cosmos.url}/cosmos/bank/v1beta1/balances/${user.address}`).then((res) => res.json());
       const balance = data.balances[0];
+      const contract = $('#contract').val().trim();
       $('#balance').html(`(${balance.amount} ${balance.denom})`);
       const tokenBalance = { balance: { address: user.address } };
       try {
@@ -127,7 +130,7 @@ const Swap = ({ user }) => {
             </strong>
           </p>
           <p>
-            {'Contract balance: '}{balance}{' ORAI'}
+            {'Current balance of your address in contract: '}{balance}{' ORAI'}
             <strong>
               <small id="balance"></small>
             </strong>
@@ -135,6 +138,10 @@ const Swap = ({ user }) => {
           <div className="field">
             <span>{t('amount')} (orai)</span>
             <input id="amount" />
+          </div>
+          <div className="field">
+            <span>{t('contract address')}</span>
+            <input id="contract" defaultValue={contractDefault} />
           </div>
         </div>
         <div className="tx-btn-wrap btn-center">
