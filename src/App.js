@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import * as actions from './actions';
 import SignIn from './components/SignIn';
 import Send from './components/Send';
+import SwapWithdraw from './components/SwapWithdraw';
 import Import from './components/Import';
 import ImportPrivateKey from './components/ImportPrivateKey';
 import CreateWallet from './components/CreateWallet';
@@ -227,6 +228,11 @@ const App = ({ user, updateUser }) => {
             isLoggedIn={isLoggedIn}
             path={`${match.url}/send`}
             component={Send}
+          />
+          <PrivateRoute
+            isLoggedIn={isLoggedIn}
+            path={`${match.url}/swapwithdraw`}
+            component={SwapWithdraw}
           />
           <PrivateRoute
             isLoggedIn={isLoggedIn}

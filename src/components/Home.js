@@ -20,6 +20,9 @@ const Home = () => {
       <Link to={`/${i18n.language}/airequest/set`} className="button full">
         {t('interactRequest')}
       </Link>
+      <Link to={`/${i18n.language}/swapwithdraw`} className="button full">
+        {t('Swap and Withdaw')}
+      </Link>
     </div>
   );
 };
