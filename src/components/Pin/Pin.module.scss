@@ -14,21 +14,60 @@
   .keypad {
     background: white;
     margin-bottom: 60px;
+    
+    &-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+    }
+
+    &-button {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 100ms ease-out;
+    }
+
+    &-button:active {
+      background: #EAEAEA;
+    }
+
+    .reset {
+      &-button {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: all 100ms ease-out;
+        background-color: #F3574F;
+        color: white;
+      }
+  
+      &-button:active {
+        background: #EAEAEA;
+      }
+    }
   }
 
   .numpad {
-    .keypad-row {
-      margin-bottom: 23px;
-    }
+    .keypad {
+      &-row {
+        margin-bottom: 23px;
+      }
 
-    .keypad-button {
-      font-family: Source Sans Pro;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 36px;
-      width: 47px;
-      height: 47px;
-      margin: 0 61.5px;
+      &-button {
+        font-family: Source Sans Pro;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 36px;
+        width: 47px;
+        height: 47px;
+        margin: 0 61.5px;
+      }
     }
 
     .reset-button {
@@ -40,21 +79,23 @@
   }
 
   .charpad {
-    .keypad-row {
-      margin-bottom: 16px;
-    }
+    .keypad {
+      &-row {
+        margin-bottom: 16px;
+      }
 
-    .keypad-button {
-      font-family: SF Pro Text;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 22px;
-      width: 63px;
-      height: 62px;
-      border: 1px solid #C1C1C1;
-      box-sizing: border-box;
-      border-radius: 9px;
-      margin: 0 3.5px;
+      &-button {
+        font-family: SF Pro Text;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 22px;
+        width: 63px;
+        height: 62px;
+        border: 1px solid #C1C1C1;
+        box-sizing: border-box;
+        border-radius: 9px;
+        margin: 0 3.5px;
+      }
     }
 
     .reset-button {
@@ -65,123 +106,88 @@
     }
   }
   
-  .keypad-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .keypad-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 100ms ease-out;
-  }
-  .keypad-button:active {
-    background: #EAEAEA;
-  }
-
-  .reset-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: all 100ms ease-out;
-    background-color: #F3574F;
-    color: white;
-  }
-  .reset-button:active {
-    background: #EAEAEA;
-  }
-  
   .confirmation-dots {
     margin: 55px 0;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-  }
-  
-  .confirmation-dots svg {
-    width: 139px;
-    height: 24px;
-    max-height: 24px;
-  }
-  .confirmation-dots .pin-circle {
-    transition: all 100ms ease-out;
-    fill: white;
-    stroke-width: 2px;
-    stroke: black;
-    outline-offset: -2px;
-    outline-width: 2px;
-  }
-  .confirmation-dots .pin-circle.entered {
-    fill: black;
-  }
-  .confirmation-dots .pin-circle.success {
-    fill: green;
-    stroke: green;
-  }
-  .confirmation-dots .pin-circle.error {
-    animation-name: shake;
-    animation-duration: 200ms;
-    fill: red;
-    stroke: red;
-  }
-  
-  .circle-lock--container {
-    height: 72px;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    flex-direction: row;
+
+    svg {
+      width: 139px;
+      height: 24px;
+      max-height: 24px;
+    }
+
+    .pin-circle {
+      transition: all 100ms ease-out;
+      fill: white;
+      stroke-width: 2px;
+      stroke: black;
+      outline-offset: -2px;
+      outline-width: 2px;
+
+      &.entered {
+        fill: black;
+      }
+
+      &.success {
+        fill: green;
+        stroke: green;
+      }
+
+      &.error {
+        animation-name: shake;
+        animation-duration: 200ms;
+        fill: red;
+        stroke: red;
+      }
+    }
   }
 
-  .pin-title1 {
-    margin-top: 60px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 32px;
-    line-height: 120%;
-    letter-spacing: -0.5px;
-    color: #181818;
-  }
+  .pin {
+    &-title1 {
+      margin-top: 60px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      font-family: Roboto;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 32px;
+      line-height: 120%;
+      letter-spacing: -0.5px;
+      color: #181818;
+    }
 
-  .pin-title2 {
-    margin-top: 16px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    font-family: Source Sans Pro;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 150%;
-    color: #181818;
-  }
+    &-title2 {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      font-family: Source Sans Pro;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 14px;
+      line-height: 150%;
+      color: #181818;
+    }
 
-  .pin-title3 {
-    margin-top: 8px;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    font-family: Source Sans Pro;
-    font-style: normal;
-    font-weight: 600;
-    font-size: 16px;
-    line-height: 150%;
-    color: #F3574F;
+    &-title3 {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      font-family: Source Sans Pro;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 150%;
+      color: #F3574F;
+    }
   }
   
   @keyframes shake {
