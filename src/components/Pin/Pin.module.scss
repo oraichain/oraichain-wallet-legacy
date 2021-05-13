@@ -2,58 +2,114 @@
 
   .pin-display {
     position: fixed;
-    width: 18%;
+    width: 763px;
     top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     background: white;
+    border-radius: 10px;
   }
   
   .keypad {
-    padding: 16px;
     background: white;
+    margin-bottom: 60px;
+  }
+
+  .numpad {
+    .keypad-row {
+      margin-bottom: 23px;
+    }
+
+    .keypad-button {
+      font-family: Source Sans Pro;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 36px;
+      width: 47px;
+      height: 47px;
+      margin: 0 61.5px;
+    }
+
+    .reset-button {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      margin: 0 65px;
+    }
+  }
+
+  .charpad {
+    .keypad-row {
+      margin-bottom: 16px;
+    }
+
+    .keypad-button {
+      font-family: SF Pro Text;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 22px;
+      width: 63px;
+      height: 62px;
+      border: 1px solid #C1C1C1;
+      box-sizing: border-box;
+      border-radius: 9px;
+      margin: 0 3.5px;
+    }
+
+    .reset-button {
+      width: 63px;
+      height: 62px;
+      border-radius: 9px;
+      margin: 0 3.5px;
+    }
   }
   
-  .keypad--row {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .keypad--button {
-    font-family: "Montserrat", sans-serif;
-    height: 48px;
-    width: 100%;
+  .keypad-row {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    font-size: 24px;
-    font-weight: 600;
+  }
+  
+  .keypad-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     cursor: pointer;
     transition: all 100ms ease-out;
   }
-  .keypad--button:active {
+  .keypad-button:active {
+    background: #EAEAEA;
+  }
+
+  .reset-button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 100ms ease-out;
+    background-color: #F3574F;
+    color: white;
+  }
+  .reset-button:active {
     background: #EAEAEA;
   }
   
   .confirmation-dots {
-    margin-bottom: 48px;
+    margin: 55px 0;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
   }
-  .confirmation-dots.error {
-    animation-name: shake;
-    animation-duration: 300ms;
-  }
+  
   .confirmation-dots svg {
+    width: 139px;
     height: 24px;
     max-height: 24px;
-    width: 139px;
   }
   .confirmation-dots .pin-circle {
     transition: all 100ms ease-out;
@@ -71,6 +127,8 @@
     stroke: green;
   }
   .confirmation-dots .pin-circle.error {
+    animation-name: shake;
+    animation-duration: 200ms;
     fill: red;
     stroke: red;
   }
@@ -82,22 +140,48 @@
     justify-content: center;
     flex-direction: row;
   }
-  
-  .circle-lock {
-    width: 80px;
-    height: 80px;
-    background: white;
-    border-radius: 1000px;
-    position: relative;
-    top: -40px;
-    box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.12);
+
+  .pin-title1 {
+    margin-top: 60px;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 120%;
+    letter-spacing: -0.5px;
+    color: #181818;
   }
-  .circle-lock .lock-icon {
-    color: #333;
+
+  .pin-title2 {
+    margin-top: 16px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Source Sans Pro;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+    color: #181818;
+  }
+
+  .pin-title3 {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    font-family: Source Sans Pro;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 150%;
+    color: #F3574F;
   }
   
   @keyframes shake {
