@@ -9,7 +9,9 @@ import SignIn from "src/components/SignIn/SignIn";
 import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
 import SendTokens from "src/components/SendTokens";
-import Pin from "src/components/Pin";
+import ImportWallet from "./components/ImportWallet";
+import ImportPrivateKey from "./components/ImportPrivateKey";
+import CreateWallet from "./components/CreateWallet";
 
 const App = ({ }) => {
   let persistor = persistStore(store);
@@ -23,14 +25,18 @@ const App = ({ }) => {
                 <SignIn />
               </AuthLayout>
             </Route>
+            <Route path="/create-wallet">
+                <CreateWallet />
+            </Route>
+            <Route path="/import-wallet">
+                <ImportWallet />
+            </Route>
+            <Route path="/import-private-key">
+                <ImportPrivateKey />
+            </Route>
             <Route path="/send-tokens">
               <MainLayout>
                 <SendTokens />
-              </MainLayout>
-            </Route>
-            <Route path="/pin">
-              <MainLayout>
-                <Pin />
               </MainLayout>
             </Route>
             <Route path="/">

@@ -31,7 +31,6 @@ const SignIn = () => {
                         <Field
                             title="Walletname"
                             input={<TextField type="text" variant="light" name="walletName" placeholder="" {...register("walletName")} />}
-                            error={<ErrorText>Nhập vào tên wallet</ErrorText>}
                         />
                         <Suggestion text="Unavailable in guest mode or incognito mode" />
                         <Button variant="primary" size="lg" onClick={onSubmit}>

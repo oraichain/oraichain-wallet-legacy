@@ -5,10 +5,19 @@
     align-items: center;
     cursor: pointer;
 
+    &-submit {
+        width: 100%;
+    }
+
     &-primary {
         color: #FFFFFF;
         background: #1A87FF;
+        border: 1px solid #1A87FF;
 
+        &:hover {
+            color: #181818;
+            background: #FFFFFF;
+        }
     }
 
     &-outline-primary {

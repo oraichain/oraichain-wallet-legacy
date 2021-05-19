@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import styles from "./Field.module.scss";
 const cx = cn.bind(styles);
 
-const Field = ({ title, input, error }) => {
+const Field = ({ title, input }) => {
     return <div className={cx("field")}>
         <div className={cx("field-title")}>
             {title}
@@ -12,16 +12,12 @@ const Field = ({ title, input, error }) => {
         <div className={cx("field-input")}>
             {input}
         </div>
-        <div className={cx("field-error")}>
-            {error}
-        </div>
     </div>;
 };
 
 Field.propTypes = {
     title: PropTypes.any,
-    input: PropTypes.any,
-    error: PropTypes.any,
+    input: PropTypes.any
 };
 Field.defaultProps = {};
 

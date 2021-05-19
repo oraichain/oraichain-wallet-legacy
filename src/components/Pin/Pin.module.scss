@@ -1,4 +1,11 @@
 .pin-wrapper {
+  width: 100vw;
+  height: 100vh;
+  background-image: url("../../images/sigin_bg.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed;
 
   .pin-display {
     position: fixed;
@@ -143,6 +150,13 @@
         stroke: red;
       }
     }
+  }
+
+  .close {
+    position: absolute;
+    color: black;
+    top: 2px;
+    right: 2px;
   }
 
   .pin {

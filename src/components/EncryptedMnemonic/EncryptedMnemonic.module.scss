@@ -1,0 +1,125 @@
+.card {
+    width: 100%;
+    background: #ffffff;
+    box-shadow: 0px 16px 24px rgba(0, 0, 0, 0.05),
+        0px 6px 30px rgba(0, 0, 0, 0.04), 0px 8px 10px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+
+    a {
+        text-decoration: none;
+
+        :hover {
+            text-decoration: underline;
+            color: #757575;
+        }
+    }
+
+    &-header {
+        padding: 60px 70px 15px 70px;
+        color: rgba(24, 24, 25, 0.9);
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 32px;
+        line-height: 120%;
+    }
+
+    &-body {
+        padding-left: 70px;
+        padding-right: 70px;
+        padding-top: 15px;
+        padding-bottom: 97px;
+    }
+
+    &-footer {
+        padding-left: 70px;
+        padding-right: 70px;
+        padding-top: 0;
+        padding-bottom: 40px;
+    }
+
+    .sub-card-header {
+        color: #181818;
+        font-family: Source Sans Pro;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 150%;
+    }
+    
+    .copy-message {
+        font-family: Source Sans Pro;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 150%;
+        color: #757575;
+    }
+    
+    .mnemonics {
+        position: relative;
+        width: 100%;
+    
+        .copy {
+            position: absolute;
+            display: flex;
+            flex-direction: row;
+            top: 2px;
+            right: 14px;
+            border-radius: 5px;
+            
+            &:hover {
+                cursor: pointer;
+            }
+    
+            &:active {
+                background-color: #EEEEEE;
+            }
+        
+            &-image {
+                display: inline-block;
+                width: 15.75px;
+                height: 18px;
+                margin-right: 8.25px;
+            }
+        
+            &-btn {
+                display: inline-block;
+                font-family: Source Sans Pro;
+                font-style: normal;
+                font-weight: 600;
+                font-size: 14px;
+                line-height: 150%;
+                color: #757575;
+            }
+        }
+    }
+    
+    .text-field {
+        box-sizing: border-box;
+        width: 100%;
+        font-family: Source Sans Pro;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 150%;
+        padding: 15px 20px;
+        color: #181818;
+        background: #FFFFFF;
+        border: 1px solid #E0E0E0;
+        border-radius: 5px;
+    
+        &:focus-visible {
+            outline: none;
+        }
+    
+        &:focus {
+            background: #EEEEEE;
+        }
+    }
+    
+    .text-area {
+        height: 150px;
+        resize: none;
+    }
+}
