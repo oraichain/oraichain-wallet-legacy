@@ -42,9 +42,7 @@ const App = ({ }) => {
         <Router>
           <Switch>
             <Route path="/signin">
-              <AuthLayout>
                 <SignIn />
-              </AuthLayout>
             </Route>
             <Route path="/create-wallet">
                 <CreateWallet />

@@ -7,7 +7,7 @@ import styles from "./EncryptedMnemonic.module.scss";
 import AuthLayout from "../AuthLayout";
 import copyIcon from "src/assets/icons/copy.svg";
 import ErrorText from "../ErrorText";
-import {CopyToClipboard} from 'react-copy-to-clipboard';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Field from "../Field";
 import { useHistory } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ const EncryptedMnemonic = (props) => {
     const history = useHistory();
 
     const methods = useForm();
-    const { register:importWallet, handleSubmit, formState: { errors } } = methods;
+    const { register: importWallet, handleSubmit, formState: { errors } } = methods;
 
     const [copied, setCopied] = useState(false);
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
@@ -41,6 +41,7 @@ const EncryptedMnemonic = (props) => {
             }, 1000);
         } else {
             history.push();
+            localStorage.setItem(props.walletName + '-password', props.encryptedMnemonics);
             goToNextStep()
         }
     };
@@ -56,7 +57,7 @@ const EncryptedMnemonic = (props) => {
                         title="Encrypted mnemonic pharse"
                         input={<textarea className={cx("text-field", "text-area")} defaultValue={props.encryptedMnemonics} disabled="disabled" placeholder="" />}
                     />
-                    
+
                     {copied && <div className={cx("copy-message")}>Encrypted mnemonic phrase is copied.</div>}
                     <CopyToClipboard onCopy={copyToClipboard} text={props.encryptedMnemonics}>
                         <div className={cx("copy")}>
@@ -75,11 +76,11 @@ const EncryptedMnemonic = (props) => {
                         />
                         {errors.mnemonics && <ErrorText>Invalid mnemonics.</ErrorText>}
                         {invalidMnemonics && <ErrorText>Encrypted mnemonic phrase does not match.</ErrorText>}
-                        
+
                         <a href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5" target="blank">
                             <Suggestion text="Why do I have to encrypt my mnemonic pharse?" />
                         </a>
-                        
+
                         <Button variant="primary" size="lg" submit={true}>
                             Next
                         </Button>

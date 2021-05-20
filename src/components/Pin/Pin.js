@@ -4,10 +4,17 @@ import { ArrowBack, Close } from '@material-ui/icons';
 import PropTypes from "prop-types";
 import styles from "./Pin.module.scss";
 import { AES, enc } from "crypto-js";
+import { useHistory } from "react-router";
+import { useTranslation } from "react-i18next";
+import { getChildkeyFromDecrypted } from '../../utils';
 
 const cx = cn.bind(styles);
 
-const Pin = ({ setStep, currentStep, message, checkPin, mnemonics, encryptedMnemonics, setEncryptedMnemonics }) => {
+const Pin = ({ setStep, setEncryptedMnemonics, updateUser, closePopup, message, currentStep, pinType, walletName, mnemonics, encryptedMnemonics }) => {
+  const history = useHistory();
+  const { t, i18n } = useTranslation();
+  const cosmos = window.cosmos
+
   let [pinArray, setPinArray] = useState([]);
   const [pinEvaluateStatus, setPinEvaluateStatus] = useState("");
 
@@ -39,21 +46,38 @@ const Pin = ({ setStep, currentStep, message, checkPin, mnemonics, encryptedMnem
     }
 
     if (pinArray.length === 5) {
-      checkPin ? evaluatePin() : encryptMnemonic()
+      (pinType === 'confirm' || pinType === 'signin' || pinType === 'tx') ? evaluatePin() : encryptMnemonic()
     }
   }
 
   const evaluatePin = () => {
     const enteredPin = pinArray.join('');
-
-    if (decryptAES(encryptedMnemonics, enteredPin) !== '') {
+    const decryptedMnemonics = decryptAES(encryptedMnemonics, enteredPin)
+    if (decryptedMnemonics !== '') {
 
       setTimeout(() => {
         setPinEvaluateStatus("success")
         setTimeout(() => {
-          goToNextStep()
+          if (pinType === 'confirm') {
+            goToNextStep()
+          } else if (pinType === 'signin') {
+            const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
+            const address = cosmos.getAddress(childKey);
+
+            // go to transaction with address, other go to send
+            // updateUser({ name: walletName, address });
+            if (window.stdSignMsgByPayload) {
+              history.push(`/${i18n.language}/transaction`);
+            } else if (closePopup) {
+              window.opener.postMessage({ address: address, account: walletName}, "*");
+              window.close();
+            } else {
+              // window.postMessage({ address: address, account: walletName}, "*");
+              history.push(`/${i18n.language}/`);
+            }
+          }
         }, 300);
-      }, 250);
+      }, 200);
 
     } else {
 
@@ -63,7 +87,7 @@ const Pin = ({ setStep, currentStep, message, checkPin, mnemonics, encryptedMnem
           setPinEvaluateStatus("")
           setPinArray([])
         }, 300);
-      }, 250);
+      }, 200);
 
     }
   }

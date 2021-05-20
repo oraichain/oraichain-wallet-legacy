@@ -52,6 +52,8 @@ const ImportWallet = () => {
         } else {
             data.address = address
             setData(data);
+            setInvalidMnemonics(false);
+            setInvalidMnemonicsChecksum(false);
             setStep(2);
         }
     }
@@ -97,7 +99,7 @@ const ImportWallet = () => {
         <div>
             {step === 1 && <MainLayout />}
             {step === 2 && <Pin setStep={setStep} currentStep={step} message="Please set your PIN" mnemonics={data.mnemonics} setEncryptedMnemonics={setEncryptedMnemonics} />}
-            {step === 3 && <Pin setStep={setStep} currentStep={step} message="Please confirm your PIN" checkPin={true} encryptedMnemonics={encryptedMnemonics} />}
+            {step === 3 && <Pin setStep={setStep} currentStep={step} message="Please confirm your PIN" pinType='confirm' encryptedMnemonics={encryptedMnemonics} />}
             {step === 4 && <EncryptedMnemonic setStep={setStep} currentStep={step} walletName={data.walletName} encryptedMnemonics={encryptedMnemonics} />}
             {step === 5 && <ConnectWallet account={data.walletName} address={data.address} />}
         </div>

@@ -6,10 +6,15 @@ import Button from "src/components/Button";
 import styles from "./ConnectWallet.module.scss";
 import AuthLayout from "../AuthLayout";
 import keyChain from "src/assets/img/keychain.png";
+import { useHistory } from "react-router";
+import { useTranslation } from "react-i18next";
 
 const cx = cn.bind(styles);
 
 const ConnectWallet = (props) => {
+    const history = useHistory();
+    const { t, i18n } = useTranslation();
+
     const methods = useForm();
     const { handleSubmit } = methods;
 
@@ -18,19 +23,13 @@ const ConnectWallet = (props) => {
 
     const sendEventToParent = () => {
         try {
-            window.postMessage(
-                { address: props.address, account: props.account },
-                '*'
-            );
-            console.log(props)
+            // window.postMessage({ address: props.address, account: props.account }, "*");
+            history.push(`/${i18n.language}/`);
         } catch(e) {
             console.log(e)
         }
         // try {
-        //     window.postMessage(
-        //         { address: props.address, account: props.account },
-        //         '*'
-        //     );
+        //     window.opener.postMessage({ address: props.address, account: props.account }, "*");
         // } catch(e) {
         //     console.log(e);
         // }
