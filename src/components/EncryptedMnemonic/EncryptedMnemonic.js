@@ -9,14 +9,22 @@ import copyIcon from "src/assets/icons/copy.svg";
 import ErrorText from "../ErrorText";
 import {CopyToClipboard} from 'react-copy-to-clipboard';
 import Field from "../Field";
+import { useHistory } from 'react-router-dom';
 
 const cx = cn.bind(styles);
 
 const EncryptedMnemonic = (props) => {
+    const history = useHistory();
+
     const methods = useForm();
     const { register:importWallet, handleSubmit, formState: { errors } } = methods;
 
     const [copied, setCopied] = useState(false);
+    const [invalidMnemonics, setInvalidMnemonics] = useState(false);
+
+    const goToNextStep = () => {
+        props.setStep(props.currentStep + 1);
+    }
 
     const copyToClipboard = () => {
         setCopied(true)
@@ -25,8 +33,16 @@ const EncryptedMnemonic = (props) => {
         }, 1000);
     };
 
-    const onSubmit = () => {
-        // to do
+    const onSubmit = (data) => {
+        if (data.mnemonics !== props.encryptedMnemonics) {
+            setInvalidMnemonics(true)
+            setTimeout(() => {
+                setInvalidMnemonics(false)
+            }, 1000);
+        } else {
+            history.push();
+            goToNextStep()
+        }
     };
 
     return (
@@ -38,7 +54,7 @@ const EncryptedMnemonic = (props) => {
                 <div className={cx("mnemonics")}>
                     <Field
                         title="Encrypted mnemonic pharse"
-                        input={<textarea className={cx("text-field", "text-area")} defaultValue={props.encryptedMnemonics} disabled="disabled" name="mnemonics" placeholder="" />}
+                        input={<textarea className={cx("text-field", "text-area")} defaultValue={props.encryptedMnemonics} disabled="disabled" placeholder="" />}
                     />
                     
                     {copied && <div className={cx("copy-message")}>Encrypted mnemonic phrase is copied.</div>}
@@ -52,11 +68,13 @@ const EncryptedMnemonic = (props) => {
 
                 <FormProvider {...methods} >
                     <form onSubmit={handleSubmit(onSubmit)}>
+                        <input type="text" className={cx("text-field-hidden")} name="account" value={props.walletName} placeholder="" {...importWallet("account", { required: true })} />
                         <Field
                             title="Encrypted mnemonic pharse"
-                            input={<input type="password" className={cx("text-field")} name="encryptedMnemonics" placeholder="" {...importWallet("encryptedMnemonics", { required: true })} />}
+                            input={<input type="password" className={cx("text-field")} name="mnemonics" autoComplete="off" placeholder="" {...importWallet("mnemonics", { required: true })} />}
                         />
-                        {(errors.encryptedMnemonics) && <ErrorText>Invalid account.</ErrorText>}
+                        {errors.mnemonics && <ErrorText>Invalid mnemonics.</ErrorText>}
+                        {invalidMnemonics && <ErrorText>Encrypted mnemonic phrase does not match.</ErrorText>}
                         
                         <a href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5" target="blank">
                             <Suggestion text="Why do I have to encrypt my mnemonic pharse?" />

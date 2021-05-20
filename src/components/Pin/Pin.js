@@ -46,7 +46,7 @@ const Pin = ({ setStep, currentStep, message, checkPin, mnemonics, encryptedMnem
   const evaluatePin = () => {
     const enteredPin = pinArray.join('');
 
-    if (decryptAES(encryptedMnemonics, enteredPin) === mnemonics) {
+    if (decryptAES(encryptedMnemonics, enteredPin) !== '') {
 
       setTimeout(() => {
         setPinEvaluateStatus("success")

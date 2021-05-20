@@ -9,21 +9,52 @@ import Pin from "../Pin";
 import EncryptedMnemonic from "../EncryptedMnemonic";
 import ErrorText from "../ErrorText";
 import Field from "../Field";
+import { cleanMnemonics, countWords } from '../../utils';
+import ConnectWallet from "../ConnectWallet";
 
 const cx = cn.bind(styles);
 
 const ImportWallet = () => {
     const methods = useForm();
     const { register, handleSubmit, formState: { errors } } = methods;
+    const cosmos = window.cosmos;
 
     const [step, setStep] = useState(1);
     const [data, setData] = useState({});
     const [encryptedMnemonics, setEncryptedMnemonics] = useState('');
+    const [invalidMnemonics, setInvalidMnemonics] = useState(false);
+    const [invalidMnemonicsChecksum, setInvalidMnemonicsChecksum] = useState(false);
+
+    var address = '';
+    const isMnemonicsValid = (mnemonics, disablechecksum = false) => {
+        let validFlag = true;
+        // To check the checksum, it is a process to check whether there is an error in creating an address, so you can input any path and prefix.
+        try {
+          if (disablechecksum) {
+            address = (cosmos.getAddress(mnemonics, false));
+          } else {
+            address = (cosmos.getAddress(cleanMnemonics(mnemonics)));
+          }
+        } catch (e) {
+          validFlag = false;
+        }
+        return validFlag;
+    };
 
     const onSubmit = (data) => {
-        setData(data)
-        setStep(2)
-    };
+        const mnemonic = data.mnemonics.trim();
+        if (countWords(mnemonic) !== 12 && countWords(mnemonic) !== 16 && countWords(mnemonic) !== 24) {
+            setInvalidMnemonics(true);
+            setInvalidMnemonicsChecksum(false);
+        } else if (!isMnemonicsValid(mnemonic)) {
+            setInvalidMnemonics(false);
+            setInvalidMnemonicsChecksum(true);
+        } else {
+            data.address = address
+            setData(data);
+            setStep(2);
+        }
+    }
 
     const MainLayout = () =>
         <AuthLayout><div className={cx("card")}>
@@ -35,13 +66,14 @@ const ImportWallet = () => {
                             title="Walletname"
                             input={<input type="text" className={cx("text-field")} defaultValue={data.walletName} name="walletName" placeholder="" {...register("walletName", { required: true })} />}
                         />
+                        {errors.walletName && <ErrorText>Invalid account.</ErrorText>}
 
                         <Field
                             title="Mnemonics"
                             input={<textarea className={cx("text-field", "text-area")} defaultValue={data.mnemonics} name="mnemonics" placeholder="" {...register("mnemonics", { required: true })} />}
                         />
-
-                        {(errors.mnemonics || errors.walletName) && <ErrorText>Invalid account.</ErrorText>}
+                        {(errors.mnemonics || invalidMnemonics) && <ErrorText>Mnemonics is not valid.</ErrorText>}
+                        {invalidMnemonicsChecksum && <ErrorText>Invalid mnemonics checksum error.</ErrorText>}
 
                         <Suggestion text="Enter 12 / 16 / 24 words including spaces. Mnemonicphrase is encrypted and stored in Keychain." />
 
@@ -65,8 +97,9 @@ const ImportWallet = () => {
         <div>
             {step === 1 && <MainLayout />}
             {step === 2 && <Pin setStep={setStep} currentStep={step} message="Please set your PIN" mnemonics={data.mnemonics} setEncryptedMnemonics={setEncryptedMnemonics} />}
-            {step === 3 && <Pin setStep={setStep} currentStep={step} message="Please confirm your PIN" mnemonics={data.mnemonics} checkPin={true} encryptedMnemonics={encryptedMnemonics} />}
-            {step === 4 && <EncryptedMnemonic encryptedMnemonics={encryptedMnemonics} />}
+            {step === 3 && <Pin setStep={setStep} currentStep={step} message="Please confirm your PIN" checkPin={true} encryptedMnemonics={encryptedMnemonics} />}
+            {step === 4 && <EncryptedMnemonic setStep={setStep} currentStep={step} walletName={data.walletName} encryptedMnemonics={encryptedMnemonics} />}
+            {step === 5 && <ConnectWallet account={data.walletName} address={data.address} />}
         </div>
     );
 };

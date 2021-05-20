@@ -8,7 +8,7 @@
     a {
         text-decoration: none;
 
-        :hover {
+        &:hover {
             text-decoration: underline;
             color: #757575;
         }
@@ -108,6 +108,10 @@
         background: #FFFFFF;
         border: 1px solid #E0E0E0;
         border-radius: 5px;
+
+        &-hidden {
+            display: none;
+        }
     
         &:focus-visible {
             outline: none;
