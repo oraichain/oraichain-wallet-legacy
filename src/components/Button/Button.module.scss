@@ -7,6 +7,10 @@
 
     &-submit {
         width: 100%;
+        
+        &:focus {
+            outline: none;
+        }
     }
 
     &-primary {
