@@ -7,6 +7,7 @@ import styles from "./ImportPrivateKey.module.scss";
 import AuthLayout from "../AuthLayout";
 import ErrorText from "../ErrorText";
 import Field from "../Field";
+import { Link } from "react-router-dom";
 
 const cx = cn.bind(styles);
 
@@ -31,7 +32,7 @@ const ImportPrivateKey = () => {
                         
                         <Field
                             title="Private Key"
-                            input={<input type="password" className={cx("text-field")} name="privateKey" placeholder="" {...register("privateKey", { required: true })} />}
+                            input={<input type="password" className={cx("text-field")} name="privateKey" autoComplete="new-password" placeholder="" {...register("privateKey", { required: true })} />}
                         />
 
                         {(errors.privateKey || errors.walletName) && <ErrorText>Invalid account.</ErrorText>}
@@ -44,11 +45,11 @@ const ImportPrivateKey = () => {
                             </Button>
                         </div>
 
-                        <Button variant="outline-primary" size="lg" onClick={() => {
-                        
-                        }}>
-                            Sign In
-                        </Button>
+                        <Link to="/signin" className={cx("question-link")}>
+                            <Button variant="outline-primary" size="lg">
+                                Sign In
+                            </Button>
+                        </Link>
                     </form>
                 </FormProvider>
             </div>

@@ -72,7 +72,7 @@ const EncryptedMnemonic = (props) => {
                         <input type="text" className={cx("text-field-hidden")} name="account" value={props.walletName} placeholder="" {...importWallet("account", { required: true })} />
                         <Field
                             title="Encrypted mnemonic pharse"
-                            input={<input type="password" className={cx("text-field")} name="mnemonics" autoComplete="off" placeholder="" {...importWallet("mnemonics", { required: true })} />}
+                            input={<input type="password" className={cx("text-field")} name="mnemonics" autoComplete="new-password" placeholder="" {...importWallet("mnemonics", { required: true })} />}
                         />
                         {errors.mnemonics && <ErrorText>Invalid mnemonics.</ErrorText>}
                         {invalidMnemonics && <ErrorText>Encrypted mnemonic phrase does not match.</ErrorText>}

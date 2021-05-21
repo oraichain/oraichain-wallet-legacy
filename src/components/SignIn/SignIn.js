@@ -60,16 +60,16 @@ const SignIn = () => {
                 </FormProvider>
                 <OrDivider />
                 <ButtonGroup className={cx("button-group")}>
-                    <Button variant="outline-primary" size="lg" onClick={() => {
-
-                    }}>
-                        Import Wallet
-                    </Button>
-                    <Button variant="outline-success" size="lg" onClick={() => {
-
-                    }}>
-                        Import Private Key
-                    </Button>
+                    <Link to="/import-wallet" className={cx("question-link")}>
+                        <Button variant="outline-primary" size="lg">
+                            Import Wallet
+                        </Button>
+                    </Link>
+                    <Link to="/import-private-key" className={cx("question-link")}>
+                        <Button variant="outline-success" size="lg">
+                            Import Private Key
+                        </Button>
+                    </Link>
                 </ButtonGroup>
             </div>
             <div className={cx("card-footer")}>
@@ -77,7 +77,7 @@ const SignIn = () => {
                     <div className={cx("question-text")}>
                         Dont have a wallet?
                     </div>
-                    <Link to="/sign_up" className={cx("question-link")}>Create Wallet</Link>
+                    <Link to="/create-wallet" className={cx("question-link")}>Create Wallet</Link>
                 </div>
             </div>
         </div></AuthLayout>

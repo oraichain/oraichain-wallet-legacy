@@ -11,6 +11,7 @@ import ErrorText from "../ErrorText";
 import Field from "../Field";
 import { cleanMnemonics, countWords } from '../../utils';
 import ConnectWallet from "../ConnectWallet";
+import { Link } from "react-router-dom";
 
 const cx = cn.bind(styles);
 
@@ -85,11 +86,11 @@ const ImportWallet = () => {
                             </Button>
                         </div>
 
-                        <Button variant="outline-primary" size="lg" onClick={() => {
-                            alert('Sign In')
-                        }}>
-                            Sign In
-                        </Button>
+                        <Link to="/signin" className={cx("question-link")}>
+                            <Button variant="outline-primary" size="lg">
+                                Sign In
+                            </Button>
+                        </Link>
                     </form>
                 </FormProvider>
             </div>
