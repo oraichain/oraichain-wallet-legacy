@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import cn from "classnames/bind";
 import { useForm, FormProvider } from "react-hook-form";
+import queryString from "query-string";
 import Field from "src/components/Field";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
@@ -14,13 +15,15 @@ import Pin from "../Pin";
 
 const cx = cn.bind(styles);
 
-const SignIn = () => {
+const SignIn = ({ history }) => {
     const methods = useForm();
     const { register, handleSubmit, formState: { errors } } = methods;
 
     const [step, setStep] = useState(1);
     const [data, setData] = useState({});
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
+    const queryParse = queryString.parse(history.location.search);
+
 
     const onSubmit = (data) => {
         const password = data.password || localStorage.getItem(data.walletName + '-password') || ''
@@ -60,7 +63,7 @@ const SignIn = () => {
                 </FormProvider>
                 <OrDivider />
                 <ButtonGroup className={cx("button-group")}>
-                    <Link to="/import-wallet" className={cx("question-link")}>
+                    <Link to={`/import-wallet${history.location.search}`} className={cx("question-link")}>
                         <Button variant="outline-primary" size="lg">
                             Import Wallet
                         </Button>
@@ -85,7 +88,13 @@ const SignIn = () => {
     return (
         <div>
             {step === 1 && <MainLayout />}
-            {step === 2 && <Pin setStep={setStep} currentStep={step} pinType='signin' walletName={data.walletName} encryptedMnemonics={data.password} />}
+            {step === 2 && <Pin
+                                setStep={setStep}
+                                currentStep={step}
+                                pinType='signin'
+                                walletName={data.walletName}
+                                encryptedMnemonics={data.password}
+                                closePopup={queryParse.signInFromScan} />}
         </div>
     );
 };

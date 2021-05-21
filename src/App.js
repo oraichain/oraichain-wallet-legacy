@@ -40,9 +40,7 @@ const App = ({ }) => {
       <PersistGate loading={null} persistor={persistor}>
         <Router>
           <Switch>
-            <Route path="/signin">
-                <SignIn />
-            </Route>
+            <Route path="/signin" component={SignIn} />
             <Route path="/create-wallet">
                 <CreateWallet />
             </Route>
