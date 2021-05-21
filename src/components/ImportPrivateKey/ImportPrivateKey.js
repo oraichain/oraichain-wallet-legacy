@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 const cx = cn.bind(styles);
 
-const ImportPrivateKey = () => {
+const ImportPrivateKey = ({ history }) => {
     const methods = useForm();
 
     const { register, handleSubmit, formState: { errors } } = methods;
@@ -45,7 +45,7 @@ const ImportPrivateKey = () => {
                             </Button>
                         </div>
 
-                        <Link to="/signin" className={cx("question-link")}>
+                        <Link to={`/signin${history.location.search}`}>
                             <Button variant="outline-primary" size="lg">
                                 Sign In
                             </Button>

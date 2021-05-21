@@ -1,6 +1,7 @@
 import { React, useState } from "react";
 import cn from "classnames/bind";
 import { useForm, FormProvider } from "react-hook-form";
+import queryString from "query-string";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import styles from "./ImportWallet.module.scss";
@@ -15,10 +16,11 @@ import { Link } from "react-router-dom";
 
 const cx = cn.bind(styles);
 
-const ImportWallet = () => {
+const ImportWallet = ({ history }) => {
     const methods = useForm();
     const { register, handleSubmit, formState: { errors } } = methods;
     const cosmos = window.cosmos;
+    const queryParse = queryString.parse(history.location.search);
 
     const [step, setStep] = useState(1);
     const [data, setData] = useState({});
@@ -31,13 +33,13 @@ const ImportWallet = () => {
         let validFlag = true;
         // To check the checksum, it is a process to check whether there is an error in creating an address, so you can input any path and prefix.
         try {
-          if (disablechecksum) {
-            address = (cosmos.getAddress(mnemonics, false));
-          } else {
-            address = (cosmos.getAddress(cleanMnemonics(mnemonics)));
-          }
+            if (disablechecksum) {
+                address = cosmos.getAddress(mnemonics, false);
+            } else {
+                address = cosmos.getAddress(cleanMnemonics(mnemonics));
+            }
         } catch (e) {
-          validFlag = false;
+            validFlag = false;
         }
         return validFlag;
     };
@@ -86,7 +88,7 @@ const ImportWallet = () => {
                             </Button>
                         </div>
 
-                        <Link to="/signin" className={cx("question-link")}>
+                        <Link to={`/signin${history.location.search}`}>
                             <Button variant="outline-primary" size="lg">
                                 Sign In
                             </Button>
@@ -99,10 +101,25 @@ const ImportWallet = () => {
     return (
         <div>
             {step === 1 && <MainLayout />}
-            {step === 2 && <Pin setStep={setStep} currentStep={step} message="Please set your PIN" mnemonics={data.mnemonics} setEncryptedMnemonics={setEncryptedMnemonics} />}
-            {step === 3 && <Pin setStep={setStep} currentStep={step} message="Please confirm your PIN" pinType='confirm' encryptedMnemonics={encryptedMnemonics} />}
-            {step === 4 && <EncryptedMnemonic setStep={setStep} currentStep={step} walletName={data.walletName} encryptedMnemonics={encryptedMnemonics} />}
-            {step === 5 && <ConnectWallet account={data.walletName} address={data.address} />}
+            {step === 2 && <Pin
+                setStep={setStep}
+                currentStep={step}
+                message="Please set your PIN"
+                mnemonics={data.mnemonics}
+                setEncryptedMnemonics={setEncryptedMnemonics} />}
+            {step === 3 && <Pin setStep={setStep} currentStep={step}
+                message="Please confirm your PIN"
+                pinType='confirm'
+                encryptedMnemonics={encryptedMnemonics} />}
+            {step === 4 && <EncryptedMnemonic setStep={setStep}
+                currentStep={step}
+                walletName={data.walletName}
+                queryParam={history.location.search}
+                encryptedMnemonics={encryptedMnemonics} />}
+            {step === 5 && <ConnectWallet
+                account={data.walletName}
+                address={data.address}
+                closePopup={queryParse.signInFromScan} />}
         </div>
     );
 };

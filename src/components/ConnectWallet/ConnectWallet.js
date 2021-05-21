@@ -16,24 +16,17 @@ const ConnectWallet = (props) => {
     const { t, i18n } = useTranslation();
 
     const methods = useForm();
-    const { handleSubmit } = methods;
 
     const onSubmit = (data) => {
     };
 
     const sendEventToParent = () => {
-        try {
-            // window.postMessage({ address: props.address, account: props.account }, "*");
+        if (props.closePopup) {
+            window.opener.postMessage({ address: props.address, account: props.account }, "*");
+            window.close();
+        } else {
             history.push(`/${i18n.language}/`);
-        } catch(e) {
-            console.log(e)
         }
-        // try {
-        //     window.opener.postMessage({ address: props.address, account: props.account }, "*");
-        // } catch(e) {
-        //     console.log(e);
-        // }
-        // window.close();
     }
 
     return (
@@ -43,7 +36,7 @@ const ConnectWallet = (props) => {
             </div>
             <div className={cx("card-body")}>
                 <FormProvider {...methods} >
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={onSubmit}>
                         <img className={cx("keychain-image")} src={keyChain} alt="" />
                         <Suggestion text='You MUST press "Save" in order to complete registration of your account. If this pop-up does not appear, please press the Key logo on the top right corner of your browser.' />
                         <a href="https://support.google.com/chrome/answer/95606?co=GENIE.Platform%3DDesktop&hl=en" target="blank">

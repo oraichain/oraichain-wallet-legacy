@@ -9,7 +9,6 @@ import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
 import SendTokens from "src/components/SendTokens";
 import ImportWallet from "./components/ImportWallet";
-import ImportPrivateKey from "./components/ImportPrivateKey";
 import CreateWallet from "./components/CreateWallet";
 import Cosmos from "@oraichain/cosmosjs";
 import { networks } from "./config";
@@ -41,15 +40,9 @@ const App = ({ }) => {
         <Router>
           <Switch>
             <Route path="/signin" component={SignIn} />
-            <Route path="/create-wallet">
-                <CreateWallet />
-            </Route>
-            <Route path="/import-wallet">
-                <ImportWallet />
-            </Route>
-            <Route path="/import-private-key">
-                <ImportPrivateKey />
-            </Route>
+            <Route path="/create-wallet" component={CreateWallet} />
+            <Route path="/import-wallet" component={ImportWallet} />
+
             <Route path="/send-tokens">
               <MainLayout>
                 <SendTokens />

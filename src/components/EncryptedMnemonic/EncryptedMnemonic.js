@@ -40,7 +40,9 @@ const EncryptedMnemonic = (props) => {
                 setInvalidMnemonics(false)
             }, 1000);
         } else {
-            history.push();
+            history.push({
+                search: props.queryParam
+            });
             localStorage.setItem(props.walletName + '-password', props.encryptedMnemonics);
             goToNextStep()
         }

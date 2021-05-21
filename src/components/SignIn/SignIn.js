@@ -7,7 +7,6 @@ import Field from "src/components/Field";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import OrDivider from "src/components/OrDivider";
-import ButtonGroup from "src/components/ButtonGroup/ButtonGroup";
 import styles from "./SignIn.module.scss";
 import AuthLayout from "../AuthLayout";
 import ErrorText from "../ErrorText";
@@ -24,10 +23,8 @@ const SignIn = ({ history }) => {
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
     const queryParse = queryString.parse(history.location.search);
 
-
     const onSubmit = (data) => {
-        const password = data.password || localStorage.getItem(data.walletName + '-password') || ''
-        console.log(password)
+        const password = data.password || localStorage.getItem(data.walletName + '-password') || '';
 
         if (password === '') {
             setInvalidMnemonics(true);
@@ -47,7 +44,7 @@ const SignIn = ({ history }) => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Field
                             title="Walletname"
-                            input={<input type="text" className={cx("text-field")} defaultValue={data.walletName} name="walletName" placeholder="" {...register("walletName", { required: true })} />}
+                            input={<input type="text" className={cx("text-field")} defaultValue={data.walletName} name="walletName" autoComplete="username" placeholder="" {...register("walletName", { required: true })} />}
                         />
                         {errors.walletName && <ErrorText>Invalid account.</ErrorText>}
 
@@ -61,26 +58,21 @@ const SignIn = ({ history }) => {
                         </Button>
                     </form>
                 </FormProvider>
+
                 <OrDivider />
-                <ButtonGroup className={cx("button-group")}>
-                    <Link to={`/import-wallet${history.location.search}`} className={cx("question-link")}>
-                        <Button variant="outline-primary" size="lg">
-                            Import Wallet
-                        </Button>
-                    </Link>
-                    <Link to="/import-private-key" className={cx("question-link")}>
-                        <Button variant="outline-success" size="lg">
-                            Import Private Key
-                        </Button>
-                    </Link>
-                </ButtonGroup>
+
+                <Link to={`/import-wallet${history.location.search}`}>
+                    <Button variant="outline-primary" size="lg">
+                        Import Wallet
+                    </Button>
+                </Link>
             </div>
             <div className={cx("card-footer")}>
                 <div className={cx("question")}>
                     <div className={cx("question-text")}>
                         Dont have a wallet?
                     </div>
-                    <Link to="/create-wallet" className={cx("question-link")}>Create Wallet</Link>
+                    <Link to={`/create-wallet${history.location.search}`} className={cx("question-link")}>Create Wallet</Link>
                 </div>
             </div>
         </div></AuthLayout>
@@ -89,12 +81,12 @@ const SignIn = ({ history }) => {
         <div>
             {step === 1 && <MainLayout />}
             {step === 2 && <Pin
-                                setStep={setStep}
-                                currentStep={step}
-                                pinType='signin'
-                                walletName={data.walletName}
-                                encryptedMnemonics={data.password}
-                                closePopup={queryParse.signInFromScan} />}
+                setStep={setStep}
+                currentStep={step}
+                pinType='signin'
+                walletName={data.walletName}
+                encryptedMnemonics={data.password}
+                closePopup={queryParse.signInFromScan} />}
         </div>
     );
 };

@@ -11,19 +11,19 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const cx = cn.bind(styles);
 
-const CreateWallet = () => {
-    const cosmos = window.cosmos
+const CreateWallet = ({ history }) => {
+    const cosmos = window.cosmos;
 
     const [copied, setCopied] = useState(false);
     const [mnemonics, setMnemonics] = useState('');
     const [showMnemonics, setShowMnemonics] = useState(false);
 
     const changeShowMnemonics = () => {
-        setShowMnemonics(!showMnemonics)
+        setShowMnemonics(!showMnemonics);
     };
 
     const generateMnemonics = () => {
-        setMnemonics(cosmos.generateMnemonic(256))
+        setMnemonics(cosmos.generateMnemonic(256));
     };
 
     const copyToClipboard = () => {
@@ -71,7 +71,7 @@ const CreateWallet = () => {
                                 </Button>
                             </div>
 
-                            <Link to="/import-wallet" className={cx("question-link")}>
+                            <Link to={`/import-wallet${history.location.search}`}>
                                 <Button variant="outline-primary" size="lg">
                                     Import Wallet
                                 </Button>
