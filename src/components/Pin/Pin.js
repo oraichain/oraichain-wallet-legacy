@@ -69,10 +69,9 @@ const Pin = ({ setStep, setEncryptedMnemonics, updateUser, closePopup, message, 
             if (window.stdSignMsgByPayload) {
               history.push(`/${i18n.language}/transaction`);
             } else if (closePopup) {
-              window.opener.postMessage({ address: address, account: walletName}, "*");
+              window.opener.postMessage({ address: address, account: walletName }, "*");
               window.close();
             } else {
-              // window.postMessage({ address: address, account: walletName}, "*");
               history.push(`/${i18n.language}/`);
             }
           }

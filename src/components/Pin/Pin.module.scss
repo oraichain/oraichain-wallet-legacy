@@ -1,5 +1,5 @@
 .pin-wrapper {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
   background-image: url("../../images/sigin_bg.png");
   background-repeat: no-repeat;
@@ -9,13 +9,17 @@
 
   .pin-display {
     position: fixed;
-    width: 763px;
+    width: 95%;
     top: 50%;
     left: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
     background: white;
     border-radius: 10px;
+
+    @media screen and (min-width: 763px) {
+      width: 763px;
+    }
   }
   
   .keypad {
@@ -63,7 +67,9 @@
   .numpad {
     .keypad {
       &-row {
-        margin-bottom: 23px;
+        @media screen and (min-height: 700px) {
+          margin-bottom: 23px;
+        }
       }
 
       &-button {
@@ -71,17 +77,39 @@
         font-style: normal;
         font-weight: 600;
         font-size: 36px;
-        width: 47px;
-        height: 47px;
-        margin: 0 61.5px;
+        width: 30px;
+        height: 30px;
+        margin: 0 20px;
+
+        @media screen and (min-width: 320px) and (min-height: 570px) {
+          width: 40px;
+          height: 40px;
+        }
+
+        @media screen and (min-width: 763px) {
+          width: 47px;
+          height: 47px;
+          margin: 0 61.5px;
+        }
       }
     }
 
     .reset-button {
-      width: 40px;
-      height: 40px;
+      width: 30px;
+      height: 30px;
       border-radius: 10px;
-      margin: 0 65px;
+      margin: 0 20px;
+
+      @media screen and (min-width: 320px) and (min-height: 570px) {
+        width: 40px;
+        height: 40px;
+      }
+
+      @media screen and (min-width: 763px) {
+        width: 40px;
+        height: 40px;
+        margin: 0 65px;
+      }
     }
   }
 
@@ -92,29 +120,50 @@
       }
 
       &-button {
-        font-family: SF Pro Text;
+        font-family: Source Sans Pro;
         font-style: normal;
         font-weight: normal;
         font-size: 22px;
-        width: 63px;
-        height: 62px;
-        border: 1px solid #C1C1C1;
+        width: 30px;
+        height: 30px;
         box-sizing: border-box;
         border-radius: 9px;
         margin: 0 3.5px;
+
+        @media screen and (min-width: 480px) {
+          border: 1px solid #C1C1C1;
+          width: 40px;
+          height: 40px;
+        }
+
+        @media screen and (min-width: 763px) and (min-height: 570px) {
+          border: 1px solid #C1C1C1;
+          width: 62px;
+          height: 62px;
+        }
       }
     }
 
     .reset-button {
-      width: 63px;
-      height: 62px;
+      width: 30px;
+      height: 30px;
       border-radius: 9px;
       margin: 0 3.5px;
+
+      @media screen and (min-width: 480px) {
+        width: 40px;
+        height: 40px;
+      }
+
+      @media screen and (min-width: 763px) and (min-height: 570px) {
+        width: 62px;
+        height: 62px;
+      }
     }
   }
   
   .confirmation-dots {
-    margin: 55px 0;
+    margin: 35px 0;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -150,6 +199,10 @@
         stroke: red;
       }
     }
+
+    @media screen and (min-height: 570px) {
+      margin: 55px 0;
+    }
   }
 
   .close {
@@ -161,7 +214,7 @@
 
   .pin {
     &-title1 {
-      margin-top: 60px;
+      margin: 60px 10px 0 10px;
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -173,10 +226,14 @@
       line-height: 120%;
       letter-spacing: -0.5px;
       color: #181818;
+
+      @media screen and (min-width: 245px) {
+        margin: 60px 0 0 0;
+      }
     }
 
     &-title2 {
-      margin-top: 16px;
+      margin: 16px 10px 0 10px;
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -187,10 +244,14 @@
       font-size: 14px;
       line-height: 150%;
       color: #181818;
+
+      @media screen and (min-width: 245px) {
+        margin: 16px 0 0 0;
+      }
     }
 
     &-title3 {
-      margin-top: 8px;
+      margin: 8px 10px 0 10px;
       display: flex;
       flex-direction: row;
       justify-content: center;
@@ -201,6 +262,10 @@
       font-size: 16px;
       line-height: 150%;
       color: #F3574F;
+
+      @media screen and (min-width: 340px) {
+        margin: 8px 0 0 0;
+      }
     }
   }
   
