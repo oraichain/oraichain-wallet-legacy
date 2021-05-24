@@ -11,7 +11,7 @@ const AuthLayout = ({ children }) => {
         <div className={cx("auth-layout")}>
             <div className="container h-100">
                 <div className="row h-100">
-                    <div className="col-sm-6 col-xs-12 h-100">
+                    <div className="col-sm-6 col-xs-12 h-100 d-none d-md-block">
                         <div className={cx("auth-layout-header")}>
                             <div className={cx("brand")}>
                                 <img className={cx("brand-logo")} src={logoUrl} alt="" />

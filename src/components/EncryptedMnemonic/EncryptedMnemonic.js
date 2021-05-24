@@ -55,18 +55,20 @@ const EncryptedMnemonic = (props) => {
             </div>
             <div className={cx("card-body")}>
                 <div className={cx("mnemonics")}>
-                    <Field
-                        title="Encrypted mnemonic pharse"
-                        input={<textarea className={cx("text-field", "text-area")} defaultValue={props.encryptedMnemonics} disabled="disabled" placeholder="" />}
-                    />
-
-                    {copied && <div className={cx("copy-message")}>Encrypted mnemonic phrase is copied.</div>}
-                    <CopyToClipboard onCopy={copyToClipboard} text={props.encryptedMnemonics}>
-                        <div className={cx("copy")}>
-                            <img className={cx("copy-image")} src={copyIcon} alt="" />
-                            <span className={cx("copy-btn")} >Copy</span>
+                    <div className={cx("mnemonics-field")}>
+                        <div className={cx("field-title")}>Encrypted mnemonic pharse
+                            <CopyToClipboard onCopy={copyToClipboard} text={props.encryptedMnemonics}>
+                                <div className={cx("copy")}>
+                                    <img className={cx("copy-image")} src={copyIcon} alt="" />
+                                    <div className={cx("copy-btn")} >Copy</div>
+                                </div>
+                            </CopyToClipboard>
                         </div>
-                    </CopyToClipboard>
+                        <div className={cx("field-input")}>
+                            <textarea className={cx("text-field", "text-area")} defaultValue={props.encryptedMnemonics} disabled="disabled" placeholder="" />
+                        </div>
+                        {copied && <div className={cx("copy-message")}>Encrypted mnemonic phrase is copied.</div>}
+                    </div>                    
                 </div>
 
                 <FormProvider {...methods} >
