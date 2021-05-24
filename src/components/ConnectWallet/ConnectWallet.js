@@ -11,7 +11,7 @@ import { useTranslation } from "react-i18next";
 
 const cx = cn.bind(styles);
 
-const ConnectWallet = (props) => {
+const ConnectWallet = ({ account, address, closePopup }) => {
     const history = useHistory();
     const { t, i18n } = useTranslation();
 
@@ -21,8 +21,8 @@ const ConnectWallet = (props) => {
     };
 
     const sendEventToParent = () => {
-        if (props.closePopup) {
-            window.opener.postMessage({ address: props.address, account: props.account }, "*");
+        if (closePopup) {
+            window.opener.postMessage({ address: address, account: account }, "*");
             window.close();
         } else {
             history.push(`/${i18n.language}/`);

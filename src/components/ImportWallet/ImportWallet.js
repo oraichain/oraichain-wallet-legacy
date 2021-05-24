@@ -113,8 +113,8 @@ const ImportWallet = ({ history }) => {
                 encryptedMnemonics={encryptedMnemonics} />}
             {step === 4 && <EncryptedMnemonic setStep={setStep}
                 currentStep={step}
-                walletName={data.walletName}
                 queryParam={history.location.search}
+                walletName={data.walletName}
                 encryptedMnemonics={encryptedMnemonics} />}
             {step === 5 && <ConnectWallet
                 account={data.walletName}

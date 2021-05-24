@@ -13,7 +13,7 @@ import { useHistory } from 'react-router-dom';
 
 const cx = cn.bind(styles);
 
-const EncryptedMnemonic = (props) => {
+const EncryptedMnemonic = ({ setStep, currentStep, queryParam, walletName, encryptedMnemonics }) => {
     const history = useHistory();
 
     const methods = useForm();
@@ -23,7 +23,7 @@ const EncryptedMnemonic = (props) => {
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
 
     const goToNextStep = () => {
-        props.setStep(props.currentStep + 1);
+        setStep(currentStep + 1);
     }
 
     const copyToClipboard = () => {
@@ -34,16 +34,16 @@ const EncryptedMnemonic = (props) => {
     };
 
     const onSubmit = (data) => {
-        if (data.mnemonics !== props.encryptedMnemonics) {
+        if (data.mnemonics !== encryptedMnemonics) {
             setInvalidMnemonics(true)
             setTimeout(() => {
                 setInvalidMnemonics(false)
             }, 1000);
         } else {
             history.push({
-                search: props.queryParam
+                search: queryParam
             });
-            localStorage.setItem(props.walletName + '-password', props.encryptedMnemonics);
+            localStorage.setItem(walletName + '-password', encryptedMnemonics);
             goToNextStep()
         }
     };
@@ -57,7 +57,7 @@ const EncryptedMnemonic = (props) => {
                 <div className={cx("mnemonics")}>
                     <div className={cx("mnemonics-field")}>
                         <div className={cx("field-title")}>Encrypted mnemonic pharse
-                            <CopyToClipboard onCopy={copyToClipboard} text={props.encryptedMnemonics}>
+                            <CopyToClipboard onCopy={copyToClipboard} text={encryptedMnemonics}>
                                 <div className={cx("copy")}>
                                     <img className={cx("copy-image")} src={copyIcon} alt="" />
                                     <div className={cx("copy-btn")} >Copy</div>
@@ -65,15 +65,15 @@ const EncryptedMnemonic = (props) => {
                             </CopyToClipboard>
                         </div>
                         <div className={cx("field-input")}>
-                            <textarea className={cx("text-field", "text-area")} defaultValue={props.encryptedMnemonics} disabled="disabled" placeholder="" />
+                            <textarea className={cx("text-field", "text-area")} defaultValue={encryptedMnemonics} disabled="disabled" placeholder="" />
                         </div>
                         {copied && <div className={cx("copy-message")}>Encrypted mnemonic phrase is copied.</div>}
-                    </div>                    
+                    </div>
                 </div>
 
                 <FormProvider {...methods} >
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <input type="text" className={cx("text-field-hidden")} name="account" value={props.walletName} placeholder="" {...importWallet("account", { required: true })} />
+                        <input type="text" className={cx("text-field-hidden")} name="account" value={walletName} placeholder="" {...importWallet("account", { required: true })} />
                         <Field
                             title="Encrypted mnemonic pharse"
                             input={<input type="password" className={cx("text-field")} name="mnemonics" autoComplete="new-password" placeholder="" {...importWallet("mnemonics", { required: true })} />}
