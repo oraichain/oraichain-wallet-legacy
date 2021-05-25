@@ -7,9 +7,10 @@ import DownAngleIcon from "src/components/icons/DownAngleIcon";
 import UpAngleIcon from "src/components/icons/UpAngleIcon";
 import LogoutIcon from "src/components/icons/LogoutIcon";
 import styles from "./SideBar.module.scss";
+import { ContactSupportOutlined } from "@material-ui/icons";
 const cx = cn.bind(styles);
 
-const SideBar = ({ menuItems, subMenuItems, setActiveIdOfMenuItems, setExpandedOfMenuItem, setActiveIdOfSubMenuItems }) => {
+const SideBar = ({ menuItems, subMenuItems, setActiveIdOfMenuItems, setExpandedOfMenuItem, setActiveIdOfSubMenuItems, user, removeUser }) => {
     const history = useHistory();
     const pathname = history.location.pathname;
     const menuItemUrls = Object.values(menuItems.byId).filter(menuItem => !_.isNil(menuItem?.url)).map(menuItem => menuItem.url);
@@ -34,6 +35,11 @@ const SideBar = ({ menuItems, subMenuItems, setActiveIdOfMenuItems, setExpandedO
             setActiveIdOfMenuItems(null);
             setActiveIdOfSubMenuItems(activeSubMenuItem.id);
         }
+    }
+
+    const handleLogout = () => {
+        removeUser();
+        history.push("/signin");
     }
 
     return (
@@ -135,10 +141,10 @@ const SideBar = ({ menuItems, subMenuItems, setActiveIdOfMenuItems, setExpandedO
                 }
 
             </div>
-            <div className={cx("logout")}>
+            {user && user.account && <div className={cx("logout")} onClick={handleLogout}>
                 <LogoutIcon className={cx("logout-icon")} />
                 <span className={cx("logout-text")}>Log out</span>
-            </div>
+            </div> }
         </div>
 
     );

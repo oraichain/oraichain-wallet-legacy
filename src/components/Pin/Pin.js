@@ -10,7 +10,17 @@ import { getChildkeyFromDecrypted } from '../../utils';
 
 const cx = cn.bind(styles);
 
-const Pin = ({ setStep, setEncryptedMnemonics, updateUser, closePopup, message, currentStep, pinType, walletName, mnemonics, encryptedMnemonics }) => {
+const Pin = ({ setStep,
+                setEncryptedMnemonics,
+                updateUser,
+                closePopup,
+                message,
+                currentStep,
+                pinType,
+                walletName,
+                mnemonics,
+                encryptedMnemonics,
+                setUser }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation();
   const cosmos = window.cosmos
@@ -23,7 +33,7 @@ const Pin = ({ setStep, setEncryptedMnemonics, updateUser, closePopup, message, 
   }
 
   const goToPrevStep = () => {
-    setStep(currentStep - 1);
+    setStep && setStep(currentStep - 1);
   }
 
   const handleClick = (e) => {
@@ -63,6 +73,7 @@ const Pin = ({ setStep, setEncryptedMnemonics, updateUser, closePopup, message, 
           } else if (pinType === 'signin') {
             const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
             const address = cosmos.getAddress(childKey);
+            setUser && setUser({ address: address, account: walletName, childKey });
 
             // go to transaction with address, other go to send
             // updateUser({ name: walletName, address });

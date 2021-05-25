@@ -10,11 +10,11 @@ import OrDivider from "src/components/OrDivider";
 import styles from "./SignIn.module.scss";
 import AuthLayout from "../AuthLayout";
 import ErrorText from "../ErrorText";
-import Pin from "../Pin";
+import Pin from "src/components/Pin";
 
 const cx = cn.bind(styles);
 
-const SignIn = ({ history }) => {
+const SignIn = ({ history, setUser }) => {
     const methods = useForm();
     const { register, handleSubmit, formState: { errors } } = methods;
 
@@ -86,7 +86,8 @@ const SignIn = ({ history }) => {
                 pinType='signin'
                 walletName={data.walletName}
                 encryptedMnemonics={data.password}
-                closePopup={queryParse.signInFromScan} />}
+                closePopup={queryParse.signInFromScan}
+                setUser={setUser} />}
         </div>
     );
 };

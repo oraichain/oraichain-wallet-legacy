@@ -1,15 +1,17 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
+// import { Route, Redirect, Switch, useLocation, useRouteMatch, useHistory } from 'react-router';
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import store from "src/store";
-import SignIn from "src/components/SignIn/SignIn";
+import SignIn from "src/containers/SignIn";
 import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
 import SendTokens from "src/components/SendTokens";
 import ImportWallet from "./components/ImportWallet";
 import CreateWallet from "./components/CreateWallet";
+import Transaction from './components/Transaction';
 import Cosmos from "@oraichain/cosmosjs";
 import { networks } from "./config";
 
@@ -32,8 +34,16 @@ if (path && path !== 'undefined') {
 window.cosmos = cosmos;
 window.localStorage.setItem('wallet.network', network);
 
+const PrivateRoute = ({ component: Component, isLoggedIn, ...rest }) => {
+  return <Route {...rest} render={(props) => (isLoggedIn ? <Component {...props} /> : <Redirect to={{ pathname: '/signin', state: { from: props.location } }} />)} />;
+};
+
 const App = ({ }) => {
+  const user = useSelector(state => state.user);
   let persistor = persistStore(store);
+  const match = useRouteMatch();
+  const isLoggedIn = !!user;
+
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -42,7 +52,7 @@ const App = ({ }) => {
             <Route path="/signin" component={SignIn} />
             <Route path="/create-wallet" component={CreateWallet} />
             <Route path="/import-wallet" component={ImportWallet} />
-
+            <PrivateRoute isLoggedIn={isLoggedIn} path={`/tx`} component={Transaction} />
             <Route path="/send-tokens">
               <MainLayout>
                 <SendTokens />

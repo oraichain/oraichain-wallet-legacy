@@ -4,15 +4,17 @@ import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import thunk from "redux-thunk";
 import menuSlice from "src/store/slices/menuSlice";
+import userSlice from "src/store/slices/userSlice";
 
 const reducers = combineReducers({
     menu: menuSlice,
+    user: userSlice,
 });
 
 const persistConfig = {
     key: "root",
     storage,
-    whitelist: [],
+    whitelist: ["user"],
 };
 
 const persistedReducer = persistReducer(persistConfig, reducers);
