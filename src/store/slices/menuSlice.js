@@ -45,22 +45,22 @@ export const menuSlice = createSlice({
                     text: "Send Tokens",
                     url: "/send-tokens",
                 },
-                [menuItemIds.INTERACT_WITH_PROVIDER_SCRIPTS]: {
-                    id: menuItemIds.INTERACT_WITH_PROVIDER_SCRIPTS,
-                    icon: <ChartIcon />,
-                    activeIcon: <ActiveChartIcon />,
-                    text: "Interact with Provider scripts",
-                    expanded: false,
-                    subMenuItemIds: [subMenuItemIds.SET_PROVIDER_SCRIPTS, subMenuItemIds.EDIT_PROVIDER_SCRIPTS]
-                },
-                [menuItemIds.INTERACT_WITH_AI_REQUEST]: {
-                    id: menuItemIds.INTERACT_WITH_AI_REQUEST,
-                    icon: <SettingIcon />,
-                    activeIcon: <ActiveSettingIcon />,
-                    text: "Interact with ai request",
-                    expanded: false,
-                    subMenuItemIds: [subMenuItemIds.SET_REQUEST, subMenuItemIds.GET_REQUEST],
-                }
+                // [menuItemIds.INTERACT_WITH_PROVIDER_SCRIPTS]: {
+                //     id: menuItemIds.INTERACT_WITH_PROVIDER_SCRIPTS,
+                //     icon: <ChartIcon />,
+                //     activeIcon: <ActiveChartIcon />,
+                //     text: "Interact with Provider scripts",
+                //     expanded: false,
+                //     subMenuItemIds: [subMenuItemIds.SET_PROVIDER_SCRIPTS, subMenuItemIds.EDIT_PROVIDER_SCRIPTS]
+                // },
+                // [menuItemIds.INTERACT_WITH_AI_REQUEST]: {
+                //     id: menuItemIds.INTERACT_WITH_AI_REQUEST,
+                //     icon: <SettingIcon />,
+                //     activeIcon: <ActiveSettingIcon />,
+                //     text: "Interact with ai request",
+                //     expanded: false,
+                //     subMenuItemIds: [subMenuItemIds.SET_REQUEST, subMenuItemIds.GET_REQUEST],
+                // }
             },
             allIds: Object.values(menuItemIds),
             activeId: null,
@@ -92,16 +92,16 @@ export const menuSlice = createSlice({
                     text: "Edit Provider Scripts",
                     url: "/provider_scripts/edit",
                 },
-                [subMenuItemIds.SET_REQUEST]: {
-                    id: subMenuItemIds.SET_REQUEST,
-                    text: "Set Request",
-                    url: "/ai_request/set",
-                },
-                [subMenuItemIds.GET_REQUEST]: {
-                    id: subMenuItemIds.GET_REQUEST,
-                    text: "Get Request",
-                    url: "/ai_request/get",
-                },
+                // [subMenuItemIds.SET_REQUEST]: {
+                //     id: subMenuItemIds.SET_REQUEST,
+                //     text: "Set Request",
+                //     url: "/ai_request/set",
+                // },
+                // [subMenuItemIds.GET_REQUEST]: {
+                //     id: subMenuItemIds.GET_REQUEST,
+                //     text: "Get Request",
+                //     url: "/ai_request/get",
+                // },
             },
             allIds: Object.values(subMenuItemIds),
             activeId: null,

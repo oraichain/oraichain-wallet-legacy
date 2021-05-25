@@ -6,6 +6,14 @@
     padding-left: 30px;
 }
 
+:global(.nav-link) {
+    color: white;
+
+    &:hover {
+        color: white;
+    }
+}
+
 .logo {
     display: inline-block;
     width: 32px;
