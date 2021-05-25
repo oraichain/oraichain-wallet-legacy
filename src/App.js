@@ -9,9 +9,9 @@ import SignIn from "src/containers/SignIn";
 import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
 import SendTokens from "src/components/SendTokens";
-import ImportWallet from "./components/ImportWallet";
-import CreateWallet from "./components/CreateWallet";
-import Transaction from './components/Transaction';
+import ImportWallet from "src/components/ImportWallet";
+import CreateWallet from "src/components/CreateWallet";
+import Transaction from 'src/components/Transaction';
 import Cosmos from "@oraichain/cosmosjs";
 import { networks } from "./config";
 
