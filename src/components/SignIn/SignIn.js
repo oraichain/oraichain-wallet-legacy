@@ -15,7 +15,7 @@ import Pin from "src/components/Pin";
 
 const cx = cn.bind(styles);
 
-const SignIn = ({ history, setUser }) => {
+const SignIn = ({ history, setUser, location }) => {
     const user = useSelector((state) => state.user);
     const isLoggedIn = Object.values(user)?.length !== 0;
     const methods = useForm();
@@ -28,7 +28,12 @@ const SignIn = ({ history, setUser }) => {
     const [step, setStep] = useState(1);
     const [data, setData] = useState({});
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
-    const queryParse = queryString.parse(history.location.search);
+    let queryParse;
+    if (location && location.state && location.state.from) {
+        queryParse = queryString.parse(location.state.from.search) || {};
+    } else {
+        queryParse = queryString.parse(history.location.search) || {};
+    }
 
     const onSubmit = (data) => {
         const password = data.password || localStorage.getItem(data.walletName + "-password") || "";

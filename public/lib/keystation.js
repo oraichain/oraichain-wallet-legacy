@@ -40,7 +40,7 @@ function PopupCenter(url, title, w, h) {
 }
 
 class Keystation {
-  constructor(client, lcd, path, keystationUrl) {
+  constructor(client, lcd, path, keystationUrl, locale = 'en') {
     // {client,lcd,path,keystationUrl}
     if (typeof client === 'object') {
       lcd = client.lcd;
@@ -48,6 +48,7 @@ class Keystation {
       keystationUrl = client.keystationUrl;
       client = client.client;
     }
+    this.locale = locale;
     this.client = client || window.location.origin;
     this.lcd = lcd;
     this.path = path;
@@ -74,7 +75,7 @@ class Keystation {
 
     const url =
       this.keystationUrl +
-      '/' +
+      `/${this.locale}/` +
       apiUrl +
       '?account=' +
       encodeURIComponent(account) +
@@ -85,7 +86,8 @@ class Keystation {
       '&path=' +
       encodeURIComponent(this.path) +
       '&payload=' +
-      encodeURIComponent(payload);
+      encodeURIComponent(payload) +
+      '&signInFromScan=true';
     // create new one if closed
 
     return PopupCenter(url, '', '400', '705');
@@ -96,13 +98,43 @@ class Keystation {
     popup.postMessage(data, '*');
   }
 
+  getChildKey(path) {
+    // The account parameter is required for users having multiple keychain accounts.
+    const apiUrl = this.getApiUrl('transaction');
+
+    const url =
+      this.keystationUrl +
+      `/${this.locale}/` +
+      apiUrl +
+      '?path=' +
+      encodeURIComponent(path) +
+      '&client=' +
+      encodeURIComponent(this.client) +
+      '&lcd=' +
+      encodeURIComponent(this.lcd) +
+      '&childKeyOnly=true&signInFromScan=true';
+    // create new one if closed    
+    const popup = PopupCenter(url, '', '400', '705');
+    return new Promise((resolve) => {
+      const handler = (e) => {
+        // kind of childKey
+        if (e.data.network) {
+          window.removeEventListener('message', handler);
+          resolve(e.data);
+        }
+      };
+      window.addEventListener('message', handler);
+    })
+
+  }
+
   send(message) {
     const popup = this.openWindow('transaction');
     const handler = (e) => {
       if (e.data === 'ready') {
         this.postMessage(popup, { tx: message, client: this.client });
+        window.removeEventListener('message', handler);
       }
-      window.removeEventListener('message', handler);
     };
     window.addEventListener('message', handler);
     return popup;
@@ -115,8 +147,8 @@ class Keystation {
     const handler = (e) => {
       if (e.data === 'ready') {
         this.postMessage(popup, data);
+        window.removeEventListener('message', handler);
       }
-      window.removeEventListener('message', handler);
     };
     window.addEventListener('message', handler);
     return popup;
