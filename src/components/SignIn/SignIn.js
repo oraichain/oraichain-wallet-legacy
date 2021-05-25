@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import cn from "classnames/bind";
 import { useForm, FormProvider } from "react-hook-form";
 import queryString from "query-string";
+import { useSelector } from "react-redux";
 import Field from "src/components/Field";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
@@ -15,8 +16,14 @@ import Pin from "src/components/Pin";
 const cx = cn.bind(styles);
 
 const SignIn = ({ history, setUser }) => {
+    const user = useSelector((state) => state.user);
+    const isLoggedIn = Object.values(user)?.length !== 0;
     const methods = useForm();
-    const { register, handleSubmit, formState: { errors } } = methods;
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = methods;
 
     const [step, setStep] = useState(1);
     const [data, setData] = useState({});
@@ -24,9 +31,9 @@ const SignIn = ({ history, setUser }) => {
     const queryParse = queryString.parse(history.location.search);
 
     const onSubmit = (data) => {
-        const password = data.password || localStorage.getItem(data.walletName + '-password') || '';
+        const password = data.password || localStorage.getItem(data.walletName + "-password") || "";
 
-        if (password === '') {
+        if (password === "") {
             setInvalidMnemonics(true);
         } else {
             setInvalidMnemonics(false);
@@ -36,64 +43,92 @@ const SignIn = ({ history, setUser }) => {
         }
     };
 
-    const MainLayout = () =>
-        <AuthLayout><div className={cx("card")}>
-            <div className={cx("card-header")}>Sign In</div>
-            <div className={cx("card-body")}>
-                <FormProvider {...methods} >
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <Field
-                            title="Walletname"
-                            input={<input type="text" className={cx("text-field")} defaultValue={data.walletName} name="walletName" autoComplete="username" placeholder="" {...register("walletName", { required: true })} />}
-                        />
-                        {errors.walletName && <ErrorText>Invalid account.</ErrorText>}
+    const MainLayout = () => (
+        <AuthLayout>
+            <div className={cx("card")}>
+                <div className={cx("card-header")}>Sign In</div>
+                <div className={cx("card-body")}>
+                    <FormProvider {...methods}>
+                        <form onSubmit={handleSubmit(onSubmit)}>
+                            <Field
+                                title="Walletname"
+                                input={
+                                    <input
+                                        type="text"
+                                        className={cx("text-field")}
+                                        defaultValue={data.walletName}
+                                        name="walletName"
+                                        autoComplete="username"
+                                        placeholder=""
+                                        {...register("walletName", { required: true })}
+                                    />
+                                }
+                            />
+                            {errors.walletName && <ErrorText>Invalid account.</ErrorText>}
 
-                        <input type="password" className={cx("text-field-hidden")} name="password" autoComplete="current-password" placeholder="" {...register("password")} />
-                        {invalidMnemonics && <ErrorText>Could not retrieve account stored in Keychain. Press the button below the Import Wallet.</ErrorText>}
+                            <input
+                                type="password"
+                                className={cx("text-field-hidden")}
+                                name="password"
+                                autoComplete="current-password"
+                                placeholder=""
+                                {...register("password")}
+                            />
+                            {invalidMnemonics && (
+                                <ErrorText>
+                                    Could not retrieve account stored in Keychain. Press the button below the Import Wallet.
+                                </ErrorText>
+                            )}
 
-                        <Suggestion text=" Unavailable in guest mode or incognito mode." />
+                            <Suggestion text=" Unavailable in guest mode or incognito mode." />
 
-                        <Button variant="primary" size="lg" submit={true}>
-                            Next
+                            <Button variant="primary" size="lg" submit={true}>
+                                Next
+                            </Button>
+                        </form>
+                    </FormProvider>
+
+                    <OrDivider />
+
+                    <Link to={`/import-wallet${history.location.search}`}>
+                        <Button variant="outline-primary" size="lg">
+                            Import Wallet
                         </Button>
-                    </form>
-                </FormProvider>
-
-                <OrDivider />
-
-                <Link to={`/import-wallet${history.location.search}`}>
-                    <Button variant="outline-primary" size="lg">
-                        Import Wallet
-                    </Button>
-                </Link>
-            </div>
-            <div className={cx("card-footer")}>
-                <div className={cx("question")}>
-                    <div className={cx("question-text")}>
-                        Dont have a wallet?
+                    </Link>
+                </div>
+                <div className={cx("card-footer")}>
+                    <div className={cx("question")}>
+                        <div className={cx("question-text")}>Dont have a wallet?</div>
+                        <Link to={`/create-wallet${history.location.search}`} className={cx("question-link")}>
+                            Create Wallet
+                        </Link>
                     </div>
-                    <Link to={`/create-wallet${history.location.search}`} className={cx("question-link")}>Create Wallet</Link>
                 </div>
             </div>
-        </div></AuthLayout>
+        </AuthLayout>
+    );
 
-    return (
+    return !isLoggedIn ? (
         <div>
             {step === 1 && <MainLayout />}
-            {step === 2 && <Pin
-                setStep={setStep}
-                currentStep={step}
-                pinType='signin'
-                walletName={data.walletName}
-                encryptedMnemonics={data.password}
-                closePopup={queryParse.signInFromScan}
-                setUser={setUser} />}
+            {step === 2 && (
+                <Pin
+                    setStep={setStep}
+                    currentStep={step}
+                    pinType="signin"
+                    walletName={data.walletName}
+                    encryptedMnemonics={data.password}
+                    closePopup={queryParse.signInFromScan}
+                    setUser={setUser}
+                />
+            )}
         </div>
+    ) : (
+        <>{history?.push("/")}</>
     );
 };
 
-SignIn.propTypes = {
-};
+SignIn.propTypes = {};
 SignIn.defaultProps = {};
 
 export default SignIn;

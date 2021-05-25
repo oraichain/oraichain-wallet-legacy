@@ -1,286 +1,295 @@
 .pin-wrapper {
-  width: 100%;
-  height: 100vh;
-  background-image: url("../../images/sigin_bg.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  background-attachment: fixed;
+    width: 100%;
+    height: 100vh;
+    background-image: url("../../images/sigin_bg.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
 
-  .pin-display {
-    position: fixed;
-    width: 95%;
-    top: 50%;
-    left: 50%;
-    -webkit-transform: translate(-50%, -50%);
-    transform: translate(-50%, -50%);
-    background: white;
-    border-radius: 10px;
+    .pin-display {
+        position: fixed;
+        width: 95%;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        background: white;
+        border-radius: 10px;
 
-    @media screen and (min-width: 763px) {
-      width: 763px;
-    }
-  }
-  
-  .keypad {
-    background: white;
-    margin-bottom: 60px;
-    
-    &-row {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
+        @media screen and (min-width: 763px) {
+            width: 763px;
+        }
+
+        .close {
+            cursor: pointer;
+        }
     }
 
-    &-button {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: all 100ms ease-out;
+    .keypad {
+        background: white;
+        margin-bottom: 60px;
+
+        &-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+        }
+
+        &-button {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 100ms ease-out;
+        }
+
+        &-button:active {
+            background: #eaeaea;
+        }
+
+        .reset {
+            &-button {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                align-items: center;
+                cursor: pointer;
+                transition: all 100ms ease-out;
+                background-color: #f3574f;
+                color: white;
+            }
+
+            &-button:active {
+                background: #eaeaea;
+            }
+        }
     }
 
-    &-button:active {
-      background: #EAEAEA;
+    .numpad {
+        .keypad {
+            &-row {
+                @media screen and (min-height: 700px) {
+                    margin-bottom: 23px;
+                }
+            }
+
+            &-button {
+                font-family: Source Sans Pro;
+                font-style: normal;
+                font-weight: 600;
+                font-size: 36px;
+                width: 30px;
+                height: 30px;
+                margin: 0 20px;
+
+                @media screen and (min-width: 320px) and (min-height: 570px) {
+                    width: 40px;
+                    height: 40px;
+                }
+
+                @media screen and (min-width: 763px) {
+                    width: 47px;
+                    height: 47px;
+                    margin: 0 61.5px;
+                }
+            }
+        }
+
+        .reset-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            margin: 0 20px;
+
+            @media screen and (min-width: 320px) and (min-height: 570px) {
+                width: 40px;
+                height: 40px;
+            }
+
+            @media screen and (min-width: 763px) {
+                width: 40px;
+                height: 40px;
+                margin: 0 65px;
+            }
+        }
     }
 
-    .reset {
-      &-button {
+    .charpad {
+        .keypad {
+            &-row {
+                margin-bottom: 16px;
+            }
+
+            &-button {
+                font-family: Source Sans Pro;
+                font-style: normal;
+                font-weight: normal;
+                font-size: 22px;
+                width: 30px;
+                height: 30px;
+                box-sizing: border-box;
+                border-radius: 9px;
+                margin: 0 3.5px;
+
+                @media screen and (min-width: 480px) {
+                    border: 1px solid #c1c1c1;
+                    width: 40px;
+                    height: 40px;
+                }
+
+                @media screen and (min-width: 763px) and (min-height: 570px) {
+                    border: 1px solid #c1c1c1;
+                    width: 62px;
+                    height: 62px;
+                }
+            }
+        }
+
+        .reset-button {
+            width: 30px;
+            height: 30px;
+            border-radius: 9px;
+            margin: 0 3.5px;
+
+            @media screen and (min-width: 480px) {
+                width: 40px;
+                height: 40px;
+            }
+
+            @media screen and (min-width: 763px) and (min-height: 570px) {
+                width: 62px;
+                height: 62px;
+            }
+        }
+    }
+
+    .confirmation-dots {
+        margin: 35px 0;
         display: flex;
         flex-direction: row;
         justify-content: center;
         align-items: center;
-        cursor: pointer;
-        transition: all 100ms ease-out;
-        background-color: #F3574F;
-        color: white;
-      }
-  
-      &-button:active {
-        background: #EAEAEA;
-      }
-    }
-  }
 
-  .numpad {
-    .keypad {
-      &-row {
-        @media screen and (min-height: 700px) {
-          margin-bottom: 23px;
-        }
-      }
-
-      &-button {
-        font-family: Source Sans Pro;
-        font-style: normal;
-        font-weight: 600;
-        font-size: 36px;
-        width: 30px;
-        height: 30px;
-        margin: 0 20px;
-
-        @media screen and (min-width: 320px) and (min-height: 570px) {
-          width: 40px;
-          height: 40px;
+        svg {
+            width: 139px;
+            height: 24px;
+            max-height: 24px;
         }
 
-        @media screen and (min-width: 763px) {
-          width: 47px;
-          height: 47px;
-          margin: 0 61.5px;
-        }
-      }
-    }
+        .pin-circle {
+            transition: all 100ms ease-out;
+            fill: white;
+            stroke-width: 2px;
+            stroke: black;
+            outline-offset: -2px;
+            outline-width: 2px;
 
-    .reset-button {
-      width: 30px;
-      height: 30px;
-      border-radius: 10px;
-      margin: 0 20px;
+            &.entered {
+                fill: black;
+            }
 
-      @media screen and (min-width: 320px) and (min-height: 570px) {
-        width: 40px;
-        height: 40px;
-      }
+            &.success {
+                fill: green;
+                stroke: green;
+            }
 
-      @media screen and (min-width: 763px) {
-        width: 40px;
-        height: 40px;
-        margin: 0 65px;
-      }
-    }
-  }
-
-  .charpad {
-    .keypad {
-      &-row {
-        margin-bottom: 16px;
-      }
-
-      &-button {
-        font-family: Source Sans Pro;
-        font-style: normal;
-        font-weight: normal;
-        font-size: 22px;
-        width: 30px;
-        height: 30px;
-        box-sizing: border-box;
-        border-radius: 9px;
-        margin: 0 3.5px;
-
-        @media screen and (min-width: 480px) {
-          border: 1px solid #C1C1C1;
-          width: 40px;
-          height: 40px;
+            &.error {
+                animation-name: shake;
+                animation-duration: 200ms;
+                fill: red;
+                stroke: red;
+            }
         }
 
-        @media screen and (min-width: 763px) and (min-height: 570px) {
-          border: 1px solid #C1C1C1;
-          width: 62px;
-          height: 62px;
+        @media screen and (min-height: 570px) {
+            margin: 55px 0;
         }
-      }
     }
 
-    .reset-button {
-      width: 30px;
-      height: 30px;
-      border-radius: 9px;
-      margin: 0 3.5px;
-
-      @media screen and (min-width: 480px) {
-        width: 40px;
-        height: 40px;
-      }
-
-      @media screen and (min-width: 763px) and (min-height: 570px) {
-        width: 62px;
-        height: 62px;
-      }
-    }
-  }
-  
-  .confirmation-dots {
-    margin: 35px 0;
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-
-    svg {
-      width: 139px;
-      height: 24px;
-      max-height: 24px;
+    .close {
+        position: absolute;
+        color: black;
+        top: 2px;
+        right: 2px;
     }
 
-    .pin-circle {
-      transition: all 100ms ease-out;
-      fill: white;
-      stroke-width: 2px;
-      stroke: black;
-      outline-offset: -2px;
-      outline-width: 2px;
+    .pin {
+        &-title1 {
+            margin: 60px 10px 0 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 32px;
+            line-height: 120%;
+            letter-spacing: -0.5px;
+            color: #181818;
 
-      &.entered {
-        fill: black;
-      }
+            @media screen and (min-width: 245px) {
+                margin: 60px 0 0 0;
+            }
+        }
 
-      &.success {
-        fill: green;
-        stroke: green;
-      }
+        &-title2 {
+            margin: 16px 10px 0 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            font-family: Source Sans Pro;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 14px;
+            line-height: 150%;
+            color: #181818;
 
-      &.error {
-        animation-name: shake;
-        animation-duration: 200ms;
-        fill: red;
-        stroke: red;
-      }
+            @media screen and (min-width: 245px) {
+                margin: 16px 0 0 0;
+            }
+        }
+
+        &-title3 {
+            margin: 8px 10px 0 10px;
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+            font-family: Source Sans Pro;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 150%;
+            color: #f3574f;
+
+            @media screen and (min-width: 340px) {
+                margin: 8px 0 0 0;
+            }
+        }
     }
 
-    @media screen and (min-height: 570px) {
-      margin: 55px 0;
+    @keyframes shake {
+        10%,
+        90% {
+            transform: translate3d(-1px, 0, 0);
+        }
+        20%,
+        80% {
+            transform: translate3d(2px, 0, 0);
+        }
+        30%,
+        50%,
+        70% {
+            transform: translate3d(-4px, 0, 0);
+        }
+        40%,
+        60% {
+            transform: translate3d(4px, 0, 0);
+        }
     }
-  }
-
-  .close {
-    position: absolute;
-    color: black;
-    top: 2px;
-    right: 2px;
-  }
-
-  .pin {
-    &-title1 {
-      margin: 60px 10px 0 10px;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      font-family: Roboto;
-      font-style: normal;
-      font-weight: bold;
-      font-size: 32px;
-      line-height: 120%;
-      letter-spacing: -0.5px;
-      color: #181818;
-
-      @media screen and (min-width: 245px) {
-        margin: 60px 0 0 0;
-      }
-    }
-
-    &-title2 {
-      margin: 16px 10px 0 10px;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      font-family: Source Sans Pro;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 14px;
-      line-height: 150%;
-      color: #181818;
-
-      @media screen and (min-width: 245px) {
-        margin: 16px 0 0 0;
-      }
-    }
-
-    &-title3 {
-      margin: 8px 10px 0 10px;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      align-items: center;
-      font-family: Source Sans Pro;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 16px;
-      line-height: 150%;
-      color: #F3574F;
-
-      @media screen and (min-width: 340px) {
-        margin: 8px 0 0 0;
-      }
-    }
-  }
-  
-  @keyframes shake {
-    10%, 90% {
-      transform: translate3d(-1px, 0, 0);
-    }
-    20%, 80% {
-      transform: translate3d(2px, 0, 0);
-    }
-    30%, 50%, 70% {
-      transform: translate3d(-4px, 0, 0);
-    }
-    40%, 60% {
-      transform: translate3d(4px, 0, 0);
-    }
-  }
 }
