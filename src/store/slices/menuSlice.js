@@ -53,14 +53,14 @@ export const menuSlice = createSlice({
                 //     expanded: false,
                 //     subMenuItemIds: [subMenuItemIds.SET_PROVIDER_SCRIPTS, subMenuItemIds.EDIT_PROVIDER_SCRIPTS]
                 // },
-                // [menuItemIds.INTERACT_WITH_AI_REQUEST]: {
-                //     id: menuItemIds.INTERACT_WITH_AI_REQUEST,
-                //     icon: <SettingIcon />,
-                //     activeIcon: <ActiveSettingIcon />,
-                //     text: "Interact with ai request",
-                //     expanded: false,
-                //     subMenuItemIds: [subMenuItemIds.SET_REQUEST, subMenuItemIds.GET_REQUEST],
-                // }
+                [menuItemIds.INTERACT_WITH_AI_REQUEST]: {
+                    id: menuItemIds.INTERACT_WITH_AI_REQUEST,
+                    icon: <SettingIcon />,
+                    activeIcon: <ActiveSettingIcon />,
+                    text: "Interact with ai request",
+                    expanded: false,
+                    subMenuItemIds: [subMenuItemIds.SET_REQUEST, subMenuItemIds.GET_REQUEST],
+                }
             },
             allIds: Object.values(menuItemIds),
             activeId: null,
@@ -82,26 +82,26 @@ export const menuSlice = createSlice({
                     text: "Deploy",
                     url: "/wasm_contract/deploy",
                 },
-                [subMenuItemIds.SET_PROVIDER_SCRIPTS]: {
-                    id: subMenuItemIds.SET_PROVIDER_SCRIPTS,
-                    text: "Set Provider Scripts",
-                    url: "/provider_scripts/set",
-                },
-                [subMenuItemIds.EDIT_PROVIDER_SCRIPTS]: {
-                    id: subMenuItemIds.EDIT_PROVIDER_SCRIPTS,
-                    text: "Edit Provider Scripts",
-                    url: "/provider_scripts/edit",
-                },
-                // [subMenuItemIds.SET_REQUEST]: {
-                //     id: subMenuItemIds.SET_REQUEST,
-                //     text: "Set Request",
-                //     url: "/ai_request/set",
+                // [subMenuItemIds.SET_PROVIDER_SCRIPTS]: {
+                //     id: subMenuItemIds.SET_PROVIDER_SCRIPTS,
+                //     text: "Set Provider Scripts",
+                //     url: "/provider_scripts/set",
                 // },
-                // [subMenuItemIds.GET_REQUEST]: {
-                //     id: subMenuItemIds.GET_REQUEST,
-                //     text: "Get Request",
-                //     url: "/ai_request/get",
+                // [subMenuItemIds.EDIT_PROVIDER_SCRIPTS]: {
+                //     id: subMenuItemIds.EDIT_PROVIDER_SCRIPTS,
+                //     text: "Edit Provider Scripts",
+                //     url: "/provider_scripts/edit",
                 // },
+                [subMenuItemIds.SET_REQUEST]: {
+                    id: subMenuItemIds.SET_REQUEST,
+                    text: "Set Request",
+                    url: "/ai_request/set",
+                },
+                [subMenuItemIds.GET_REQUEST]: {
+                    id: subMenuItemIds.GET_REQUEST,
+                    text: "Get Request",
+                    url: "/ai_request/get",
+                },
             },
             allIds: Object.values(subMenuItemIds),
             activeId: null,

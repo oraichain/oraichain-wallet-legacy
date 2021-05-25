@@ -19,7 +19,15 @@ const NavBar = ({ user }) => {
             <a class="navbar-brand" href="#">
                 <img src={logoUrl} className={cx("logo")} alt="" />
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
                 <BarsIcon className={cx("navbar-toggler-icon")} />
             </button>
 
@@ -31,22 +39,27 @@ const NavBar = ({ user }) => {
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><img className={cx("nav-link-icon")} src={githubUrl} alt="" /></a>
+                        <a class="nav-link" href="#">
+                            <img className={cx("nav-link-icon")} src={githubUrl} alt="" />
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><img className={cx("nav-link-icon")} src={enLanguageUrl} alt="" /></a>
+                        <a class="nav-link" href="#">
+                            <img className={cx("nav-link-icon")} src={enLanguageUrl} alt="" />
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><img className={cx("nav-link-icon")} src={vnLanguageUrl} alt="" /></a>
+                        <a class="nav-link" href="#">
+                            <img className={cx("nav-link-icon")} src={vnLanguageUrl} alt="" />
+                        </a>
                     </li>
-                    {
-                        (_.isNil(user) || Object.keys(user).length === 0) && (
-                            <li class="nav-item">
-                                <Link class="nav-link" to="/signin">Sign in</Link>
-                            </li>
-                        )
-                    }
-
+                    {(_.isNil(user) || Object.values(user).length === 0) && (
+                        <li class="nav-item">
+                            <Link class="nav-link" to="/signin">
+                                Sign in
+                            </Link>
+                        </li>
+                    )}
                 </ul>
             </div>
         </nav>
@@ -54,7 +67,7 @@ const NavBar = ({ user }) => {
 };
 
 NavBar.propTypes = {
-    user: PropTypes.any
+    user: PropTypes.any,
 };
 NavBar.defaultProps = {};
 
