@@ -1,5 +1,7 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import cn from "classnames/bind";
+import _ from "lodash";
 import PropTypes from "prop-types";
 import SearchIcon from "src/components/icons/SearchIcon";
 import BarsIcon from "src/components/icons/BarsIcon";
@@ -11,7 +13,7 @@ import vnLanguageUrl from "src/images/vn_language.png";
 
 const cx = cn.bind(styles);
 
-const NavBar = () => {
+const NavBar = ({ user }) => {
     return (
         <nav class="navbar navbar-expand-lg main-layout-navbar">
             <a class="navbar-brand" href="#">
@@ -37,13 +39,23 @@ const NavBar = () => {
                     <li class="nav-item">
                         <a class="nav-link" href="#"><img className={cx("nav-link-icon")} src={vnLanguageUrl} alt="" /></a>
                     </li>
+                    {
+                        (_.isNil(user) || Object.keys(user).length === 0) && (
+                            <li class="nav-item">
+                                <Link class="nav-link" to="/signin">Sign in</Link>
+                            </li>
+                        )
+                    }
+
                 </ul>
             </div>
         </nav>
     );
 };
 
-NavBar.propTypes = {};
+NavBar.propTypes = {
+    user: PropTypes.any
+};
 NavBar.defaultProps = {};
 
 export default NavBar;
