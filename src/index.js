@@ -14,24 +14,29 @@ import reportWebVitals from './reportWebVitals';
 
 window.$ = window.jQuery = require('jquery')
 
-const store = configureStore();
+// const store = configureStore();
 
-const render = (Component) =>
-  ReactDOM.render(
-    <I18nextProvider i18n={i18n}>
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Switch>
-            <Route path="/:locale" component={Component} />
-            <Redirect to="/en" />
-          </Switch>
-        </ConnectedRouter>
-      </Provider>
-    </I18nextProvider>,
-    document.getElementById('app')
-  );
+// const render = (Component) =>
+//   ReactDOM.render(
+//     <I18nextProvider i18n={i18n}>
+//       <Provider store={store}>
+//         <ConnectedRouter history={history}>
+//           <Switch>
+//             <Route path="/:locale" component={Component} />
+//             <Redirect to="/en" />
+//           </Switch>
+//         </ConnectedRouter>
+//       </Provider>
+//     </I18nextProvider>,
+//     document.getElementById('app')
+//   );
 
-render(App);
+// render(App);
+
+ReactDOM.render(
+    <App />,
+    document.getElementById("app")
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

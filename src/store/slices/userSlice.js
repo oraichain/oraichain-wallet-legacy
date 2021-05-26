@@ -10,13 +10,13 @@ import ActiveSettingIcon from "src/components/icons/ActiveSettingIcon";
 
 export const userSlice = createSlice({
     name: "user",
-    initialState: {},
+    initialState: null,
     reducers: {
         setUser: (state, action) => {
             return action.payload;
         },
         removeUser: (state, action) => {
-            return {};
+            return null;
         },
     },
 });

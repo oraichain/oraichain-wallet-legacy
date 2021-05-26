@@ -1,18 +1,29 @@
-:global(.main-layout-navbar) {
-    background-color: #1B57F0;
-}
+.nav-bar {
+    :global(.navbar) {
+        background-color: #1B57F0;
+    }
 
-:global(.nav-item) {
-    padding-left: 30px;
-}
+    :global(.navbar-light .navbar-toggler) {
+        border: none;
+    }
 
-:global(.nav-link) {
-    color: white;
+    :global(.navbar-light .navbar-toggler:focus) {
+        box-shadow: none;
+    }
 
-    &:hover {
+    :global(.nav-item) {
+        padding-left: 30px;
+    }
+
+    :global(.navbar-light .navbar-nav .nav-link) {
         color: white;
+
+        &:hover {
+            color: white;
+        }
     }
 }
+
 
 .logo {
     display: inline-block;
