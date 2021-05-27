@@ -75,24 +75,23 @@ const Pin = ({
                 const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
                 setPinEvaluateStatus("success");
                 setTimeout(() => {
+                    if (onConfirmSuccess) {
+                        onConfirmSuccess(childKey);
+                        return;
+                    }
+
                     if (pinType === "confirm") {
                         goToNextStep();
-                        onConfirmSuccess && onConfirmSuccess(childKey);
                     } else if (pinType === "signin") {
                         const address = cosmos.getAddress(childKey);
                         setUser && setUser({ address: address, account: walletName, childKey });
-
                         // go to transaction with address, other go to send
                         // updateUser({ name: walletName, address });
                         if (window.stdSignMsgByPayload) {
                             // history.push(`/${i18n.language}/transaction`);
                         } else if (closePopup) {
-                            if (onConfirmSuccess) {
-                                onConfirmSuccess(childKey);
-                            } else {
-                                window.opener.postMessage({ address: address, account: walletName }, "*");
-                                window.close();
-                            }
+                            window.opener.postMessage({ address: address, account: walletName }, "*");
+                            window.close();
                         } else {
                             // history.push(`/${i18n.language}/`);
                         }

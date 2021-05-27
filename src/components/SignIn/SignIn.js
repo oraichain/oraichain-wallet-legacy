@@ -16,6 +16,7 @@ import styles from "./SignIn.module.scss";
 const cx = cn.bind(styles);
 
 const SignIn = ({ history, location, user, setUser }) => {
+
     const isLoggedIn = !_.isNil(user);
     const methods = useForm();
     const {
@@ -32,6 +33,15 @@ const SignIn = ({ history, location, user, setUser }) => {
         queryParse = queryString.parse(location.state.from.search) || {};
     } else {
         queryParse = queryString.parse(history.location.search) || {};
+    }
+
+    let onConfirmSuccess = null;
+    if (!_.isNil(queryParse?.via) && queryParse.via === "dialog") {
+        onConfirmSuccess = (childKey) => {
+            const { privateKey, chainCode, network } = childKey;
+            window.opener.postMessage({ privateKey, chainCode, network }, '*');
+            window.close();
+        }
     }
 
     const onSubmit = (data) => {
@@ -124,6 +134,7 @@ const SignIn = ({ history, location, user, setUser }) => {
                     encryptedMnemonics={data.password}
                     closePopup={queryParse.signInFromScan}
                     setUser={setUser}
+                    onConfirmSuccess={onConfirmSuccess}
                 />
             )}
         </div>

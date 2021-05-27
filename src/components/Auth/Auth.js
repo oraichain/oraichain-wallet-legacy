@@ -16,7 +16,7 @@ const Auth = ({ user, removeUser }) => {
     const isLoggedIn = !_.isNil(user);
 
     if (!isLoggedIn) {
-        history.push(pagePaths.SIGNIN);
+        history.push(`${pagePaths.SIGNIN}?via=dialog`);
         return null;
     }
 

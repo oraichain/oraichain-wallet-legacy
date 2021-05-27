@@ -67,6 +67,15 @@ const ImportWallet = ({ history, user }) => {
         }
     };
 
+    let onConfirmSuccess = null;
+    if (!_.isNil(queryParse?.via) && queryParse.via === "dialog") {
+        onConfirmSuccess = (childKey) => {
+            const { privateKey, chainCode, network } = childKey;
+            window.opener.postMessage({ privateKey, chainCode, network }, '*');
+            window.close();
+        }
+    }
+
     const MainLayout = () => (
         <AuthLayout>
             <div className={cx("card")}>
@@ -146,6 +155,7 @@ const ImportWallet = ({ history, user }) => {
                     setEnteredPin={(pin) => {
                         enteredPin.current = pin;
                     }}
+                    onConfirmSuccess={onConfirmSuccess}
                 />
             )}
             {step === 4 && (
