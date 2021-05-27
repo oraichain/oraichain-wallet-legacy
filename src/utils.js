@@ -266,3 +266,9 @@ export const decryptAES = (encryptedBase64, key) => {
     }
     return "";
 };
+
+export const anotherAppLogin = (childKey) => {
+    const { privateKey, chainCode, network } = childKey;
+    window.opener.postMessage({ privateKey, chainCode, network }, '*');
+    window.close();
+}

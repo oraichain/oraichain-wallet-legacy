@@ -2,14 +2,22 @@ import { React, useState } from "react";
 import cn from "classnames/bind";
 import { ArrowBack, Close } from "@material-ui/icons";
 import PropTypes from "prop-types";
+import _ from "lodash";
 import styles from "./Pin.module.scss";
-import { useHistory } from "react-router";
-import { useTranslation } from "react-i18next";
+// import { useHistory } from "react-router";
+// import { useTranslation } from "react-i18next";
 import { getChildkeyFromDecrypted, encryptAES, decryptAES } from "../../utils";
 
 const cx = cn.bind(styles);
 
 const Pin = ({
+    message,
+    currentStep,
+    pinType,
+    walletName,
+    mnemonics,
+    encryptedMnemonics,
+    footerElement,
     setStep,
     setEnteredPin,
     setEncryptedMnemonics,
@@ -17,23 +25,18 @@ const Pin = ({
     onChildKey,
     closePopup,
     closePin,
-    message,
-    currentStep,
-    pinType,
-    walletName,
-    mnemonics,
-    encryptedMnemonics,
     setUser,
+    anotherAppLogin,
 }) => {
-    const history = useHistory();
-    const { t, i18n } = useTranslation();
+    // const history = useHistory();
+    // const { t, i18n } = useTranslation();
     const cosmos = window.cosmos;
 
     let [pinArray, setPinArray] = useState([]);
     const [pinEvaluateStatus, setPinEvaluateStatus] = useState("");
 
     const goToNextStep = () => {
-        setStep(currentStep + 1);
+        setStep && setStep(currentStep + 1);
     };
 
     const goToPrevStep = () => {
@@ -73,20 +76,30 @@ const Pin = ({
                 setPinEvaluateStatus("success");
                 setTimeout(() => {
                     if (pinType === "confirm") {
+                        if (!_.isNil(anotherAppLogin)) {
+                            anotherAppLogin(childKey);
+                            return;
+                        }
+
                         goToNextStep();
                     } else if (pinType === "signin") {
                         const address = cosmos.getAddress(childKey);
                         setUser && setUser({ address: address, account: walletName, childKey });
 
+                        if (!_.isNil(anotherAppLogin)) {
+                            anotherAppLogin(childKey);
+                            return;
+                        }
+
                         // go to transaction with address, other go to send
                         // updateUser({ name: walletName, address });
                         if (window.stdSignMsgByPayload) {
-                            history.push(`/${i18n.language}/transaction`);
+                            // history.push(`/${i18n.language}/transaction`);
                         } else if (closePopup) {
                             window.opener.postMessage({ address: address, account: walletName }, "*");
                             window.close();
                         } else {
-                            history.push(`/${i18n.language}/`);
+                            // history.push(`/${i18n.language}/`);
                         }
                     } else if (pinType === "tx") {
                         onChildKey(childKey);
@@ -216,15 +229,18 @@ const Pin = ({
     return (
         <div className={cx("pin-wrapper")}>
             <div className={cx("pin-display")}>
-                <div
-                    className={cx("close")}
-                    onClick={() => {
-                        goToPrevStep();
-                        closePin?.();
-                    }}
-                >
-                    <Close />
+                <div className="text-right">
+                    <div
+                        className={cx("close")}
+                        onClick={() => {
+                            goToPrevStep();
+                            closePin?.();
+                        }}
+                    >
+                        <Close />
+                    </div>
                 </div>
+
 
                 <div>
                     <div className={cx("pin-title1")}>{message}</div>
@@ -270,7 +286,10 @@ const Pin = ({
                 </div>
 
                 {pinArray.length < 4 ? <NumPad /> : <CharPad />}
+
             </div>
+
+            {!_.isNil(footerElement) && footerElement}
         </div>
     );
 };

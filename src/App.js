@@ -1,20 +1,24 @@
 import React from "react";
-import { BrowserRouter as Router, Switch, Route, Redirect, useRouteMatch } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import _ from "lodash";
 // import { Route, Redirect, Switch, useLocation, useRouteMatch, useHistory } from 'react-router';
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
-import { Provider, useSelector } from "react-redux";
+import { Provider } from "react-redux";
 import store from "src/store";
-import SignIn from "src/containers/SignIn";
+import SignInContainer from "src/containers/SignInContainer";
+import PrivateRoute from "src/containers/PrivateRoute";
+import AuthContainer from "src/containers/AuthContainer";
+import ImportWalletContainer from "src/containers/ImportWalletContainer";
 import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
 import SendTokens from "src/components/SendTokens";
 import SetRequest from "src/components/airequest/SetRequest";
-import ImportWallet from "src/components/ImportWallet";
 import CreateWallet from "src/components/CreateWallet";
 import Transaction from "src/components/Transaction";
 import Cosmos from "@oraichain/cosmosjs";
 import { networks } from "./config";
+import { pagePaths } from "./consts/pagePaths";
 
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
@@ -32,47 +36,31 @@ cosmos.setBech32MainPrefix(symbol);
 window.cosmos = cosmos;
 window.localStorage.setItem("wallet.network", network);
 
-const PrivateRoute = ({ component: Component, isLoggedIn, ...rest }) => {
-    return (
-        <Route
-            {...rest}
-            render={(props) =>
-                isLoggedIn ? (
-                    <Component {...props} />
-                ) : (
-                    <Redirect to={{ pathname: "/signin", state: { from: props.location } }} />
-                )
-            }
-        />
-    );
-};
 
-const App = ({}) => {
-    const user = useSelector((state) => state.user);
+const App = ({ }) => {
     let persistor = persistStore(store);
-    const match = useRouteMatch();
-    const isLoggedIn = !!user;
 
     return (
         <Provider store={store}>
             <PersistGate loading={null} persistor={persistor}>
                 <Router>
                     <Switch>
-                        <Route path="/signin" component={SignIn} />
-                        <Route path="/create-wallet" component={CreateWallet} />
-                        <Route path="/import-wallet" component={ImportWallet} />
-                        <PrivateRoute isLoggedIn={isLoggedIn} path={`/tx`} component={Transaction} />
-                        <Route path="/send-tokens">
+                        <Route path={pagePaths.AUTH} component={AuthContainer} />
+                        <Route path={pagePaths.SIGNIN} component={SignInContainer} />
+                        <Route path={pagePaths.CREATE_WALLET} component={CreateWallet} />
+                        <Route path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
+                        <PrivateRoute path={pagePaths.TX} component={Transaction} />
+                        <Route path={pagePaths.SEND_TOKENS}>
                             <MainLayout>
                                 <SendTokens />
                             </MainLayout>
                         </Route>
-                        <Route path="/ai_request/set">
+                        <Route path={pagePaths.AI_REQUEST_SET}>
                             <MainLayout>
                                 <SetRequest />
                             </MainLayout>
                         </Route>
-                        <Route path="/">
+                        <Route path={pagePaths.HOME}>
                             <MainLayout>
                                 <Home />
                             </MainLayout>
