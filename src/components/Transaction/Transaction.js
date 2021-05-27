@@ -24,6 +24,7 @@ const Transaction = ({ user, history }) => {
     const $ = window.jQuery;
     const { t, i18n } = useTranslation();
     const [openPin, setOpenPin] = useState(false);
+    const [loading, setLoading] = useState(false);
     const methods = useForm();
     const { getValues, handleSubmit, register, watch } = methods;
     const queryStringParse = queryString.parse(history.location.search) || {};
@@ -61,6 +62,7 @@ const Transaction = ({ user, history }) => {
 
     const onChildKey = async (childKey) => {
         try {
+            setLoading(true);
             // will allow return childKey from Pin
             const type = _.get(payload, "type");
             let txBody;
@@ -102,6 +104,8 @@ const Transaction = ({ user, history }) => {
             }
             // higher gas limit
             const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
+            setLoading(false);
+            alert("Transaction success");
             if (queryStringParse.signInFromScan) {
                 window.opener.postMessage(res.tx_response, "*");
                 window.close();
@@ -110,6 +114,7 @@ const Transaction = ({ user, history }) => {
             }
         } catch (ex) {
             alert(ex.message);
+            setLoading(false);
         } finally {
             // setBlocking(false);
         }
@@ -171,12 +176,15 @@ const Transaction = ({ user, history }) => {
                     pinType="tx"
                     onChildKey={onChildKey}
                     closePopup={queryStringParse.signInFromScan}
+
                     closePin={() => {
                         setOpenPin(false);
                     }}
                     encryptedMnemonics={getValues("password")}
                 />
             )}
+
+            {loading && (<div className={cx("loading")}>Loading...</div>)}
         </>
     );
 };
