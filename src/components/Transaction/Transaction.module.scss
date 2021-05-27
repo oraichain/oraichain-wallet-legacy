@@ -76,11 +76,15 @@
     width: 100vw;
     height: 100vh;
     display: flex;
-    flex-direction: row;;
+    flex-direction: column;;
     justify-content: center;
     align-items: center;
     font-size: 20px;
-    background-color: rgba(black, 0.9);
+    background-color: rgba(rgb(99, 99, 99), 0.9);
     color: white;
     z-index: 999;
+
+    &-text {
+        margin-top: 30px;
+    }
 }
