@@ -1,25 +1,24 @@
 import { React, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import cn from "classnames/bind";
 import { useForm, FormProvider } from "react-hook-form";
+import _ from "lodash";
 import queryString from "query-string";
-import { useSelector } from "react-redux";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
-import styles from "./ImportWallet.module.scss";
-import AuthLayout from "../AuthLayout";
-import Pin from "../Pin";
-import EncryptedMnemonic from "../EncryptedMnemonic";
-import ErrorText from "../ErrorText";
-import Field from "../Field";
-import { cleanMnemonics, countWords } from "../../utils";
+import AuthLayout from "src/components/AuthLayout";
+import Pin from "src/components/Pin";
+import EncryptedMnemonic from "src/components/EncryptedMnemonic";
+import ErrorText from "src/components/ErrorText";
+import Field from "src/components/Field";
+import { anotherAppLogin, cleanMnemonics, countWords } from "src/utils";
 import ConnectWalletContainer from "src/containers/ConnectWalletContainer";
-import { Link } from "react-router-dom";
+import styles from "./ImportWallet.module.scss";
 
 const cx = cn.bind(styles);
 
-const ImportWallet = ({ history }) => {
-    const user = useSelector((state) => state.user);
-    const isLoggedIn = Object.values(user)?.length !== 0;
+const ImportWallet = ({ history, user }) => {
+    const isLoggedIn = !_.isNil(user);
     const methods = useForm();
     const {
         register,
@@ -165,6 +164,7 @@ const ImportWallet = ({ history }) => {
                     closePopup={queryParse.signInFromScan}
                     encryptedMnemonics={encryptedMnemonics}
                     enteredPin={enteredPin.current}
+                    anotherAppLogin={(!_.isNil(queryParse?.via) && queryParse.via === "dialog") ? anotherAppLogin : null}
                 />
             )}
         </div>

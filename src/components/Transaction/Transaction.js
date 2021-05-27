@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import cn from "classnames/bind";
 import { FormProvider, useForm } from "react-hook-form";
+import { Spinner } from "react-bootstrap";
 import queryString from "query-string";
 import _ from "lodash";
 import Big from "big.js";
@@ -24,6 +25,7 @@ const Transaction = ({ user, history }) => {
     const $ = window.jQuery;
     const { t, i18n } = useTranslation();
     const [openPin, setOpenPin] = useState(false);
+    const [loading, setLoading] = useState(false);
     const methods = useForm();
     const { getValues, handleSubmit, register, watch } = methods;
     const queryStringParse = queryString.parse(history.location.search) || {};
@@ -61,6 +63,7 @@ const Transaction = ({ user, history }) => {
 
     const onChildKey = async (childKey) => {
         try {
+            setLoading(true);
             // will allow return childKey from Pin
             const type = _.get(payload, "type");
             let txBody;
@@ -102,6 +105,7 @@ const Transaction = ({ user, history }) => {
             }
             // higher gas limit
             const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
+            setLoading(false);
             if (queryStringParse.signInFromScan) {
                 window.opener.postMessage(res.tx_response, "*");
                 window.close();
@@ -110,6 +114,7 @@ const Transaction = ({ user, history }) => {
             }
         } catch (ex) {
             alert(ex.message);
+            setLoading(false);
         } finally {
             // setBlocking(false);
         }
@@ -149,14 +154,14 @@ const Transaction = ({ user, history }) => {
                                 <div className={cx("card-footer")}>
                                     <div className={cx("button-group")}>
                                         <button type="button" className={cx("button", "button-deny")} onClick={denyHandler}>
-                                            {t("deny")}
+                                            {t("DENY")}
                                         </button>
                                         <button
                                             type="button"
                                             className={cx("button", "button-allow")}
                                             onClick={handleOpenPin}
                                         >
-                                            {t("allow")}
+                                            {t("ALLOW")}
                                         </button>
                                     </div>
                                 </div>
@@ -176,6 +181,13 @@ const Transaction = ({ user, history }) => {
                     }}
                     encryptedMnemonics={getValues("password")}
                 />
+            )}
+
+            {loading && (
+                <div className={cx("loading")}>
+                    <Spinner animation="border" role="status"></Spinner>
+                    <div className="loading-text">Loading...</div>
+                </div>
             )}
         </>
     );

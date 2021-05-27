@@ -1,6 +1,7 @@
 import { React } from "react";
 import cn from "classnames/bind";
 import { useForm, FormProvider } from "react-hook-form";
+import _ from "lodash";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import styles from "./ConnectWallet.module.scss";
@@ -12,22 +13,26 @@ import { getChildkeyFromDecrypted, decryptAES } from "../../utils";
 
 const cx = cn.bind(styles);
 
-const ConnectWallet = ({ account, address, closePopup, encryptedMnemonics, enteredPin, setUser }) => {
-    const history = useHistory();
-    const { t, i18n } = useTranslation();
+const ConnectWallet = ({ account, address, closePopup, encryptedMnemonics, enteredPin, setUser, anotherAppLogin }) => {
+    // const history = useHistory();
+    // const { t, i18n } = useTranslation();
     const methods = useForm();
 
-    const onSubmit = (data) => {};
+    const onSubmit = (data) => { };
 
     const sendEventToParent = () => {
-        if (closePopup) {
+        if (closePopup && _.isNil(anotherAppLogin)) {
             window.opener.postMessage({ address: address, account: account }, "*");
             window.close();
         } else {
             const decryptedMnemonics = decryptAES(encryptedMnemonics, enteredPin);
             const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
             setUser({ address: address, account: account, childKey });
-            history.push(`/${i18n.language}/`);
+
+            if (!_.isNil(anotherAppLogin)) {
+                anotherAppLogin(address, account, childKey);
+            }
+            // history.push(`/${i18n.language}/`);
         }
     };
 
@@ -50,9 +55,12 @@ const ConnectWallet = ({ account, address, closePopup, encryptedMnemonics, enter
                                 How can I manage saved mnemonics?
                             </a>
 
-                            <Button variant="primary" size="lg" onClick={sendEventToParent}>
-                                Connect
-                            </Button>
+                            <div className="mt-4">
+                                <Button variant="primary" size="lg" onClick={sendEventToParent}>
+                                    Connect
+                                </Button>
+                            </div>
+
                         </form>
                     </FormProvider>
                 </div>

@@ -3,6 +3,7 @@ import * as bip32 from "bip32";
 import Message from "@oraichain/cosmosjs";
 import Big from "big.js";
 import { AES, enc } from "crypto-js";
+import _ from "lodash";
 
 const { message } = Message;
 
@@ -266,3 +267,16 @@ export const decryptAES = (encryptedBase64, key) => {
     }
     return "";
 };
+
+export const anotherAppLogin = (address, account, childKey) => {
+    if (!_.isNil(address) && !_.isNil(account)) {
+        window.opener.postMessage({ address, account}, "*");
+    }
+
+    if (!_.isNil(childKey)) {
+        const { privateKey, chainCode, network } = childKey;
+        window.opener.postMessage({ privateKey, chainCode, network }, '*');
+    }
+
+    window.close();
+}

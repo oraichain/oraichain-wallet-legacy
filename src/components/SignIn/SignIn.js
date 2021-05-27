@@ -2,22 +2,23 @@ import { React, useState } from "react";
 import { Link } from "react-router-dom";
 import cn from "classnames/bind";
 import { useForm, FormProvider } from "react-hook-form";
+import _ from "lodash";
 import queryString from "query-string";
-import { useSelector } from "react-redux";
+import { anotherAppLogin } from "src/utils";
+import AuthLayout from "src/components/AuthLayout";
 import Field from "src/components/Field";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import OrDivider from "src/components/OrDivider";
-import styles from "./SignIn.module.scss";
-import AuthLayout from "../AuthLayout";
-import ErrorText from "../ErrorText";
+import ErrorText from "src/components/ErrorText";
 import Pin from "src/components/Pin";
+import styles from "./SignIn.module.scss";
 
 const cx = cn.bind(styles);
 
-const SignIn = ({ history, setUser, location }) => {
-    const user = useSelector((state) => state.user);
-    const isLoggedIn = Object.values(user)?.length !== 0;
+const SignIn = ({ history, location, user, setUser }) => {
+
+    const isLoggedIn = !_.isNil(user);
     const methods = useForm();
     const {
         register,
@@ -125,6 +126,7 @@ const SignIn = ({ history, setUser, location }) => {
                     encryptedMnemonics={data.password}
                     closePopup={queryParse.signInFromScan}
                     setUser={setUser}
+                    anotherAppLogin={(!_.isNil(queryParse?.via) && queryParse.via === "dialog") ? anotherAppLogin : null}
                 />
             )}
         </div>
