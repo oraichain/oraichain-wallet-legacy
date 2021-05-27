@@ -11,7 +11,7 @@ import Pin from "src/components/Pin";
 import EncryptedMnemonic from "src/components/EncryptedMnemonic";
 import ErrorText from "src/components/ErrorText";
 import Field from "src/components/Field";
-import { cleanMnemonics, countWords } from "src/utils";
+import { anotherAppLogin, cleanMnemonics, countWords } from "src/utils";
 import ConnectWalletContainer from "src/containers/ConnectWalletContainer";
 import styles from "./ImportWallet.module.scss";
 
@@ -66,15 +66,6 @@ const ImportWallet = ({ history, user }) => {
             setStep(2);
         }
     };
-
-    let onConfirmSuccess = null;
-    if (!_.isNil(queryParse?.via) && queryParse.via === "dialog") {
-        onConfirmSuccess = (childKey) => {
-            const { privateKey, chainCode, network } = childKey;
-            window.opener.postMessage({ privateKey, chainCode, network }, '*');
-            window.close();
-        }
-    }
 
     const MainLayout = () => (
         <AuthLayout>
@@ -155,7 +146,6 @@ const ImportWallet = ({ history, user }) => {
                     setEnteredPin={(pin) => {
                         enteredPin.current = pin;
                     }}
-                    onConfirmSuccess={onConfirmSuccess}
                 />
             )}
             {step === 4 && (
@@ -174,6 +164,7 @@ const ImportWallet = ({ history, user }) => {
                     closePopup={queryParse.signInFromScan}
                     encryptedMnemonics={encryptedMnemonics}
                     enteredPin={enteredPin.current}
+                    anotherAppLogin={(!_.isNil(queryParse?.via) && queryParse.via === "dialog") ? anotherAppLogin : null}
                 />
             )}
         </div>

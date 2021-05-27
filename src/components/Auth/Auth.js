@@ -4,9 +4,11 @@ import cn from "classnames/bind";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { FormProvider, useForm } from "react-hook-form";
-import styles from "./Auth.module.scss";
 import { pagePaths } from "src/consts/pagePaths";
-import Pin from "../Pin";
+import { anotherAppLogin } from "src/utils";
+import Pin from "src/components/Pin";
+import styles from "./Auth.module.scss";
+
 const cx = cn.bind(styles);
 
 const Auth = ({ user, removeUser }) => {
@@ -49,11 +51,7 @@ const Auth = ({ user, removeUser }) => {
                 closePin={() => {
                     window.close();
                 }}
-                onConfirmSuccess={(childKey) => {
-                    const { privateKey, chainCode, network } = childKey;
-                    window.opener.postMessage({ privateKey, chainCode, network }, '*');
-                    window.close();
-                }}
+                anotherAppLogin={anotherAppLogin}
                 encryptedMnemonics={watch("password")}
                 footerElement={
                     <div className={cx("logout-button")} onClick={() => {
@@ -61,6 +59,7 @@ const Auth = ({ user, removeUser }) => {
                     }}>
                         Logout
                     </div>
+
                 }
             />
         </>

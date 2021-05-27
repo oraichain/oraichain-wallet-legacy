@@ -4,13 +4,20 @@ import { ArrowBack, Close } from "@material-ui/icons";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import styles from "./Pin.module.scss";
-import { useHistory } from "react-router";
+// import { useHistory } from "react-router";
 // import { useTranslation } from "react-i18next";
 import { getChildkeyFromDecrypted, encryptAES, decryptAES } from "../../utils";
 
 const cx = cn.bind(styles);
 
 const Pin = ({
+    message,
+    currentStep,
+    pinType,
+    walletName,
+    mnemonics,
+    encryptedMnemonics,
+    footerElement,
     setStep,
     setEnteredPin,
     setEncryptedMnemonics,
@@ -18,17 +25,10 @@ const Pin = ({
     onChildKey,
     closePopup,
     closePin,
-    message,
-    currentStep,
-    pinType,
-    walletName,
-    mnemonics,
-    encryptedMnemonics,
     setUser,
-    onConfirmSuccess,
-    footerElement
+    anotherAppLogin,
 }) => {
-    const history = useHistory();
+    // const history = useHistory();
     // const { t, i18n } = useTranslation();
     const cosmos = window.cosmos;
 
@@ -75,16 +75,22 @@ const Pin = ({
                 const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
                 setPinEvaluateStatus("success");
                 setTimeout(() => {
-                    if (onConfirmSuccess) {
-                        onConfirmSuccess(childKey);
-                        return;
-                    }
-
                     if (pinType === "confirm") {
+                        if (!_.isNil(anotherAppLogin)) {
+                            anotherAppLogin(childKey);
+                            return;
+                        }
+
                         goToNextStep();
                     } else if (pinType === "signin") {
                         const address = cosmos.getAddress(childKey);
                         setUser && setUser({ address: address, account: walletName, childKey });
+
+                        if (!_.isNil(anotherAppLogin)) {
+                            anotherAppLogin(childKey);
+                            return;
+                        }
+
                         // go to transaction with address, other go to send
                         // updateUser({ name: walletName, address });
                         if (window.stdSignMsgByPayload) {

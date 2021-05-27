@@ -4,12 +4,13 @@ import cn from "classnames/bind";
 import { useForm, FormProvider } from "react-hook-form";
 import _ from "lodash";
 import queryString from "query-string";
+import { anotherAppLogin } from "src/utils";
+import AuthLayout from "src/components/AuthLayout";
 import Field from "src/components/Field";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import OrDivider from "src/components/OrDivider";
-import AuthLayout from "../AuthLayout";
-import ErrorText from "../ErrorText";
+import ErrorText from "src/components/ErrorText";
 import Pin from "src/components/Pin";
 import styles from "./SignIn.module.scss";
 
@@ -33,15 +34,6 @@ const SignIn = ({ history, location, user, setUser }) => {
         queryParse = queryString.parse(location.state.from.search) || {};
     } else {
         queryParse = queryString.parse(history.location.search) || {};
-    }
-
-    let onConfirmSuccess = null;
-    if (!_.isNil(queryParse?.via) && queryParse.via === "dialog") {
-        onConfirmSuccess = (childKey) => {
-            const { privateKey, chainCode, network } = childKey;
-            window.opener.postMessage({ privateKey, chainCode, network }, '*');
-            window.close();
-        }
     }
 
     const onSubmit = (data) => {
@@ -134,7 +126,7 @@ const SignIn = ({ history, location, user, setUser }) => {
                     encryptedMnemonics={data.password}
                     closePopup={queryParse.signInFromScan}
                     setUser={setUser}
-                    onConfirmSuccess={onConfirmSuccess}
+                    anotherAppLogin={(!_.isNil(queryParse?.via) && queryParse.via === "dialog") ? anotherAppLogin : null}
                 />
             )}
         </div>
