@@ -30,7 +30,7 @@ const ConnectWallet = ({ account, address, closePopup, encryptedMnemonics, enter
             setUser({ address: address, account: account, childKey });
 
             if (!_.isNil(anotherAppLogin)) {
-                anotherAppLogin(childKey);
+                anotherAppLogin(address, account, childKey);
             }
             // history.push(`/${i18n.language}/`);
         }

@@ -61,6 +61,8 @@ const Auth = ({ user, removeUser }) => {
                     </div>
 
                 }
+                loggedInAccount={user.account}
+                loggedInAddress={user.address}
             />
         </>
 
