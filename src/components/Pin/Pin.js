@@ -27,6 +27,8 @@ const Pin = ({
     closePin,
     setUser,
     anotherAppLogin,
+    loggedInAccount,
+    loggedInAddress,
 }) => {
     // const history = useHistory();
     // const { t, i18n } = useTranslation();
@@ -73,21 +75,21 @@ const Pin = ({
         if (decryptedMnemonics !== "") {
             setTimeout(() => {
                 const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
+                const address = cosmos.getAddress(childKey);
                 setPinEvaluateStatus("success");
                 setTimeout(() => {
                     if (pinType === "confirm") {
                         if (!_.isNil(anotherAppLogin)) {
-                            anotherAppLogin(childKey);
+                            anotherAppLogin(address ?? loggedInAddress, walletName ?? loggedInAccount, childKey);
                             return;
                         }
 
                         goToNextStep();
                     } else if (pinType === "signin") {
-                        const address = cosmos.getAddress(childKey);
                         setUser && setUser({ address: address, account: walletName, childKey });
 
                         if (!_.isNil(anotherAppLogin)) {
-                            anotherAppLogin(childKey);
+                            anotherAppLogin(address, walletName, childKey);
                             return;
                         }
 
