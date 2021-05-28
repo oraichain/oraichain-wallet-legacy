@@ -23,7 +23,7 @@ import { pagePaths } from "./consts/pagePaths";
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
 const path = url.searchParams.get("path");
-const lcd = url.searchParams.get("lcd") || process.env.REACT_APP_LCD || (networks[network]?.lcd ?? "http://localhost:1317");
+const lcd = process.env.REACT_APP_LCD || url.searchParams.get("lcd") || (networks[network]?.lcd ?? "http://localhost:1317");
 // init cosmos version
 const cosmos = new Cosmos(lcd, network);
 const symbol = networks[network]?.denom ?? "orai";
