@@ -14,6 +14,7 @@ import {
     getTxCreateValidator,
     getTxBodyUndelegate,
     getTxBodyMsgWithdrawDelegatorReward,
+    getTxBodyMsgWithdrawValidatorCommission,
 } from "src/utils";
 import AuthLayout from "src/components/AuthLayout";
 import Pin from "src/components/Pin";
@@ -88,6 +89,12 @@ const Transaction = ({ user, history }) => {
                 case "cosmos-sdk/MsgWithdrawDelegationReward": {
                     txBody = getTxBodyMsgWithdrawDelegatorReward(
                         user,
+                        _.get(payload, "value.msg.0.value.validator_address")
+                    );
+                    break;
+                }
+                case "cosmos-sdk/MsgWithdrawValidatorCommission": {
+                    txBody = getTxBodyMsgWithdrawValidatorCommission(
                         _.get(payload, "value.msg.0.value.validator_address")
                     );
                     break;

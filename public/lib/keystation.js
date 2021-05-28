@@ -104,8 +104,7 @@ class Keystation {
 
     const url =
       this.keystationUrl +
-      `/${this.locale}/` +
-      apiUrl +
+      `/auth` +
       '?path=' +
       encodeURIComponent(path) +
       '&client=' +
@@ -113,7 +112,7 @@ class Keystation {
       '&lcd=' +
       encodeURIComponent(this.lcd) +
       '&childKeyOnly=true&signInFromScan=true';
-    // create new one if closed    
+    // create new one if closed
     const popup = PopupCenter(url, '', '400', '705');
     return new Promise((resolve) => {
       const handler = (e) => {

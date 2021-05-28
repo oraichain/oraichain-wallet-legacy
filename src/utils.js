@@ -197,6 +197,20 @@ export const getTxBodyMsgWithdrawDelegatorReward = (user, validator_address) => 
     });
 };
 
+export const getTxBodyMsgWithdrawValidatorCommission = (validator_address) => {
+    const msgSend = new message.cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission({validator_address});
+
+    const msgSendAny = new message.google.protobuf.Any({
+        type_url: "/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission",
+        value: message.cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission.encode(msgSend).finish(),
+    });
+
+    return new message.cosmos.tx.v1beta1.TxBody({
+        messages: [msgSendAny],
+        memo: "",
+    });
+};
+
 export const getTxCreateValidator = (msg) => {
     const msgSend = new message.cosmos.staking.v1beta1.MsgCreateValidator({
         ...msg,
