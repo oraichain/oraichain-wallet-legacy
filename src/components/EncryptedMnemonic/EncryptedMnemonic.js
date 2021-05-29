@@ -1,102 +1,156 @@
 import { React, useState } from "react";
+import { useHistory } from "react-router-dom";
 import cn from "classnames/bind";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useForm, FormProvider } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ErrorMessage } from "@hookform/error-message";
+import FormTitle from "src/components/FormTitle";
+import FormField from "src/components/FormField";
+import Label from "src/components/Label";
+import TextField from "src/components/TextField";
+import TextArea from "src/components/TextArea";
+import ErrorText from "src/components/ErrorText";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import styles from "./EncryptedMnemonic.module.scss";
-import AuthLayout from "../AuthLayout";
 import copyIcon from "src/assets/icons/copy.svg";
-import ErrorText from "../ErrorText";
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import Field from "../Field";
-import { useHistory } from 'react-router-dom';
 
 const cx = cn.bind(styles);
 
-const EncryptedMnemonic = ({ setStep, currentStep, queryParam, walletName, encryptedMnemonics }) => {
+const EncryptedMnemonic = ({
+    setStep,
+    currentStep,
+    queryParam,
+    walletName,
+    encryptedMnemonics,
+}) => {
     const history = useHistory();
 
-    const methods = useForm();
-    const { register: importWallet, handleSubmit, formState: { errors } } = methods;
+    const schema = yup.object().shape({
+        account: yup.string().required("The Account is required"),
+        mnemonics: yup.string().required("The Encrypted Mnemonics is required"),
+    });
+
+    const methods = useForm({
+        defaultValues: {
+            encryptedMnemonics: encryptedMnemonics,
+            account: walletName,
+        },
+        resolver: yupResolver(schema),
+    });
+    const { handleSubmit, formState } = methods;
 
     const [copied, setCopied] = useState(false);
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
 
     const goToNextStep = () => {
         setStep(currentStep + 1);
-    }
+    };
 
     const copyToClipboard = () => {
-        setCopied(true)
+        setCopied(true);
         setTimeout(() => {
-            setCopied(false)
+            setCopied(false);
         }, 1000);
     };
 
     const onSubmit = (data) => {
         if (data.mnemonics !== encryptedMnemonics) {
-            setInvalidMnemonics(true)
+            setInvalidMnemonics(true);
             setTimeout(() => {
-                setInvalidMnemonics(false)
+                setInvalidMnemonics(false);
             }, 1000);
         } else {
             history.push({
-                search: queryParam
+                search: queryParam,
             });
-            localStorage.setItem(walletName + '-password', encryptedMnemonics);
-            goToNextStep()
+            localStorage.setItem(walletName + "-password", encryptedMnemonics);
+            goToNextStep();
         }
     };
 
     return (
-        <AuthLayout><div className={cx("card")}>
-            <div className={cx("card-header")}>Import Wallet
-                <div className={cx("sub-card-header")}>Please copy and paste the mnemonic encryption below.</div>
-            </div>
-            <div className={cx("card-body")}>
-                <div className={cx("mnemonics")}>
-                    <div className={cx("mnemonics-field")}>
-                        <div className={cx("field-title")}>Encrypted mnemonic pharse
-                            <CopyToClipboard onCopy={copyToClipboard} text={encryptedMnemonics}>
-                                <div className={cx("copy")}>
-                                    <img className={cx("copy-image")} src={copyIcon} alt="" />
-                                    <div className={cx("copy-btn")} >Copy</div>
-                                </div>
-                            </CopyToClipboard>
-                        </div>
-                        <div className={cx("field-input")}>
-                            <textarea className={cx("text-field", "text-area")} defaultValue={encryptedMnemonics} disabled="disabled" placeholder="" />
-                        </div>
-                        {copied && <div className={cx("copy-message")}>Encrypted mnemonic phrase is copied.</div>}
-                    </div>
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <FormTitle>Import Wallet</FormTitle>
+                <div className={cx("tutorial")}>
+                    Please copy and paste the mnemonic encryption below.
                 </div>
+                <FormField>
+                    <div className="d-flex flex-row justify-content-between align-items-center">
+                        <Label>Encrypted mnemonic pharse</Label>
+                        <CopyToClipboard
+                            onCopy={copyToClipboard}
+                            text={encryptedMnemonics}
+                        >
+                            <div className={cx("copy-button")}>
+                                <img
+                                    className={cx("copy-button-icon")}
+                                    src={copyIcon}
+                                    alt=""
+                                />
+                                <span className={cx("copy-button-text")}>
+                                    Copy
+                                </span>
+                            </div>
+                        </CopyToClipboard>
+                    </div>
 
-                <FormProvider {...methods} >
-                    <form onSubmit={handleSubmit(onSubmit)}>
-                        <input type="text" className={cx("text-field-hidden")} name="account" value={walletName} placeholder="" {...importWallet("account", { required: true })} />
-                        <Field
-                            title="Encrypted mnemonic pharse"
-                            input={<input type="password" className={cx("text-field")} name="mnemonics" autoComplete="new-password" placeholder="" {...importWallet("mnemonics", { required: true })} />}
-                        />
-                        {errors.mnemonics && <ErrorText>Invalid mnemonics.</ErrorText>}
-                        {invalidMnemonics && <ErrorText>Encrypted mnemonic phrase does not match.</ErrorText>}
+                    <TextArea disabled={true} name="encryptedMnemonics" />
+                    <ErrorMessage
+                        errors={formState.errors}
+                        name="encryptedMnemonics"
+                        render={({ message }) => (
+                            <ErrorText>{message}</ErrorText>
+                        )}
+                    />
 
-                        <a href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5" target="blank">
-                            <Suggestion text="Why do I have to encrypt my mnemonic pharse?" />
-                        </a>
+                    {copied && (
+                        <div className={cx("copy-message")}>
+                            Encrypted mnemonic phrase is copied.
+                        </div>
+                    )}
+                </FormField>
 
-                        <Button variant="primary" size="lg" submit={true}>
-                            Next
-                        </Button>
-                    </form>
-                </FormProvider>
-            </div>
-        </div></AuthLayout>
+                <TextField name="account" className="d-none" />
+
+                <FormField>
+                    <Label>Encrypted mnemonic pharse</Label>
+                    <TextField
+                        type="password"
+                        name="mnemonics"
+                        autoComplete="new-password"
+                    />
+                    {formState.errors.mnemonics && (
+                        <ErrorText>Invalid mnemonics.</ErrorText>
+                    )}
+                    {invalidMnemonics && (
+                        <ErrorText>
+                            Encrypted mnemonic phrase does not match.
+                        </ErrorText>
+                    )}
+                </FormField>
+
+                <a
+                    href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5"
+                    target="blank"
+                >
+                    <Suggestion text="Why do I have to encrypt my mnemonic pharse?" />
+                </a>
+
+                <div className="d-flex flex-row justify-content-center mb-4">
+                    <Button variant="primary" size="lg" submit={true}>
+                        Next
+                    </Button>
+                </div>
+            </form>
+        </FormProvider>
     );
 };
 
-EncryptedMnemonic.propTypes = {
-};
+EncryptedMnemonic.propTypes = {};
 EncryptedMnemonic.defaultProps = {};
 
 export default EncryptedMnemonic;

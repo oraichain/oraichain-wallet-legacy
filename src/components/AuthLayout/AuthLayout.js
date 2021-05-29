@@ -9,19 +9,17 @@ const cx = cn.bind(styles);
 const AuthLayout = ({ children }) => {
     return (
         <div className={cx("auth-layout")}>
-            <div className="container h-100">
-                <div className="row h-100">
-                    <div className="col-12 col-lg-6 h-100 d-none d-lg-block">
-                        <div className={cx("auth-layout-header")}>
-                            <div className={cx("brand")}>
-                                <img className={cx("brand-logo")} src={logoUrl} alt="" />
-                                <span className={cx("brand-name")}>Oraichain Wallet</span>
-                            </div>
-                        </div>
+            <div className={cx("auth-layout-header")}>
+                <div className="container d-flex flex-row justify-content-start align-items-center">
+                    <div className={cx("brand")}>
+                        <img className={cx("brand-icon")} src={logoUrl} alt="" />
+                        <span className={cx("brand-text")}>Oraichain Wallet</span>
                     </div>
-                    <div className="col-12 col-lg-6 h-100">
-                        <div className={cx("auth-layout-body")}>{children}</div>
-                    </div>
+                </div>
+            </div>
+            <div className={cx("auth-layout-body")}>
+                <div className="container">
+                    {children}
                 </div>
             </div>
         </div>

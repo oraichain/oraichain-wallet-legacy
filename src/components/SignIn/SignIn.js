@@ -1,33 +1,50 @@
 import { React, useState } from "react";
-import { Link } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import cn from "classnames/bind";
-import { useForm, FormProvider } from "react-hook-form";
 import _ from "lodash";
 import queryString from "query-string";
+import { useForm, FormProvider } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { anotherAppLogin } from "src/utils";
+import { ErrorMessage } from "@hookform/error-message";
 import AuthLayout from "src/components/AuthLayout";
-import Field from "src/components/Field";
-import Suggestion from "src/components/Suggestion";
-import Button from "src/components/Button";
-import OrDivider from "src/components/OrDivider";
+import FormContainer from "src/components/FormContainer";
+import FormTitle from "src/components/FormTitle";
+import FormField from "src/components/FormField";
+import Label from "src/components/Label";
+import TextField from "src/components/TextField";
 import ErrorText from "src/components/ErrorText";
 import Pin from "src/components/Pin";
+import Suggestion from "src/components/Suggestion";
+import Button from "src/components/Button";
+import QuestionLink from "src/components/QuestionLink";
 import styles from "./SignIn.module.scss";
 
 const cx = cn.bind(styles);
 
-const SignIn = ({ history, location, user, setUser }) => {
+const steps = {
+    SIGIN_FORM: 1,
+    PIN: 2,
+};
 
-    const isLoggedIn = !_.isNil(user);
-    const methods = useForm();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = methods;
+const SignIn = ({ setUser }) => {
+    const history = useHistory();
+    const location = useLocation();
+    const schema = yup.object().shape({
+        walletName: yup.string().required("The Wallet Name is required"),
+    });
 
-    const [step, setStep] = useState(1);
-    const [data, setData] = useState({});
+    const methods = useForm({
+        resolver: yupResolver(schema),
+    });
+    const { handleSubmit, formState, watch } = methods;
+
+    const [step, setStep] = useState(steps.SIGIN_FORM);
+    const [pinData, setPinData] = useState({
+        walletName: null,
+        password: null,
+    });
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
     let queryParse;
     if (location && location.state && location.state.from) {
@@ -37,101 +54,107 @@ const SignIn = ({ history, location, user, setUser }) => {
     }
 
     const onSubmit = (data) => {
-        const password = data.password || localStorage.getItem(data.walletName + "-password") || "";
+        const password =
+            data.password ||
+            localStorage.getItem(data.walletName + "-password") ||
+            "";
 
         if (password === "") {
             setInvalidMnemonics(true);
         } else {
             setInvalidMnemonics(false);
-            data.password = password;
-            setData(data);
-            setStep(2);
+            setPinData({
+                walletName: data.walletName,
+                password: password
+            });
+            setStep(steps.PIN);
         }
     };
 
-    const MainLayout = () => (
-        <AuthLayout>
-            <div className={cx("card")}>
-                <div className={cx("card-header")}>Sign In</div>
-                <div className={cx("card-body")}>
-                    <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <Field
-                                title="Walletname"
-                                input={
-                                    <input
-                                        type="text"
-                                        className={cx("text-field")}
-                                        defaultValue={data.walletName}
-                                        name="walletName"
-                                        autoComplete="username"
-                                        placeholder=""
-                                        {...register("walletName", { required: true })}
-                                    />
-                                }
-                            />
-                            {errors.walletName && <ErrorText>Invalid account.</ErrorText>}
+    const signinForm = (
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <FormTitle>SignIn</FormTitle>
+                <FormField>
+                    <Label>Walletname</Label>
+                    <TextField
+                        type="text"
+                        autoComplete="username"
+                        name="walletName"
+                    />
+                    <ErrorMessage
+                        errors={formState.errors}
+                        name="walletName"
+                        render={({ message }) => (
+                            <ErrorText>{message}</ErrorText>
+                        )}
+                    />
+                </FormField>
 
-                            <input
-                                type="password"
-                                className={cx("text-field-hidden")}
-                                name="password"
-                                autoComplete="current-password"
-                                placeholder=""
-                                {...register("password")}
-                            />
-                            {invalidMnemonics && (
-                                <ErrorText>
-                                    Could not retrieve account stored in Keychain. Press the button below the Import Wallet.
-                                </ErrorText>
-                            )}
+                <FormField>
+                    <TextField
+                        type="password"
+                        autoComplete="current-password"
+                        name="password"
+                        className="d-none"
+                    />
+                    {invalidMnemonics && (
+                        <ErrorText>
+                            Could not retrieve account stored in Keychain. Press
+                            the button below the Import Wallet.
+                        </ErrorText>
+                    )}
+                </FormField>
 
-                            <Suggestion text=" Unavailable in guest mode or incognito mode." />
+                <Suggestion text=" Unavailable in guest mode or incognito mode." />
 
-                            <Button variant="primary" size="lg" submit={true}>
-                                Next
-                            </Button>
-                        </form>
-                    </FormProvider>
-
-                    <OrDivider />
-
-                    <Link to={`/import-wallet${history.location.search}`}>
-                        <Button variant="outline-primary" size="lg">
-                            Import Wallet
-                        </Button>
-                    </Link>
+                <div className="d-flex flex-row justify-content-center mb-4">
+                    <Button variant="primary" size="lg" submit={true}>
+                        Next
+                    </Button>
                 </div>
-                <div className={cx("card-footer")}>
-                    <div className={cx("question")}>
-                        <div className={cx("question-text")}>Dont have a wallet?</div>
-                        <Link to={`/create-wallet${history.location.search}`} className={cx("question-link")}>
-                            Create Wallet
-                        </Link>
-                    </div>
+
+                <div className="d-flex flex-row justify-content-center mb-5">
+                    <Button
+                        variant="secondary"
+                        size="lg"
+                        onClick={() => {
+                            history.push(
+                                `/import-wallet${history.location.search}`
+                            );
+                        }}
+                    >
+                        Import Wallet
+                    </Button>
                 </div>
-            </div>
-        </AuthLayout>
+
+                <QuestionLink questionText="Don't have Mnemonics?" linkTo={`/create-wallet${history.location.search}`} linkText="Generate Mnemonics" />
+            </form>
+        </FormProvider>
     );
 
-    return !isLoggedIn ? (
-        <div>
-            {step === 1 && <MainLayout />}
-            {step === 2 && (
-                <Pin
-                    setStep={setStep}
-                    currentStep={step}
-                    pinType="signin"
-                    walletName={data.walletName}
-                    encryptedMnemonics={data.password}
-                    closePopup={queryParse.signInFromScan}
-                    setUser={setUser}
-                    anotherAppLogin={(!_.isNil(queryParse?.via) && queryParse.via === "dialog") ? anotherAppLogin : null}
-                />
-            )}
-        </div>
-    ) : (
-        <>{history?.push("/")}</>
+    return (
+        <AuthLayout>
+            <FormContainer>
+                {step === steps.SIGIN_FORM && signinForm}
+                {step === steps.PIN && (
+                    <Pin
+                        currentStep={step}
+                        pinType="signin"
+                        walletName={pinData?.walletName}
+                        encryptedMnemonics={pinData?.password}
+                        setStep={setStep}
+                        setUser={setUser}
+                        anotherAppLogin={
+                            !_.isNil(queryParse?.via) &&
+                            queryParse.via === "dialog"
+                                ? anotherAppLogin
+                                : null
+                        }
+                    />
+                )}
+            </FormContainer>
+        </AuthLayout>
     );
 };
 

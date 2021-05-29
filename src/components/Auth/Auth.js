@@ -8,6 +8,7 @@ import { pagePaths } from "src/consts/pagePaths";
 import { anotherAppLogin } from "src/utils";
 import Pin from "src/components/Pin";
 import styles from "./Auth.module.scss";
+import LogoutIcon from "../icons/LogoutIcon";
 
 const cx = cn.bind(styles);
 

@@ -1,91 +1,134 @@
 import { React, useState } from "react";
 import cn from "classnames/bind";
-import { FormProvider } from "react-hook-form";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useForm, FormProvider } from "react-hook-form";
+import AuthLayout from "src/components/AuthLayout";
+import FormContainer from "src/components/FormContainer";
+import FormTitle from "src/components/FormTitle";
+import FormField from "src/components/FormField";
+import Label from "src/components/Label";
+import TextField from "src/components/TextField";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import styles from "./CreateWallet.module.scss";
-import AuthLayout from "../AuthLayout";
 import copyIcon from "src/assets/icons/copy.svg";
-import { Link } from "react-router-dom";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const cx = cn.bind(styles);
 
 const CreateWallet = ({ history }) => {
     const cosmos = window.cosmos;
-
+    const methods = useForm();
+    const { handleSubmit, setValue, getValues } = methods;
     const [copied, setCopied] = useState(false);
-    const [mnemonics, setMnemonics] = useState('');
     const [showMnemonics, setShowMnemonics] = useState(false);
 
-    const changeShowMnemonics = () => {
+    const toggleShowMnemonics = () => {
         setShowMnemonics(!showMnemonics);
     };
 
     const generateMnemonics = () => {
-        setMnemonics(cosmos.generateMnemonic(256));
+        return cosmos.generateMnemonic(256);
     };
 
     const copyToClipboard = () => {
-        setCopied(true)
+        setCopied(true);
         setTimeout(() => {
-            setCopied(false)
+            setCopied(false);
         }, 1000);
+    };
+
+    const onSubmit = (data) => {
+        setValue("mnemonics", generateMnemonics());
     };
 
     return (
         <AuthLayout>
-            <div className={cx("card")}>
-                <div className={cx("card-header")}>Create Wallet</div>
-                <div className={cx("card-body")}>
-                    <FormProvider>
-                        <form onSubmit={() => { }}>
-                            <div className={cx("field")}>
-                                <div className={cx("field-title")}>Mnemonics</div>
-                                <div className={cx("field-input")}>
-                                    <div className={cx("mnemonics")}>
-                                        <input className={cx("text-field")} type={showMnemonics ? "text" : "password"} value={mnemonics} autoComplete="off" name="mnemonics" placeholder="" onChange={() => { }} />
-
-                                        {copied && <div className={cx("copy-message")}>Encrypted mnemonic phrase is copied.</div>}
-                                        <CopyToClipboard onCopy={copyToClipboard} text={mnemonics}>
-                                            <div className={cx("copy")}>
-                                                <span className={cx("copy-line")}></span>
-                                                <img className={cx("copy-image")} src={copyIcon} alt="" />
-                                                <span className={cx("copy-btn")}>Copy</span>
-                                            </div>
-                                        </CopyToClipboard>
+            <FormContainer>
+                <FormProvider {...methods}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <FormTitle>Generate Mnemonics</FormTitle>
+                        <FormField>
+                            <div className="d-flex flex-row justify-content-between align-items-center">
+                                <Label>Mnemonics</Label>
+                                <CopyToClipboard
+                                    onCopy={copyToClipboard}
+                                    text={getValues("mnemonics")}
+                                >
+                                    <div className={cx("copy-button")}>
+                                        <img
+                                            className={cx("copy-button-icon")}
+                                            src={copyIcon}
+                                            alt=""
+                                        />
+                                        <span
+                                            className={cx("copy-button-text")}
+                                        >
+                                            Copy
+                                        </span>
                                     </div>
+                                </CopyToClipboard>
+                            </div>
+
+                            <TextField
+                                name="mnemonics"
+                                type={showMnemonics ? "text" : "password"}
+                                autoComplete="off"
+                            />
+
+                            {copied && (
+                                <div className={cx("copy-message")}>
+                                    Encrypted mnemonic phrase is copied.
                                 </div>
-                            </div>
+                            )}
+                        </FormField>
 
-                            <div className={cx("show-mnemonics")}>
-                                <input type="radio" checked={showMnemonics} className={cx("show-mnemonics-radio")} id="show-mnemonics" name="" onClick={changeShowMnemonics} onChange={() => { }} />
-                                <span className={cx("show-mnemonics-text")}>Show the mnemonics</span>
-                            </div>
+                        <div className={cx("show-mnemonics")}>
+                            <input
+                                type="radio"
+                                checked={showMnemonics}
+                                className={cx("show-mnemonics-radio")}
+                                id="show-mnemonics"
+                                name=""
+                                onClick={toggleShowMnemonics}
+                                onChange={() => {}}
+                            />
+                            <label
+                                htmlFor="show-mnemonics"
+                                className={cx("show-mnemonics-label")}
+                            >
+                                Show the mnemonics
+                            </label>
+                        </div>
 
-                            <Suggestion text="Copy this mnemonic then go to import page." />
+                        <Suggestion text="Copy this mnemonic then go to import page." />
 
-                            <div className={cx("button-space")}>
-                                <Button variant="primary" size="lg" onClick={generateMnemonics}>
-                                    Next
-                                </Button>
-                            </div>
+                        <div className="mb-4">
+                            <Button variant="primary" size="lg" submit={true}>
+                                Generate
+                            </Button>
+                        </div>
 
-                            <Link to={`/import-wallet${history.location.search}`}>
-                                <Button variant="outline-primary" size="lg">
-                                    Import Wallet
-                                </Button>
-                            </Link>
-                        </form>
-                    </FormProvider>
-                </div>
-            </div>
+                        <div className="mb-4">
+                            <Button
+                                variant="secondary"
+                                size="lg"
+                                onClick={() => {
+                                    history.push(
+                                        `/import-wallet${history.location.search}`
+                                    );
+                                }}
+                            >
+                                Import Wallet
+                            </Button>
+                        </div>
+                    </form>
+                </FormProvider>
+            </FormContainer>
         </AuthLayout>
     );
 };
 
-CreateWallet.propTypes = {
-};
+CreateWallet.propTypes = {};
 CreateWallet.defaultProps = {};
 
 export default CreateWallet;

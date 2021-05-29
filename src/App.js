@@ -6,8 +6,12 @@ import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { Provider } from "react-redux";
 import store from "src/store";
+import Cosmos from "@oraichain/cosmosjs";
+import { networks } from "src/config";
+import { pagePaths } from "src/consts/pagePaths";
 import SignInContainer from "src/containers/SignInContainer";
-import PrivateRoute from "src/containers/PrivateRoute";
+import UnauthenticatedRoute from "src/containers/UnauthenticatedRoute";
+import AuthenticatedRoute from "src/containers/AuthenticatedRoute";
 import AuthContainer from "src/containers/AuthContainer";
 import ImportWalletContainer from "src/containers/ImportWalletContainer";
 import MainLayout from "src/components/MainLayout";
@@ -16,9 +20,6 @@ import SendTokens from "src/components/SendTokens";
 import SetRequest from "src/components/airequest/SetRequest";
 import CreateWallet from "src/components/CreateWallet";
 import Transaction from "src/components/Transaction";
-import Cosmos from "@oraichain/cosmosjs";
-import { networks } from "./config";
-import { pagePaths } from "./consts/pagePaths";
 
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
@@ -36,7 +37,6 @@ cosmos.setBech32MainPrefix(symbol);
 window.cosmos = cosmos;
 window.localStorage.setItem("wallet.network", network);
 
-
 const App = ({ }) => {
     let persistor = persistStore(store);
 
@@ -46,10 +46,10 @@ const App = ({ }) => {
                 <Router>
                     <Switch>
                         <Route path={pagePaths.AUTH} component={AuthContainer} />
-                        <Route path={pagePaths.SIGNIN} component={SignInContainer} />
+                        <UnauthenticatedRoute path={pagePaths.SIGNIN} component={SignInContainer} />
                         <Route path={pagePaths.CREATE_WALLET} component={CreateWallet} />
                         <Route path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
-                        <PrivateRoute path={pagePaths.TX} component={Transaction} />
+                        <AuthenticatedRoute path={pagePaths.TX} component={Transaction} />
                         <Route path={pagePaths.SEND_TOKENS}>
                             <MainLayout>
                                 <SendTokens />

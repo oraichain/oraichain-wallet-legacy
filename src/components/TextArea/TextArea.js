@@ -3,36 +3,36 @@ import cn from "classnames/bind";
 import PropTypes from "prop-types";
 import _ from "lodash";
 import { useFormContext } from "react-hook-form";
-import styles from "./TextField.module.scss";
+import styles from "./TextArea.module.scss";
 
 const cx = cn.bind(styles);
 
-const TextField = ({ type, name, placeholder, autoComplete, className }) => {
+const TextArea = ({ name, placeholder, autoComplete, className, disabled }) => {
     const { register } = useFormContext();
     return (
-        <input
+        <textarea
             className={
-                cx("text-field") + (!_.isNil(className) ? ` ${className}` : "")
+                cx("text-area") + (!_.isNil(className) ? ` ${className}` : "")
             }
-            type={type}
             name={name}
             placeholder={placeholder}
             autoComplete={autoComplete}
+            disabled={disabled}
             {...register(name)}
         />
     );
 };
 
-TextField.propTypes = {
-    type: PropTypes.string,
+TextArea.propTypes = {
     name: PropTypes.string,
     placeholder: PropTypes.string,
     autoComplete: PropTypes.string,
+    disabled: PropTypes.bool,
 };
-TextField.defaultProps = {
-    type: "text",
+TextArea.defaultProps = {
     placeholder: "",
     autoComplete: "",
+    disabled: false,
 };
 
-export default TextField;
+export default TextArea;

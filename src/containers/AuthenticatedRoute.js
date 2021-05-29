@@ -2,6 +2,7 @@ import { connect } from "react-redux";
 import _ from "lodash";
 import { selectUser } from "src/store/slices/userSlice";
 import { Redirect, Route } from "react-router";
+import { pagePaths } from "src/consts/pagePaths";
 
 const mapStateToProps = (state) => {
     const user = selectUser(state);
@@ -11,7 +12,7 @@ const mapStateToProps = (state) => {
     };
 };
 
-const PrivateRoute = ({ component: Component, isLoggedIn, ...rest }) => {
+const AuthenticatedRoute = ({ component: Component, isLoggedIn, ...rest }) => {
     return (
         <Route
             {...rest}
@@ -19,11 +20,11 @@ const PrivateRoute = ({ component: Component, isLoggedIn, ...rest }) => {
                 isLoggedIn ? (
                     <Component {...props} />
                 ) : (
-                    <Redirect to={{ pathname: "/signin", state: { from: props.location } }} />
+                    <Redirect to={{ pathname: pagePaths.SIGNIN, state: { from: props.location } }} />
                 )
             }
         />
     );
 };
 
-export default connect(mapStateToProps, null)(PrivateRoute);
+export default connect(mapStateToProps, null)(AuthenticatedRoute);

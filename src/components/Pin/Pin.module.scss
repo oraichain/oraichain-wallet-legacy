@@ -1,288 +1,169 @@
-.pin-wrapper {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+.pin {
     width: 100%;
-    min-height: 100vh;
-    padding: 32px 0;
-    background-image: url("../../images/sigin_bg.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: 100vw 100vh;
-    background-attachment: fixed;
+    padding: 32px;
+    border-radius: 10px;
+    background-color: #192B40;
 
-    .pin-display {
-        padding: 16px;
-        background: white;
-        border-radius: 10px;
-
-        .close {
-            cursor: pointer;
-        }
-    }
-
-    .keypad {
-        background: white;
-        margin-bottom: 60px;
-
-        &-row {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-        }
-
-        &-button {
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            transition: all 100ms ease-out;
-        }
-
-        &-button:active {
-            background: #eaeaea;
-        }
-
-        .reset {
-            &-button {
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                transition: all 100ms ease-out;
-                background-color: #f3574f;
-                color: white;
-            }
-
-            &-button:active {
-                background: #eaeaea;
-            }
-        }
-    }
-
-    .numpad {
-        .keypad {
-            &-row {
-                @media screen and (min-height: 700px) {
-                    margin-bottom: 23px;
-                }
-            }
-
-            &-button {
-                font-family: Source Sans Pro;
-                font-style: normal;
-                font-weight: 600;
-                font-size: 36px;
-                width: 30px;
-                height: 30px;
-                margin: 0 20px;
-
-                @media screen and (min-width: 320px) and (min-height: 570px) {
-                    width: 40px;
-                    height: 40px;
-                }
-
-                @media screen and (min-width: 763px) {
-                    width: 47px;
-                    height: 47px;
-                    margin: 0 61.5px;
-                }
-            }
-        }
-
-        .reset-button {
-            width: 30px;
-            height: 30px;
-            border-radius: 10px;
-            margin: 0 20px;
-
-            @media screen and (min-width: 320px) and (min-height: 570px) {
-                width: 40px;
-                height: 40px;
-            }
-
-            @media screen and (min-width: 763px) {
-                width: 40px;
-                height: 40px;
-                margin: 0 65px;
-            }
-        }
-    }
-
-    .charpad {
-        .keypad {
-            &-row {
-                margin-bottom: 16px;
-            }
-
-            &-button {
-                font-family: Source Sans Pro;
-                font-style: normal;
-                font-weight: normal;
-                font-size: 22px;
-                width: 30px;
-                height: 30px;
-                box-sizing: border-box;
-                border-radius: 9px;
-                margin: 0 3.5px;
-
-                @media screen and (min-width: 480px) {
-                    border: 1px solid #c1c1c1;
-                    width: 40px;
-                    height: 40px;
-                }
-
-                @media screen and (min-width: 763px) and (min-height: 570px) {
-                    border: 1px solid #c1c1c1;
-                    width: 62px;
-                    height: 62px;
-                }
-            }
-        }
-
-        .reset-button {
-            width: 30px;
-            height: 30px;
-            border-radius: 9px;
-            margin: 0 3.5px;
-
-            @media screen and (min-width: 480px) {
-                width: 40px;
-                height: 40px;
-            }
-
-            @media screen and (min-width: 763px) and (min-height: 570px) {
-                width: 62px;
-                height: 62px;
-            }
-        }
-    }
-
-    .confirmation-dots {
-        margin: 35px 0;
+    &-header {
         display: flex;
         flex-direction: row;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
+        margin-bottom: 32px;
+    }
 
-        svg {
-            width: 139px;
-            height: 24px;
-            max-height: 24px;
+    &-body {}
+}
+
+.close-button {
+    cursor: pointer;
+    user-select: none;
+
+    &-icon {
+        color: white;
+    }
+}
+
+.title {
+    margin-bottom: 16px;
+    color: white;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 120%;
+    letter-spacing: -0.5px;
+    text-align: center;
+}
+
+.description {
+    margin-bottom: 8px;
+    color: white;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+}
+
+.warning {
+    color: #ffc107;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 150%;
+    text-align: center;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+.confirmation-status {
+    margin: 35px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+        width: 139px;
+        height: 24px;
+        max-height: 24px;
+    }
+}
+
+.circle {
+    transition: all 100ms ease-out;
+    fill: white;
+
+    &.entered {
+        fill: #007bff;
+    }
+
+    &.success {
+        fill: #28a745;
+    }
+
+    &.error {
+        animation-name: shake;
+        animation-duration: 200ms;
+        fill: #dc3545;
+    }
+}
+
+.numpad {
+    display: grid;
+    grid-template-columns: auto auto auto;
+
+    &-button {
+        color: white;
+        font-family: Roboto;
+        font-style: normal;
+        font-size: 30px;
+        line-height: 130%;
+        text-align: center;
+        letter-spacing: -0.02em;
+        user-select: none;
+        cursor: pointer;
+    }
+}
+
+.charpad {
+    &-row {
+        display: grid;
+        grid-auto-flow: column;
+        grid-gap: 8px;
+
+        margin-bottom: 16px;
+
+        &:nth-child(1) {
+            padding: 0;
         }
 
-        .pin-circle {
-            transition: all 100ms ease-out;
-            fill: white;
-            stroke-width: 2px;
-            stroke: black;
-            outline-offset: -2px;
-            outline-width: 2px;
-
-            &.entered {
-                fill: black;
-            }
-
-            &.success {
-                fill: green;
-                stroke: green;
-            }
-
-            &.error {
-                animation-name: shake;
-                animation-duration: 200ms;
-                fill: red;
-                stroke: red;
-            }
+        &:nth-child(2) {
+            padding: 0 8px;
         }
 
-        @media screen and (min-height: 570px) {
-            margin: 55px 0;
+        &:nth-child(3) {
+            padding: 0 16px;
         }
     }
 
-    .close {
-        color: black;
-    }
-
-    .pin {
-        &-title1 {
-            margin: 60px 10px 0 10px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            font-family: Roboto;
-            font-style: normal;
-            font-weight: bold;
-            font-size: 32px;
-            line-height: 120%;
-            letter-spacing: -0.5px;
-            color: #181818;
-
-            @media screen and (min-width: 245px) {
-                margin: 60px 0 0 0;
-            }
-        }
-
-        &-title2 {
-            margin: 16px 10px 0 10px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            font-family: Source Sans Pro;
-            font-style: normal;
-            font-weight: normal;
-            font-size: 14px;
-            line-height: 150%;
-            color: #181818;
-
-            @media screen and (min-width: 245px) {
-                margin: 16px 0 0 0;
-            }
-        }
-
-        &-title3 {
-            margin: 8px 10px 0 10px;
-            display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: center;
-            font-family: Source Sans Pro;
-            font-style: normal;
-            font-weight: 600;
-            font-size: 16px;
-            line-height: 150%;
-            color: #f3574f;
-
-            @media screen and (min-width: 340px) {
-                margin: 8px 0 0 0;
-            }
-        }
-    }
-
-    @keyframes shake {
-        10%,
-        90% {
-            transform: translate3d(-1px, 0, 0);
-        }
-        20%,
-        80% {
-            transform: translate3d(2px, 0, 0);
-        }
-        30%,
-        50%,
-        70% {
-            transform: translate3d(-4px, 0, 0);
-        }
-        40%,
-        60% {
-            transform: translate3d(4px, 0, 0);
-        }
+    &-button {
+        border-radius: 9px;
+        border: 1px solid white;
+        color: white;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 22px;
+        text-align: center;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        user-select: none;
+        cursor: pointer;
     }
 }

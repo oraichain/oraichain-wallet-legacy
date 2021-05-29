@@ -1,30 +1,40 @@
 import { React, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import cn from "classnames/bind";
-import { useForm, FormProvider } from "react-hook-form";
 import _ from "lodash";
 import queryString from "query-string";
-import Suggestion from "src/components/Suggestion";
-import Button from "src/components/Button";
-import AuthLayout from "src/components/AuthLayout";
-import Pin from "src/components/Pin";
-import EncryptedMnemonic from "src/components/EncryptedMnemonic";
-import ErrorText from "src/components/ErrorText";
-import Field from "src/components/Field";
+import { useForm, FormProvider } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ErrorMessage } from "@hookform/error-message";
 import { anotherAppLogin, cleanMnemonics, countWords } from "src/utils";
 import ConnectWalletContainer from "src/containers/ConnectWalletContainer";
+import AuthLayout from "src/components/AuthLayout";
+import FormContainer from "src/components/FormContainer";
+import FormTitle from "src/components/FormTitle";
+import FormField from "src/components/FormField";
+import Label from "src/components/Label";
+import TextField from "src/components/TextField";
+import TextArea from "src/components/TextArea";
+import ErrorText from "src/components/ErrorText";
+import Suggestion from "src/components/Suggestion";
+import Button from "src/components/Button";
+import Pin from "src/components/Pin";
+import EncryptedMnemonic from "src/components/EncryptedMnemonic";
+import QuestionLink from "src/components/QuestionLink";
 import styles from "./ImportWallet.module.scss";
 
 const cx = cn.bind(styles);
 
 const ImportWallet = ({ history, user }) => {
-    const isLoggedIn = !_.isNil(user);
-    const methods = useForm();
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = methods;
+    const schema = yup.object().shape({
+        walletName: yup.string().required("The Wallet Name is required"),
+        mnemonics: yup.string().required("The Mnemonics is required"),
+    });
+
+    const methods = useForm({
+        resolver: yupResolver(schema),
+    });
+    const { handleSubmit, formState } = methods;
     const cosmos = window.cosmos;
     const queryParse = queryString.parse(history.location.search);
     const enteredPin = useRef("");
@@ -32,7 +42,8 @@ const ImportWallet = ({ history, user }) => {
     const [data, setData] = useState({});
     const [encryptedMnemonics, setEncryptedMnemonics] = useState("");
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
-    const [invalidMnemonicsChecksum, setInvalidMnemonicsChecksum] = useState(false);
+    const [invalidMnemonicsChecksum, setInvalidMnemonicsChecksum] =
+        useState(false);
 
     var address = "";
     const isMnemonicsValid = (mnemonics, disablechecksum = false) => {
@@ -52,7 +63,11 @@ const ImportWallet = ({ history, user }) => {
 
     const onSubmit = (data) => {
         const mnemonic = data.mnemonics.trim();
-        if (countWords(mnemonic) !== 12 && countWords(mnemonic) !== 16 && countWords(mnemonic) !== 24) {
+        if (
+            countWords(mnemonic) !== 12 &&
+            countWords(mnemonic) !== 16 &&
+            countWords(mnemonic) !== 24
+        ) {
             setInvalidMnemonics(true);
             setInvalidMnemonicsChecksum(false);
         } else if (!isMnemonicsValid(mnemonic)) {
@@ -67,109 +82,109 @@ const ImportWallet = ({ history, user }) => {
         }
     };
 
-    const MainLayout = () => (
-        <AuthLayout>
-            <div className={cx("card")}>
-                <div className={cx("card-header")}>Import Wallet</div>
-                <div className={cx("card-body")}>
-                    <FormProvider {...methods}>
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <Field
-                                title="Walletname"
-                                input={
-                                    <input
-                                        type="text"
-                                        className={cx("text-field")}
-                                        defaultValue={data.walletName}
-                                        name="walletName"
-                                        placeholder=""
-                                        {...register("walletName", { required: true })}
-                                    />
-                                }
-                            />
-                            {errors.walletName && <ErrorText>Invalid account.</ErrorText>}
+    const importWalletForm = (
+        <FormProvider {...methods}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <FormTitle>Import Wallet</FormTitle>
+                <FormField>
+                    <Label>Walletname</Label>
+                    <TextField type="text" name="walletName" />
+                    <ErrorMessage
+                        errors={formState.errors}
+                        name="walletName"
+                        render={({ message }) => (
+                            <ErrorText>{message}</ErrorText>
+                        )}
+                    />
+                </FormField>
 
-                            <Field
-                                title="Mnemonics"
-                                input={
-                                    <textarea
-                                        className={cx("text-field", "text-area")}
-                                        defaultValue={data.mnemonics}
-                                        name="mnemonics"
-                                        placeholder=""
-                                        {...register("mnemonics", { required: true })}
-                                    />
-                                }
-                            />
-                            {(errors.mnemonics || invalidMnemonics) && <ErrorText>Mnemonics is not valid.</ErrorText>}
-                            {invalidMnemonicsChecksum && <ErrorText>Invalid mnemonics checksum error.</ErrorText>}
+                <FormField>
+                    <Label>Mnemonics</Label>
+                    <TextArea name="mnemonics" />
+                    {(formState.errors.mnemonics || invalidMnemonics) && (
+                        <ErrorText>Mnemonics is not valid.</ErrorText>
+                    )}
+                    {invalidMnemonicsChecksum && (
+                        <ErrorText>Invalid mnemonics checksum error.</ErrorText>
+                    )}
+                </FormField>
 
-                            <Suggestion text="Enter 12 / 16 / 24 words including spaces. Mnemonicphrase is encrypted and stored in Keychain." />
+                <Suggestion text="Enter 12 / 16 / 24 words including spaces. Mnemonicphrase is encrypted and stored in Keychain." />
 
-                            <div className={cx("button-space")}>
-                                <Button variant="primary" size="lg" submit={true}>
-                                    Next
-                                </Button>
-                            </div>
-
-                            <Link to={`/signin${history.location.search}`}>
-                                <Button variant="outline-primary" size="lg">
-                                    Sign In
-                                </Button>
-                            </Link>
-                        </form>
-                    </FormProvider>
+                <div className="d-flex flex-row justify-content-center mb-4">
+                    <Button variant="primary" size="lg" submit={true}>
+                        Next
+                    </Button>
                 </div>
-            </div>
-        </AuthLayout>
+
+                <div className="d-flex flex-row justify-content-center mb-5">
+                    <Button
+                        variant="secondary"
+                        size="lg"
+                        onClick={() => {
+                            history.push(`/signin${history.location.search}`);
+                        }}
+                    >
+                        Sign In
+                    </Button>
+                </div>
+
+                <QuestionLink questionText="Don't have Mnemonics?" linkTo={`/create-wallet${history.location.search}`} linkText="Generate Mnemonics" />
+            </form>
+        </FormProvider>
     );
 
-    return !isLoggedIn ? (
-        <div>
-            {step === 1 && <MainLayout />}
-            {step === 2 && (
-                <Pin
-                    setStep={setStep}
-                    currentStep={step}
-                    message="Please set your PIN"
-                    mnemonics={data.mnemonics}
-                    setEncryptedMnemonics={setEncryptedMnemonics}
-                />
-            )}
-            {step === 3 && (
-                <Pin
-                    setStep={setStep}
-                    currentStep={step}
-                    message="Please confirm your PIN"
-                    pinType="confirm"
-                    encryptedMnemonics={encryptedMnemonics}
-                    setEnteredPin={(pin) => {
-                        enteredPin.current = pin;
-                    }}
-                />
-            )}
-            {step === 4 && (
-                <EncryptedMnemonic
-                    setStep={setStep}
-                    currentStep={step}
-                    queryParam={history.location.search}
-                    walletName={data.walletName}
-                    encryptedMnemonics={encryptedMnemonics}
-                />
-            )}
-            {step === 5 && (
-                <ConnectWalletContainer
-                    account={data.walletName}
-                    address={data.address}
-                    closePopup={queryParse.signInFromScan}
-                    encryptedMnemonics={encryptedMnemonics}
-                    enteredPin={enteredPin.current}
-                    anotherAppLogin={(!_.isNil(queryParse?.via) && queryParse.via === "dialog") ? anotherAppLogin : null}
-                />
-            )}
-        </div>
-    ) : (
-        <>{history.push("/")}</>
+    return (
+        <AuthLayout>
+            <FormContainer>
+                {step === 1 && importWalletForm}
+                {step === 2 && (
+                    <Pin
+                        setStep={setStep}
+                        currentStep={step}
+                        message="Please set your PIN"
+                        mnemonics={data.mnemonics}
+                        setEncryptedMnemonics={setEncryptedMnemonics}
+                    />
+                )}
+                {step === 3 && (
+                    <Pin
+                        setStep={setStep}
+                        currentStep={step}
+                        message="Please confirm your PIN"
+                        pinType="confirm"
+                        encryptedMnemonics={encryptedMnemonics}
+                        setEnteredPin={(pin) => {
+                            enteredPin.current = pin;
+                        }}
+                    />
+                )}
+                {step === 4 && (
+                    <EncryptedMnemonic
+                        setStep={setStep}
+                        currentStep={step}
+                        queryParam={history.location.search}
+                        walletName={data.walletName}
+                        encryptedMnemonics={encryptedMnemonics}
+                    />
+                )}
+                {step === 5 && (
+                    <ConnectWalletContainer
+                        account={data.walletName}
+                        address={data.address}
+                        closePopup={queryParse.signInFromScan}
+                        encryptedMnemonics={encryptedMnemonics}
+                        enteredPin={enteredPin.current}
+                        anotherAppLogin={
+                            !_.isNil(queryParse?.via) &&
+                            queryParse.via === "dialog"
+                                ? anotherAppLogin
+                                : null
+                        }
+                    />
+                )}
+            </FormContainer>
+        </AuthLayout>
     );
 };
 

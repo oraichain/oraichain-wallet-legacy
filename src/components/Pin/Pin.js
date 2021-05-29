@@ -6,7 +6,7 @@ import _ from "lodash";
 import styles from "./Pin.module.scss";
 // import { useHistory } from "react-router";
 // import { useTranslation } from "react-i18next";
-import { getChildkeyFromDecrypted, encryptAES, decryptAES } from "../../utils";
+import { getChildkeyFromDecrypted, encryptAES, decryptAES } from "src/utils";
 
 const cx = cn.bind(styles);
 
@@ -21,9 +21,7 @@ const Pin = ({
     setStep,
     setEnteredPin,
     setEncryptedMnemonics,
-    updateUser,
     onChildKey,
-    closePopup,
     closePin,
     setUser,
     anotherAppLogin,
@@ -65,7 +63,9 @@ const Pin = ({
         }
 
         if (pinArray.length === 5) {
-            pinType === "confirm" || pinType === "signin" || pinType === "tx" ? evaluatePin() : encryptMnemonic();
+            pinType === "confirm" || pinType === "signin" || pinType === "tx"
+                ? evaluatePin()
+                : encryptMnemonic();
         }
     };
 
@@ -80,28 +80,26 @@ const Pin = ({
                 setTimeout(() => {
                     if (pinType === "confirm") {
                         if (!_.isNil(anotherAppLogin)) {
-                            anotherAppLogin(address ?? loggedInAddress, walletName ?? loggedInAccount, childKey);
+                            anotherAppLogin(
+                                address ?? loggedInAddress,
+                                walletName ?? loggedInAccount,
+                                childKey
+                            );
                             return;
                         }
 
                         goToNextStep();
                     } else if (pinType === "signin") {
-                        setUser && setUser({ address: address, account: walletName, childKey });
+                        setUser &&
+                            setUser({
+                                address: address,
+                                account: walletName,
+                                childKey,
+                            });
 
                         if (!_.isNil(anotherAppLogin)) {
                             anotherAppLogin(address, walletName, childKey);
                             return;
-                        }
-
-                        // go to transaction with address, other go to send
-                        // updateUser({ name: walletName, address });
-                        if (window.stdSignMsgByPayload) {
-                            // history.push(`/${i18n.language}/transaction`);
-                        } else if (closePopup) {
-                            window.opener.postMessage({ address: address, account: walletName }, "*");
-                            window.close();
-                        } else {
-                            // history.push(`/${i18n.language}/`);
                         }
                     } else if (pinType === "tx") {
                         onChildKey(childKey);
@@ -127,50 +125,48 @@ const Pin = ({
     };
 
     const NumPad = () => (
-        <div className={cx("keypad", "numpad")}>
-            <div className={cx("keypad-row")}>
-                <div className={cx("keypad-button")} onClick={() => handleClick(7)}>
-                    7
-                </div>
-                <div className={cx("keypad-button")} onClick={() => handleClick(8)}>
-                    8
-                </div>
-                <div className={cx("keypad-button")} onClick={() => handleClick(9)}>
-                    9
-                </div>
+        <div className={cx("numpad")}>
+            <div className={cx("numpad-button")} onClick={() => handleClick(7)}>
+                7
             </div>
-            <div className={cx("keypad-row")}>
-                <div className={cx("keypad-button")} onClick={() => handleClick(4)}>
-                    4
-                </div>
-                <div className={cx("keypad-button")} onClick={() => handleClick(5)}>
-                    5
-                </div>
-                <div className={cx("keypad-button")} onClick={() => handleClick(6)}>
-                    6
-                </div>
+            <div className={cx("numpad-button")} onClick={() => handleClick(8)}>
+                8
             </div>
-            <div className={cx("keypad-row")}>
-                <div className={cx("keypad-button")} onClick={() => handleClick(1)}>
-                    1
-                </div>
-                <div className={cx("keypad-button")} onClick={() => handleClick(2)}>
-                    2
-                </div>
-                <div className={cx("keypad-button")} onClick={() => handleClick(3)}>
-                    3
-                </div>
+            <div className={cx("numpad-button")} onClick={() => handleClick(9)}>
+                9
             </div>
-            <div className={cx("keypad-row")}>
-                <div className={cx("keypad-button")} onClick={() => handleClick("back")}>
-                    <ArrowBack />
-                </div>
-                <div className={cx("keypad-button")} onClick={() => handleClick(0)}>
-                    0
-                </div>
-                <div className={cx("reset-button")} onClick={() => handleClick("reset")}>
-                    <Close />
-                </div>
+            <div className={cx("numpad-button")} onClick={() => handleClick(4)}>
+                4
+            </div>
+            <div className={cx("numpad-button")} onClick={() => handleClick(5)}>
+                5
+            </div>
+            <div className={cx("numpad-button")} onClick={() => handleClick(6)}>
+                6
+            </div>
+            <div className={cx("numpad-button")} onClick={() => handleClick(1)}>
+                1
+            </div>
+            <div className={cx("numpad-button")} onClick={() => handleClick(2)}>
+                2
+            </div>
+            <div className={cx("numpad-button")} onClick={() => handleClick(3)}>
+                3
+            </div>
+            <div
+                className={cx("numpad-button")}
+                onClick={() => handleClick("back")}
+            >
+                <ArrowBack />
+            </div>
+            <div className={cx("numpad-button")} onClick={() => handleClick(0)}>
+                0
+            </div>
+            <div
+                className={cx("numpad-button")}
+                onClick={() => handleClick("reset")}
+            >
+                <Close />
             </div>
         </div>
     );
@@ -179,117 +175,161 @@ const Pin = ({
         const rows = [];
 
         rows.push(
-            <div className={cx("keypad-row")} key="row1">
-                {["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"].map((button) => (
-                    <div className={cx("keypad-button")} key={button} onClick={() => handleClick(button)}>
-                        {button}
+            <div className={cx("charpad-row")} key="charpad-row-1">
+                {["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"].map(
+                    (char) => (
+                        <div
+                            className={cx("charpad-button")}
+                            key={char}
+                            onClick={() => handleClick(char)}
+                        >
+                            {char}
+                        </div>
+                    )
+                )}
+            </div>
+        );
+
+        rows.push(
+            <div className={cx("charpad-row")} key="charpad-row-2">
+                {["A", "S", "D", "F", "G", "H", "J", "K", "L"].map((char) => (
+                    <div
+                        className={cx("charpad-button")}
+                        key={char}
+                        onClick={() => handleClick(char)}
+                    >
+                        {char}
                     </div>
                 ))}
             </div>
         );
 
         rows.push(
-            <div className={cx("keypad-row")} key="row2">
-                {["A", "S", "D", "F", "G", "H", "J", "K", "L"].map((button) => (
-                    <div className={cx("keypad-button")} key={button} onClick={() => handleClick(button)}>
-                        {button}
-                    </div>
-                ))}
-            </div>
-        );
-
-        rows.push(
-            <div className={cx("keypad-row")} key="row3">
-                {["back", "Z", "X", "C", "V", "B", "N", "M", "reset"].map((button) => {
-                    switch (button) {
-                        case "back":
-                            return (
-                                <div className={cx("keypad-button")} key={button} onClick={() => handleClick("back")}>
-                                    <ArrowBack />
-                                </div>
-                            );
-                        case "reset":
-                            return (
-                                <div className={cx("reset-button")} key={button} onClick={() => handleClick("reset")}>
-                                    <Close />
-                                </div>
-                            );
-                        default:
-                            return (
-                                <div className={cx("keypad-button")} key={button} onClick={() => handleClick(button)}>
-                                    {button}
-                                </div>
-                            );
+            <div className={cx("charpad-row")} key="charpad-row-3">
+                {["back", "Z", "X", "C", "V", "B", "N", "M", "reset"].map(
+                    (char) => {
+                        switch (char) {
+                            case "back":
+                                return (
+                                    <div
+                                        className={cx("charpad-button")}
+                                        key={char}
+                                        onClick={() => handleClick("back")}
+                                    >
+                                        <ArrowBack />
+                                    </div>
+                                );
+                            case "reset":
+                                return (
+                                    <div
+                                        className={cx("charpad-button")}
+                                        key={char}
+                                        onClick={() => handleClick("reset")}
+                                    >
+                                        <Close />
+                                    </div>
+                                );
+                            default:
+                                return (
+                                    <div
+                                        className={cx("charpad-button")}
+                                        key={char}
+                                        onClick={() => handleClick(char)}
+                                    >
+                                        {char}
+                                    </div>
+                                );
+                        }
                     }
-                })}
+                )}
             </div>
         );
 
-        return <div className={cx("keypad", "charpad")}> {rows} </div>;
+        return <div className={cx("charpad")}> {rows} </div>;
     };
 
     return (
-        <div className={cx("pin-wrapper")}>
-            <div className={cx("pin-display")}>
-                <div className="text-right">
-                    <div
-                        className={cx("close")}
-                        onClick={() => {
-                            goToPrevStep();
-                            closePin?.();
-                        }}
-                    >
-                        <Close />
-                    </div>
+        <div className={cx("pin")}>
+            <div className={cx("pin-header")}>
+                <div
+                    className={cx("close-button")}
+                    onClick={() => {
+                        goToPrevStep();
+                        closePin?.();
+                    }}
+                >
+                    <Close className={cx("close-button-icon")} />
                 </div>
-
-
-                <div>
-                    <div className={cx("pin-title1")}>{message}</div>
-                    <div className={cx("pin-title2")}>PIN is required for every transaction.</div>
-                    <div className={cx("pin-title3")}>If lost, you cannot reset or recover your PIN.</div>
-                </div>
-
-                <div className={cx("confirmation-dots")}>
-                    <svg>
-                        <g>
-                            <circle
-                                className={cx("pin-circle", pinArray.length > 0 ? "entered" : "", pinEvaluateStatus)}
-                                cx="10"
-                                cy="10"
-                                r="8"
-                            ></circle>
-                            <circle
-                                className={cx("pin-circle", pinArray.length > 1 ? "entered" : "", pinEvaluateStatus)}
-                                cx="40"
-                                cy="10"
-                                r="8"
-                            ></circle>
-                            <circle
-                                className={cx("pin-circle", pinArray.length > 2 ? "entered" : "", pinEvaluateStatus)}
-                                cx="70"
-                                cy="10"
-                                r="8"
-                            ></circle>
-                            <circle
-                                className={cx("pin-circle", pinArray.length > 3 ? "entered" : "", pinEvaluateStatus)}
-                                cx="100"
-                                cy="10"
-                                r="8"
-                            ></circle>
-                            <circle
-                                className={cx("pin-circle", pinArray.length > 4 ? "entered" : "", pinEvaluateStatus)}
-                                cx="130"
-                                cy="10"
-                                r="8"
-                            ></circle>
-                        </g>
-                    </svg>
-                </div>
-
-                {pinArray.length < 4 ? <NumPad /> : <CharPad />}
-
             </div>
+
+            <div className={cx("pin-body")}>
+                <div className={cx("title")}>{message}</div>
+                <div className={cx("description")}>
+                    PIN is required for every transaction.
+                </div>
+                <div className={cx("warning")}>
+                    If lost, you cannot reset or recover your PIN.
+                </div>
+            </div>
+
+            <div className={cx("confirmation-status")}>
+                <svg>
+                    <g>
+                        <circle
+                            className={cx(
+                                "circle",
+                                pinArray.length > 0 ? "entered" : "",
+                                pinEvaluateStatus
+                            )}
+                            cx="10"
+                            cy="10"
+                            r="8"
+                        ></circle>
+                        <circle
+                            className={cx(
+                                "circle",
+                                pinArray.length > 1 ? "entered" : "",
+                                pinEvaluateStatus
+                            )}
+                            cx="40"
+                            cy="10"
+                            r="8"
+                        ></circle>
+                        <circle
+                            className={cx(
+                                "circle",
+                                pinArray.length > 2 ? "entered" : "",
+                                pinEvaluateStatus
+                            )}
+                            cx="70"
+                            cy="10"
+                            r="8"
+                        ></circle>
+                        <circle
+                            className={cx(
+                                "circle",
+                                pinArray.length > 3 ? "entered" : "",
+                                pinEvaluateStatus
+                            )}
+                            cx="100"
+                            cy="10"
+                            r="8"
+                        ></circle>
+                        <circle
+                            className={cx(
+                                "circle",
+                                pinArray.length > 4 ? "entered" : "",
+                                pinEvaluateStatus
+                            )}
+                            cx="130"
+                            cy="10"
+                            r="8"
+                        ></circle>
+                    </g>
+                </svg>
+            </div>
+
+            {pinArray.length < 4 ? <NumPad /> : <CharPad />}
 
             {!_.isNil(footerElement) && footerElement}
         </div>

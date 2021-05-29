@@ -1,0 +1,8 @@
+.auth-container {
+    width: 100%;
+
+    @media (min-width: 576px) {
+        margin: auto;
+        width: 480px;
+     }
+}
