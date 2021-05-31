@@ -54,10 +54,7 @@ const SignIn = ({ setUser }) => {
     }
 
     const onSubmit = (data) => {
-        const password =
-            data.password ||
-            localStorage.getItem(data.walletName + "-password") ||
-            "";
+        const password = data.password || localStorage.getItem(data.walletName + "-password") || "";
 
         if (password === "") {
             setInvalidMnemonics(true);
@@ -65,7 +62,7 @@ const SignIn = ({ setUser }) => {
             setInvalidMnemonics(false);
             setPinData({
                 walletName: data.walletName,
-                password: password
+                password: password,
             });
             setStep(steps.PIN);
         }
@@ -77,31 +74,19 @@ const SignIn = ({ setUser }) => {
                 <FormTitle>SignIn</FormTitle>
                 <FormField>
                     <Label>Walletname</Label>
-                    <TextField
-                        type="text"
-                        autoComplete="username"
-                        name="walletName"
-                    />
+                    <TextField type="text" autoComplete="username" name="walletName" />
                     <ErrorMessage
                         errors={formState.errors}
                         name="walletName"
-                        render={({ message }) => (
-                            <ErrorText>{message}</ErrorText>
-                        )}
+                        render={({ message }) => <ErrorText>{message}</ErrorText>}
                     />
                 </FormField>
 
                 <FormField>
-                    <TextField
-                        type="password"
-                        autoComplete="current-password"
-                        name="password"
-                        className="d-none"
-                    />
+                    <TextField type="password" autoComplete="current-password" name="password" className="d-none" />
                     {invalidMnemonics && (
                         <ErrorText>
-                            Could not retrieve account stored in Keychain. Press
-                            the button below the Import Wallet.
+                            Could not retrieve account stored in Keychain. Press the button below the Import Wallet.
                         </ErrorText>
                     )}
                 </FormField>
@@ -119,16 +104,18 @@ const SignIn = ({ setUser }) => {
                         variant="secondary"
                         size="lg"
                         onClick={() => {
-                            history.push(
-                                `/import-wallet${history.location.search}`
-                            );
+                            history.push(`/import-wallet${history.location.search}`);
                         }}
                     >
                         Import Wallet
                     </Button>
                 </div>
 
-                <QuestionLink questionText="Don't have Mnemonics?" linkTo={`/create-wallet${history.location.search}`} linkText="Generate Mnemonics" />
+                <QuestionLink
+                    questionText="Don't have Mnemonics?"
+                    linkTo={`/create-wallet${history.location.search}`}
+                    linkText="Generate Mnemonics"
+                />
             </form>
         </FormProvider>
     );
@@ -139,18 +126,13 @@ const SignIn = ({ setUser }) => {
                 {step === steps.SIGIN_FORM && signinForm}
                 {step === steps.PIN && (
                     <Pin
-                        currentStep={step}
+                        title="Enter your PIN"
+                        step={step}
                         pinType="signin"
                         walletName={pinData?.walletName}
                         encryptedMnemonics={pinData?.password}
                         setStep={setStep}
                         setUser={setUser}
-                        anotherAppLogin={
-                            !_.isNil(queryParse?.via) &&
-                            queryParse.via === "dialog"
-                                ? anotherAppLogin
-                                : null
-                        }
                     />
                 )}
             </FormContainer>

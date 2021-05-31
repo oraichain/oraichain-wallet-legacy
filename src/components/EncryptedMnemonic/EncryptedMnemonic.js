@@ -21,11 +21,12 @@ const cx = cn.bind(styles);
 
 const EncryptedMnemonic = ({
     setStep,
-    currentStep,
+    step,
     queryParam,
     walletName,
     encryptedMnemonics,
 }) => {
+    console.log("EncryptedMnemonic");
     const history = useHistory();
 
     const schema = yup.object().shape({
@@ -46,7 +47,7 @@ const EncryptedMnemonic = ({
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
 
     const goToNextStep = () => {
-        setStep(currentStep + 1);
+        setStep(step + 1);
     };
 
     const copyToClipboard = () => {

@@ -153,8 +153,8 @@
     }
 
     &-button {
-        border-radius: 9px;
-        border: 1px solid white;
+        border: none;
+        border-radius: 0;
         color: white;
         font-family: Roboto;
         font-style: normal;
@@ -165,5 +165,10 @@
         text-transform: uppercase;
         user-select: none;
         cursor: pointer;
+
+        @media (min-width: 576px) {
+            border-radius: 9px;
+            border: 1px solid white;
+        }
     }
 }

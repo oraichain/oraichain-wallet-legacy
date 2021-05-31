@@ -7,66 +7,60 @@ import { FormProvider, useForm } from "react-hook-form";
 import { pagePaths } from "src/consts/pagePaths";
 import { anotherAppLogin } from "src/utils";
 import Pin from "src/components/Pin";
+import AuthLayout from "src/components/AuthLayout";
+import FormContainer from "src/components/FormContainer";
 import styles from "./Auth.module.scss";
-import LogoutIcon from "../icons/LogoutIcon";
+import Button from "../Button";
+import TextField from "../TextField";
 
 const cx = cn.bind(styles);
 
 const Auth = ({ user, removeUser }) => {
+
     const history = useHistory();
-    const methods = useForm();
+    const methods = useForm({
+        defaultValues: {
+            account: user?.account ?? "",
+        }
+    });
     const { register, watch } = methods;
     const isLoggedIn = !_.isNil(user);
 
     if (!isLoggedIn) {
-        history.push(`${pagePaths.SIGNIN}?via=dialog`);
+        history.push(pagePaths.SIGNIN);
         return null;
     }
 
-    const account = user?.account || "";
-
     return (
-        <>
-            <FormProvider {...methods}>
-                <form>
-                    <input
-                        {...register("account")}
-                        style={{ display: "none" }}
-                        type="text"
-                        tabIndex={-1}
-                        spellCheck="false"
-                        defaultValue={account}
-                    />
-                    <input
-                        {...register("password")}
-                        style={{ display: "none" }}
-                        type="password"
-                        autoComplete="current-password"
-                        tabIndex={-1}
-                        spellCheck="false"
-                    />
-                </form>
-            </FormProvider>
-            <Pin
-                pinType="confirm"
-                closePin={() => {
-                    window.close();
-                }}
-                anotherAppLogin={anotherAppLogin}
-                encryptedMnemonics={watch("password")}
-                footerElement={
-                    <div className={cx("logout-button")} onClick={() => {
-                        removeUser();
-                    }}>
+        <AuthLayout>
+            <FormContainer>
+                <FormProvider {...methods}>
+                    <form>
+                        <TextField type="text" name="account" className="d-none" />
+                        <TextField type="password" name="password" autoComplete="current-password" className="d-none" />
+                    </form>
+                </FormProvider>
+                <Pin
+                    pinType="confirm"
+                    walletName={user.account}
+                    encryptedMnemonics={watch("password")}
+                    closePin={() => {
+                        window.close();
+                    }}
+                />
+                <div className="d-flex flex-row justify-content-center mt-4 mb-2">
+                    <Button
+                        variant="secondary"
+                        size="lg"
+                        onClick={() => {
+                            removeUser();
+                        }}
+                    >
                         Logout
-                    </div>
-
-                }
-                loggedInAccount={user.account}
-                loggedInAddress={user.address}
-            />
-        </>
-
+                    </Button>
+                </div>
+            </FormContainer>
+        </AuthLayout>
     );
 };
 

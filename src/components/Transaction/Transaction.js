@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import cn from "classnames/bind";
 import { FormProvider, useForm } from "react-hook-form";
-import { Spinner } from "react-bootstrap";
 import queryString from "query-string";
 import _ from "lodash";
 import Big from "big.js";
@@ -16,50 +16,70 @@ import {
     getTxBodyMsgWithdrawDelegatorReward,
     getTxBodyMsgWithdrawValidatorCommission,
 } from "src/utils";
+import { selectUser } from "src/store/slices/userSlice";
 import AuthLayout from "src/components/AuthLayout";
+import FormContainer from "src/components/FormContainer";
+import FormTitle from "src/components/FormTitle";
 import Pin from "src/components/Pin";
+import TextField from "src/components/TextField";
+import Button from "src/components/Button";
+import Loading from "src/components/Loading";
 import styles from "./Transaction.module.scss";
 
 const cx = cn.bind(styles);
 
-const Transaction = ({ user, history }) => {
-    const $ = window.jQuery;
-    const { t, i18n } = useTranslation();
+const mapStateToProps = (state) => ({
+    user: selectUser(state),
+});
+
+const Transaction = ({ user }) => {
+    const history = useHistory();
+    const { t } = useTranslation();
     const [openPin, setOpenPin] = useState(false);
     const [loading, setLoading] = useState(false);
-    const methods = useForm();
-    const { getValues, handleSubmit, register, watch } = methods;
+    const txJsonRef = useRef(null);
+    const methods = useForm({
+        defaultValue: {
+            account: user.name,
+        },
+    });
+    const { getValues } = methods;
     const queryStringParse = queryString.parse(history.location.search) || {};
     const payload = JSON.parse(queryStringParse.raw_message || "{}");
     const cosmos = window.cosmos;
 
     useEffect(() => {
-        if (window.stdSignMsgByPayload) {
-            const txBody = window.stdSignMsgByPayload;
-            $("#tx-json").html(JSON.stringify(txBody));
-        } else if (payload && payload.value) {
-            const cloneObj = JSON.parse(JSON.stringify(payload));
-            if (_.get(cloneObj, "value.fee.amount") && cloneObj.value.fee.amount[0]) {
-                cloneObj.value.fee.amount[0] = new Big(cloneObj.value.fee.amount[0]).times(0.000001);
+        if (!openPin && !_.isNil(txJsonRef?.current)) {
+            if (window.stdSignMsgByPayload) {
+                const txBody = window.stdSignMsgByPayload;
+                txJsonRef.current.innerHTML = JSON.stringify(txBody);
+            } else if (payload && payload.value) {
+                const cloneObj = JSON.parse(JSON.stringify(payload));
+                if (_.get(cloneObj, "value.fee.amount") && cloneObj.value.fee.amount[0]) {
+                    cloneObj.value.fee.amount[0] = new Big(cloneObj.value.fee.amount[0]).times(0.000001);
+                }
+                if (_.get(cloneObj, "value.msg.0.value.amount.0.amount")) {
+                    const amountString = _.get(cloneObj, "value.msg.0.value.amount.0.amount");
+                    _.set(cloneObj, "value.msg.0.value.amount.0.amount", new Big(amountString).times(0.000001));
+                }
+                if (_.get(cloneObj, "value.msg.0.value.amount.amount")) {
+                    const amountString = _.get(cloneObj, "value.msg.0.value.amount.amount");
+                    _.set(cloneObj, "value.msg.0.value.amount.amount", new Big(amountString).times(0.000001));
+                }
+                txJsonRef.current.innerHTML = JSON.stringify(cloneObj.value);
             }
-            if (_.get(cloneObj, "value.msg.0.value.amount.0.amount")) {
-                const amountString = _.get(cloneObj, "value.msg.0.value.amount.0.amount");
-                _.set(cloneObj, "value.msg.0.value.amount.0.amount", new Big(amountString).times(0.000001));
-            }
-            if (_.get(cloneObj, "value.msg.0.value.amount.amount")) {
-                const amountString = _.get(cloneObj, "value.msg.0.value.amount.amount");
-                _.set(cloneObj, "value.msg.0.value.amount.amount", new Big(amountString).times(0.000001));
-            }
-            $("#tx-json").html(JSON.stringify(cloneObj.value));
         }
-    });
+    }, [openPin, txJsonRef]);
 
-    const denyHandler = () => {
-        // clear, close if there is window.opener
-        if (window.opener) {
+    const deny = () => {
+        if (!_.isNil(window?.opener)) {
             window.opener.postMessage("deny", "*");
             window.close();
         }
+    };
+
+    const allow = () => {
+        setOpenPin(true);
     };
 
     const onChildKey = async (childKey) => {
@@ -113,11 +133,11 @@ const Transaction = ({ user, history }) => {
             // higher gas limit
             const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
             setLoading(false);
-            if (queryStringParse.signInFromScan) {
+            if (!_.isNil(window.opener)) {
                 window.opener.postMessage(res.tx_response, "*");
                 window.close();
             } else {
-                $("#tx-json").text(res.tx_response.raw_log);
+                txJsonRef.current.innerText = res.tx_response.raw_log;
             }
         } catch (ex) {
             alert(ex.message);
@@ -127,83 +147,50 @@ const Transaction = ({ user, history }) => {
         }
     };
 
-    const handleOpenPin = () => {
-        setOpenPin(true);
-    };
-
     return (
-        <>
-            {!openPin && (
-                <AuthLayout>
+        <AuthLayout>
+            <FormContainer>
+                {openPin ? (
+                    <Pin
+                        pinType="tx"
+                        onChildKey={onChildKey}
+                        closePin={() => {
+                            setOpenPin(false);
+                        }}
+                        encryptedMnemonics={getValues("password")}
+                    />
+                ) : (
                     <FormProvider {...methods}>
-                        <form className="keystation-form">
-                            <div className={cx("card")}>
-                                <div className={cx("card-header")}>Sign Transaction</div>
-                                <div className={cx("card-body")}>
-                                    <input
-                                        {...register("account")}
-                                        style={{ display: "none" }}
-                                        type="text"
-                                        tabIndex={-1}
-                                        spellCheck="false"
-                                        defaultValue={user.name}
-                                    />
-                                    <input
-                                        {...register("password")}
-                                        style={{ display: "none" }}
-                                        type="password"
-                                        autoComplete="current-password"
-                                        tabIndex={-1}
-                                        spellCheck="false"
-                                    />
-                                    <div className={cx("keystation-tx-json")} id="tx-json"></div>
-                                </div>
-                                <div className={cx("card-footer")}>
-                                    <div className={cx("button-group")}>
-                                        <button type="button" className={cx("button", "button-deny")} onClick={denyHandler}>
-                                            {t("DENY")}
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className={cx("button", "button-allow")}
-                                            onClick={handleOpenPin}
-                                        >
-                                            {t("ALLOW")}
-                                        </button>
-                                    </div>
-                                </div>
+                        <form>
+                            <FormTitle>Sign Transaction</FormTitle>
+                            <TextField type="text" name="account" className="d-none" />
+                            <TextField
+                                type="password"
+                                name="password"
+                                className="d-none"
+                                autoComplete="current-password"
+                            />
+                            <div className={cx("tx-json")} ref={txJsonRef}></div>
+
+                            <div className="d-flex flex-row justify-content-center my-4">
+                                <Button variant="primary" size="lg" onClick={allow}>
+                                    {t("ALLOW")}
+                                </Button>
+                            </div>
+
+                            <div className="d-flex flex-row justify-content-center mb-5">
+                                <Button variant="secondary" size="lg" onClick={deny}>
+                                    {t("DENY")}
+                                </Button>
                             </div>
                         </form>
                     </FormProvider>
-                </AuthLayout>
-            )}
+                )}
 
-            {openPin && (
-                <Pin
-                    pinType="tx"
-                    onChildKey={onChildKey}
-                    closePopup={queryStringParse.signInFromScan}
-                    closePin={() => {
-                        setOpenPin(false);
-                    }}
-                    encryptedMnemonics={getValues("password")}
-                />
-            )}
-
-            {loading && (
-                <div className={cx("loading")}>
-                    <Spinner animation="border" role="status"></Spinner>
-                    <div className="loading-text">Loading...</div>
-                </div>
-            )}
-        </>
+                {loading && <Loading message="Signing..." />}
+            </FormContainer>
+        </AuthLayout>
     );
 };
-
-function mapStateToProps(state) {
-    return {
-        user: state.user,
-    };
-}
 
 export default connect(mapStateToProps)(Transaction);

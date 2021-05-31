@@ -3,48 +3,40 @@ import cn from "classnames/bind";
 import { ArrowBack, Close } from "@material-ui/icons";
 import PropTypes from "prop-types";
 import _ from "lodash";
+import { getChildkeyFromDecrypted, encryptAES, decryptAES, anotherAppLogin } from "src/utils";
 import styles from "./Pin.module.scss";
-// import { useHistory } from "react-router";
-// import { useTranslation } from "react-i18next";
-import { getChildkeyFromDecrypted, encryptAES, decryptAES } from "src/utils";
 
 const cx = cn.bind(styles);
 
 const Pin = ({
-    message,
-    currentStep,
+    title,
+    step,
     pinType,
     walletName,
     mnemonics,
     encryptedMnemonics,
-    footerElement,
     setStep,
     setEnteredPin,
     setEncryptedMnemonics,
     onChildKey,
     closePin,
     setUser,
-    anotherAppLogin,
-    loggedInAccount,
-    loggedInAddress,
 }) => {
-    // const history = useHistory();
-    // const { t, i18n } = useTranslation();
     const cosmos = window.cosmos;
 
     let [pinArray, setPinArray] = useState([]);
     const [pinEvaluateStatus, setPinEvaluateStatus] = useState("");
 
-    const goToNextStep = () => {
-        setStep && setStep(currentStep + 1);
+    const nextStep = () => {
+        setStep && setStep(step + 1);
     };
 
-    const goToPrevStep = () => {
-        setStep && setStep(currentStep - 1);
+    const prevStep = () => {
+        setStep && setStep(step - 1);
     };
 
-    const handleClick = (e) => {
-        switch (e) {
+    const onKeyClick = (key) => {
+        switch (key) {
             case "back":
                 pinArray.pop();
                 setPinArray([...pinArray]);
@@ -57,15 +49,13 @@ const Pin = ({
                 break;
             default:
                 if (pinArray.length < 5) {
-                    pinArray.push(e);
+                    pinArray.push(key);
                     setPinArray([...pinArray]);
                 }
         }
 
         if (pinArray.length === 5) {
-            pinType === "confirm" || pinType === "signin" || pinType === "tx"
-                ? evaluatePin()
-                : encryptMnemonic();
+            pinType === "confirm" || pinType === "signin" || pinType === "tx" ? evaluatePin() : encryptMnemonic();
         }
     };
 
@@ -79,16 +69,12 @@ const Pin = ({
                 setPinEvaluateStatus("success");
                 setTimeout(() => {
                     if (pinType === "confirm") {
-                        if (!_.isNil(anotherAppLogin)) {
-                            anotherAppLogin(
-                                address ?? loggedInAddress,
-                                walletName ?? loggedInAccount,
-                                childKey
-                            );
+                        if (!_.isNil(window?.opener) && _.isNil(setStep)) {
+                            anotherAppLogin(address, walletName, childKey);
                             return;
                         }
 
-                        goToNextStep();
+                        nextStep();
                     } else if (pinType === "signin") {
                         setUser &&
                             setUser({
@@ -97,7 +83,7 @@ const Pin = ({
                                 childKey,
                             });
 
-                        if (!_.isNil(anotherAppLogin)) {
+                        if (!_.isNil(window?.opener)) {
                             anotherAppLogin(address, walletName, childKey);
                             return;
                         }
@@ -121,51 +107,45 @@ const Pin = ({
     const encryptMnemonic = () => {
         const enteredPin = pinArray.join("");
         setEncryptedMnemonics(encryptAES(mnemonics, enteredPin));
-        goToNextStep();
+        nextStep();
     };
 
     const NumPad = () => (
         <div className={cx("numpad")}>
-            <div className={cx("numpad-button")} onClick={() => handleClick(7)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(7)}>
                 7
             </div>
-            <div className={cx("numpad-button")} onClick={() => handleClick(8)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(8)}>
                 8
             </div>
-            <div className={cx("numpad-button")} onClick={() => handleClick(9)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(9)}>
                 9
             </div>
-            <div className={cx("numpad-button")} onClick={() => handleClick(4)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(4)}>
                 4
             </div>
-            <div className={cx("numpad-button")} onClick={() => handleClick(5)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(5)}>
                 5
             </div>
-            <div className={cx("numpad-button")} onClick={() => handleClick(6)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(6)}>
                 6
             </div>
-            <div className={cx("numpad-button")} onClick={() => handleClick(1)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(1)}>
                 1
             </div>
-            <div className={cx("numpad-button")} onClick={() => handleClick(2)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(2)}>
                 2
             </div>
-            <div className={cx("numpad-button")} onClick={() => handleClick(3)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(3)}>
                 3
             </div>
-            <div
-                className={cx("numpad-button")}
-                onClick={() => handleClick("back")}
-            >
+            <div className={cx("numpad-button")} onClick={() => onKeyClick("back")}>
                 <ArrowBack />
             </div>
-            <div className={cx("numpad-button")} onClick={() => handleClick(0)}>
+            <div className={cx("numpad-button")} onClick={() => onKeyClick(0)}>
                 0
             </div>
-            <div
-                className={cx("numpad-button")}
-                onClick={() => handleClick("reset")}
-            >
+            <div className={cx("numpad-button")} onClick={() => onKeyClick("reset")}>
                 <Close />
             </div>
         </div>
@@ -176,28 +156,18 @@ const Pin = ({
 
         rows.push(
             <div className={cx("charpad-row")} key="charpad-row-1">
-                {["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"].map(
-                    (char) => (
-                        <div
-                            className={cx("charpad-button")}
-                            key={char}
-                            onClick={() => handleClick(char)}
-                        >
-                            {char}
-                        </div>
-                    )
-                )}
+                {["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"].map((char) => (
+                    <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
+                        {char}
+                    </div>
+                ))}
             </div>
         );
 
         rows.push(
             <div className={cx("charpad-row")} key="charpad-row-2">
                 {["A", "S", "D", "F", "G", "H", "J", "K", "L"].map((char) => (
-                    <div
-                        className={cx("charpad-button")}
-                        key={char}
-                        onClick={() => handleClick(char)}
-                    >
+                    <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
                         {char}
                     </div>
                 ))}
@@ -206,42 +176,28 @@ const Pin = ({
 
         rows.push(
             <div className={cx("charpad-row")} key="charpad-row-3">
-                {["back", "Z", "X", "C", "V", "B", "N", "M", "reset"].map(
-                    (char) => {
-                        switch (char) {
-                            case "back":
-                                return (
-                                    <div
-                                        className={cx("charpad-button")}
-                                        key={char}
-                                        onClick={() => handleClick("back")}
-                                    >
-                                        <ArrowBack />
-                                    </div>
-                                );
-                            case "reset":
-                                return (
-                                    <div
-                                        className={cx("charpad-button")}
-                                        key={char}
-                                        onClick={() => handleClick("reset")}
-                                    >
-                                        <Close />
-                                    </div>
-                                );
-                            default:
-                                return (
-                                    <div
-                                        className={cx("charpad-button")}
-                                        key={char}
-                                        onClick={() => handleClick(char)}
-                                    >
-                                        {char}
-                                    </div>
-                                );
-                        }
+                {["back", "Z", "X", "C", "V", "B", "N", "M", "reset"].map((char) => {
+                    switch (char) {
+                        case "back":
+                            return (
+                                <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick("back")}>
+                                    <ArrowBack />
+                                </div>
+                            );
+                        case "reset":
+                            return (
+                                <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick("reset")}>
+                                    <Close />
+                                </div>
+                            );
+                        default:
+                            return (
+                                <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
+                                    {char}
+                                </div>
+                            );
                     }
-                )}
+                })}
             </div>
         );
 
@@ -254,7 +210,7 @@ const Pin = ({
                 <div
                     className={cx("close-button")}
                     onClick={() => {
-                        goToPrevStep();
+                        prevStep();
                         closePin?.();
                     }}
                 >
@@ -263,84 +219,58 @@ const Pin = ({
             </div>
 
             <div className={cx("pin-body")}>
-                <div className={cx("title")}>{message}</div>
-                <div className={cx("description")}>
-                    PIN is required for every transaction.
+                <div className={cx("title")}>{title}</div>
+                <div className={cx("description")}>PIN is required for every transaction.</div>
+                <div className={cx("warning")}>If lost, you cannot reset or recover your PIN.</div>
+
+                <div className={cx("confirmation-status")}>
+                    <svg>
+                        <g>
+                            <circle
+                                className={cx("circle", pinArray.length > 0 ? "entered" : "", pinEvaluateStatus)}
+                                cx="10"
+                                cy="10"
+                                r="8"
+                            ></circle>
+                            <circle
+                                className={cx("circle", pinArray.length > 1 ? "entered" : "", pinEvaluateStatus)}
+                                cx="40"
+                                cy="10"
+                                r="8"
+                            ></circle>
+                            <circle
+                                className={cx("circle", pinArray.length > 2 ? "entered" : "", pinEvaluateStatus)}
+                                cx="70"
+                                cy="10"
+                                r="8"
+                            ></circle>
+                            <circle
+                                className={cx("circle", pinArray.length > 3 ? "entered" : "", pinEvaluateStatus)}
+                                cx="100"
+                                cy="10"
+                                r="8"
+                            ></circle>
+                            <circle
+                                className={cx("circle", pinArray.length > 4 ? "entered" : "", pinEvaluateStatus)}
+                                cx="130"
+                                cy="10"
+                                r="8"
+                            ></circle>
+                        </g>
+                    </svg>
                 </div>
-                <div className={cx("warning")}>
-                    If lost, you cannot reset or recover your PIN.
-                </div>
+
+                {pinArray.length < 4 ? <NumPad /> : <CharPad />}
             </div>
-
-            <div className={cx("confirmation-status")}>
-                <svg>
-                    <g>
-                        <circle
-                            className={cx(
-                                "circle",
-                                pinArray.length > 0 ? "entered" : "",
-                                pinEvaluateStatus
-                            )}
-                            cx="10"
-                            cy="10"
-                            r="8"
-                        ></circle>
-                        <circle
-                            className={cx(
-                                "circle",
-                                pinArray.length > 1 ? "entered" : "",
-                                pinEvaluateStatus
-                            )}
-                            cx="40"
-                            cy="10"
-                            r="8"
-                        ></circle>
-                        <circle
-                            className={cx(
-                                "circle",
-                                pinArray.length > 2 ? "entered" : "",
-                                pinEvaluateStatus
-                            )}
-                            cx="70"
-                            cy="10"
-                            r="8"
-                        ></circle>
-                        <circle
-                            className={cx(
-                                "circle",
-                                pinArray.length > 3 ? "entered" : "",
-                                pinEvaluateStatus
-                            )}
-                            cx="100"
-                            cy="10"
-                            r="8"
-                        ></circle>
-                        <circle
-                            className={cx(
-                                "circle",
-                                pinArray.length > 4 ? "entered" : "",
-                                pinEvaluateStatus
-                            )}
-                            cx="130"
-                            cy="10"
-                            r="8"
-                        ></circle>
-                    </g>
-                </svg>
-            </div>
-
-            {pinArray.length < 4 ? <NumPad /> : <CharPad />}
-
-            {!_.isNil(footerElement) && footerElement}
         </div>
     );
 };
 
 Pin.propTypes = {
-    message: PropTypes.string,
+    title: PropTypes.string,
 };
 Pin.defaultProps = {
-    message: "Enter your PIN",
+    title: "Enter your PIN",
 };
 
 export default Pin;

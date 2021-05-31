@@ -11,9 +11,7 @@ const TextArea = ({ name, placeholder, autoComplete, className, disabled }) => {
     const { register } = useFormContext();
     return (
         <textarea
-            className={
-                cx("text-area") + (!_.isNil(className) ? ` ${className}` : "")
-            }
+            className={cx("text-area") + (!_.isNil(className) ? ` ${className}` : "")}
             name={name}
             placeholder={placeholder}
             autoComplete={autoComplete}
