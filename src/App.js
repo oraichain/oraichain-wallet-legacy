@@ -18,13 +18,14 @@ import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
 import SendTokens from "src/components/SendTokens";
 import SetRequest from "src/components/airequest/SetRequest";
-import CreateWallet from "src/components/CreateWallet";
+import GenerateMnemonics from "src/components/GenerateMnemonics";
 import Transaction from "src/components/Transaction";
 
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
 const path = url.searchParams.get("path");
-const lcd = process.env.REACT_APP_LCD || url.searchParams.get("lcd") || (networks[network]?.lcd ?? "http://localhost:1317");
+const lcd =
+    process.env.REACT_APP_LCD || url.searchParams.get("lcd") || (networks[network]?.lcd ?? "http://localhost:1317");
 // init cosmos version
 const cosmos = new Cosmos(lcd, network);
 const symbol = networks[network]?.denom ?? "orai";
@@ -37,7 +38,7 @@ cosmos.setBech32MainPrefix(symbol);
 window.cosmos = cosmos;
 window.localStorage.setItem("wallet.network", network);
 
-const App = ({ }) => {
+const App = ({}) => {
     let persistor = persistStore(store);
 
     return (
@@ -47,7 +48,7 @@ const App = ({ }) => {
                     <Switch>
                         <Route path={pagePaths.AUTH} component={AuthContainer} />
                         <UnauthenticatedRoute path={pagePaths.SIGNIN} component={SignInContainer} />
-                        <Route path={pagePaths.CREATE_WALLET} component={CreateWallet} />
+                        <Route path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
                         <Route path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
                         <AuthenticatedRoute path={pagePaths.TX} component={Transaction} />
                         <Route path={pagePaths.SEND_TOKENS}>
@@ -61,9 +62,7 @@ const App = ({ }) => {
                             </MainLayout>
                         </Route>
                         <Route path={pagePaths.HOME}>
-                            <MainLayout>
-                                <Home />
-                            </MainLayout>
+                            <Home />
                         </Route>
                     </Switch>
                 </Router>

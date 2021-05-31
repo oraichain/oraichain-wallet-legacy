@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { anotherAppLogin } from "src/utils";
 import { ErrorMessage } from "@hookform/error-message";
+import { pagePaths } from "src/consts/pagePaths";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
 import FormTitle from "src/components/FormTitle";
@@ -113,7 +114,7 @@ const SignIn = ({ setUser }) => {
 
                 <QuestionLink
                     questionText="Don't have Mnemonics?"
-                    linkTo={`/create-wallet${history.location.search}`}
+                    linkTo={`${pagePaths.GENERATE_MNEMONICS}${history.location.search}`}
                     linkText="Generate Mnemonics"
                 />
             </form>

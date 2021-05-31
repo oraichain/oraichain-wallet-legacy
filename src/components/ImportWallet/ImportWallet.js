@@ -6,6 +6,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
+import { pagePaths } from "src/consts/pagePaths";
 import { cleanMnemonics, countWords } from "src/utils";
 import ConnectWalletContainer from "src/containers/ConnectWalletContainer";
 import AuthLayout from "src/components/AuthLayout";
@@ -111,7 +112,7 @@ const ImportWallet = ({ history, user }) => {
                         variant="secondary"
                         size="lg"
                         onClick={() => {
-                            history.push(`/signin${history.location.search}`);
+                            history.push(`${pagePaths.SIGNIN}${history.location.search}`);
                         }}
                     >
                         Sign In
@@ -120,7 +121,7 @@ const ImportWallet = ({ history, user }) => {
 
                 <QuestionLink
                     questionText="Don't have Mnemonics?"
-                    linkTo={`/create-wallet${history.location.search}`}
+                    linkTo={`${pagePaths.GENERATE_MNEMONICS}${history.location.search}`}
                     linkText="Generate Mnemonics"
                 />
             </form>

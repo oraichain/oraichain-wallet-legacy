@@ -10,12 +10,12 @@ import Label from "src/components/Label";
 import TextField from "src/components/TextField";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
-import styles from "./CreateWallet.module.scss";
+import styles from "./GenerateMnemonics.module.scss";
 import copyIcon from "src/assets/icons/copy.svg";
 
 const cx = cn.bind(styles);
 
-const CreateWallet = ({ history }) => {
+const GenerateMnemonics = ({ history }) => {
     const cosmos = window.cosmos;
     const methods = useForm();
     const { handleSubmit, setValue, getValues } = methods;
@@ -128,7 +128,7 @@ const CreateWallet = ({ history }) => {
     );
 };
 
-CreateWallet.propTypes = {};
-CreateWallet.defaultProps = {};
+GenerateMnemonics.propTypes = {};
+GenerateMnemonics.defaultProps = {};
 
-export default CreateWallet;
+export default GenerateMnemonics;

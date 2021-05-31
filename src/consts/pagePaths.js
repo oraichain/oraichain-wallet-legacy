@@ -1,6 +1,6 @@
 export const pagePaths = {
     SIGNIN: "/signin",
-    CREATE_WALLET: "/create-wallet",
+    GENERATE_MNEMONICS: "/generate-mnemonics",
     IMPORT_WALLET: "/import-wallet",
     TX: "/transaction",
     SEND_TOKENS: "/send-tokens",
