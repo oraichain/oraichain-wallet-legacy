@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import cn from "classnames/bind";
 import { FormProvider, useForm } from "react-hook-form";
@@ -34,7 +33,6 @@ const mapStateToProps = (state) => ({
 
 const Transaction = ({ user }) => {
     const history = useHistory();
-    const { t } = useTranslation();
     const [openPin, setOpenPin] = useState(false);
     const [loading, setLoading] = useState(false);
     const txJsonRef = useRef(null);
@@ -174,13 +172,13 @@ const Transaction = ({ user }) => {
 
                             <div className="d-flex flex-row justify-content-center my-4">
                                 <Button variant="primary" size="lg" onClick={allow}>
-                                    {t("ALLOW")}
+                                    ALLOW
                                 </Button>
                             </div>
 
                             <div className="d-flex flex-row justify-content-center mb-5">
                                 <Button variant="secondary" size="lg" onClick={deny}>
-                                    {t("DENY")}
+                                    DENY
                                 </Button>
                             </div>
                         </form>

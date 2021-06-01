@@ -1,110 +1,181 @@
-import React from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from "react";
 import cn from "classnames/bind";
-import queryString from "query-string";
-import { useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { ReactComponent as ArrowRightIcon } from "src/assets/icons/arrow-right.svg";
-import Cosmos from "@oraichain/cosmosjs";
-import Big from 'big.js';
-
-import PinWrap, { openPinWrap } from "src/components/PinWrap";
-import { getTxBodySend } from 'src/utils';
+import PropTypes from "prop-types";
+import _ from "lodash";
+import { useForm, FormProvider } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { ErrorMessage } from "@hookform/error-message";
+import { getTxBodySend } from "src/utils";
+import MainLayout from "src/components/MainLayout";
+import FormContainer from "src/components/FormContainer";
+import FormCard from "src/components/FormCard";
+import Label from "src/components/Label";
+import StaticText from "src/components/StaticText";
+import TextField from "src/components/TextField";
+import ErrorText from "src/components/ErrorText";
+import ArrowButton from "src/components/ArrowButton";
+import Pin from "src/components/Pin";
+import Loading from "src/components/Loading";
 import styles from "./SendTokens.module.scss";
 
-
-const message = Cosmos.message;
+// const message = Cosmos.message;
 const cx = cn.bind(styles);
 
-const SendTokens = () => {
-    const { t, i18n } = useTranslation();
-    const history = useHistory();
-    const user = useSelector(state => state.user);
-    const queryStringParse = queryString.parse(history.location.search) || {};
+const SendTokens = ({ user }) => {
     const cosmos = window.cosmos;
+    const [openPin, setOpenPin] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [sendData, setSendData] = useState(null);
+
+    const schema = yup.object().shape({
+        to: yup.string().required("The To is required"),
+        amount: yup.number().required("The Amount is required").typeError("The Amount must be a number"),
+    });
+
+    const methods = useForm({
+        resolver: yupResolver(schema),
+    });
+    const { handleSubmit, formState, getValues } = methods;
+
+    const onSubmit = (data) => {
+        setSendData(data);
+        setOpenPin(true);
+    };
 
     const onChildKey = async (childKey) => {
         try {
-            const amount = 0;
-            const to = '0';
-            const memo = '';
-            const txBody = getTxBodySend(user, to, amount, memo);
-            const res = await cosmos.submit(childKey, txBody, 'BROADCAST_MODE_BLOCK') || {};
-            if (queryStringParse.signInFromScan) {
+            setLoading(true);
+            const txBody = getTxBodySend(user, sendData.to, sendData.amount, sendData.memo);
+            const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
+            window.open(
+                `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${res?.tx_response?.txhash ?? ""}`
+            );
+            setLoading(false);
+            setOpenPin(false);
+            if (!_.isNil(window?.opener)) {
                 window.opener.postMessage(res.tx_response, "*");
                 window.close();
             }
         } catch (ex) {
             alert(ex.message);
-            return;
+            setLoading(false);
         }
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        openPinWrap();
-    }
+    return (
+        <>
+            {openPin ? (
+                <AuthLayout>
+                    <FormContainer>
+                        <Pin
+                            pinType="tx"
+                            onChildKey={onChildKey}
+                            closePin={() => {
+                                setOpenPin(false);
+                            }}
+                            encryptedMnemonics={getValues("password")}
+                        />
+                    </FormContainer>
+                </AuthLayout>
+            ) : (
+                <MainLayout pageTitle="Send">
+                    <div className={cx("send-tokens")}>
+                        <FormCard>
+                            <FormProvider {...methods}>
+                                <form onSubmit={handleSubmit(onSubmit)}>
+                                    <TextField type="text" name="account" className="d-none" />
+                                    <TextField
+                                        type="password"
+                                        name="password"
+                                        className="d-none"
+                                        autoComplete="current-password"
+                                    />
 
-    return <div className={cx("send-token")}>
-        <form
-            revalidateMode
-            className="keystation-form"
-            onSubmit={handleSubmit}
-        >
-            <div className={cx("row", "row-custom")}>
-                <div class="col-4 text-right">
-                    From:
-            </div>
-                <div class="col-4">
-                    orai1kwz2df8zqh560kxnujvyta3qzq6pw9yprfcpe9 (50000 orai)
-            </div>
-            </div>
-            <div className={cx("row", "row-custom")}>
-                <div class="col-4 text-right">
-                    To:
-            </div>
-                <div class="col-4">
-                    <input type="text" class={cx("form-control", "form-control-custom")} />
-                </div>
-            </div>
-            <div className={cx("row", "row-custom")}>
-                <div class="col-4 text-right">
-                    Amount (orai):
-            </div>
-                <div class="col-4">
-                    <input type="text" class={cx("form-control", "form-control-custom")} />
-                </div>
-            </div>
-            <div className={cx("row", "row-custom")}>
-                <div class="col-4 text-right">
-                    Tx Fee (orai):
-            </div>
-                <div class="col-4">
-                    <input type="text" class={cx("form-control", "form-control-custom")} />
-                </div>
-            </div>
-            <div className={cx("row", "row-custom")}>
-                <div class="col-4 text-right">
-                    Memo:
-            </div>
-                <div class="col-4">
-                    <textarea class={cx("form-control", "form-control-custom")} rows="3"></textarea>
-                </div>
-            </div>
-            <div className={cx("row", "row-custom", "last-row-custom")}>
-                <div class="col-4 text-right">
-                </div>
-                <div class="col-4">
-                    <button class="btn btn-primary" type="submit"> Next <ArrowRightIcon /> </button>
-                </div>
-            </div>
-        </form>
+                                    <div className="row">
+                                        <div className="col-12 col-lg-4 text-left text-lg-right">
+                                            <Label>From:</Label>
+                                        </div>
+                                        <div className="col-12 col-lg-8 text-left">
+                                            <StaticText>{user.address}</StaticText>
+                                        </div>
+                                    </div>
 
-        <PinWrap show={false} pinType="tx" onChildKey={onChildKey} />
-    </div>;
+                                    <div className="row">
+                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <Label htmlFor="to">To:</Label>
+                                        </div>
+                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <TextField variant="primary" type="text" name="to" id="to" />
+                                            <ErrorMessage
+                                                errors={formState.errors}
+                                                name="to"
+                                                render={({ message }) => (
+                                                    <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="row">
+                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <Label htmlFor="amount">Amount (orai):</Label>
+                                        </div>
+                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <TextField variant="primary" type="text" name="amount" id="amount" />
+                                            <ErrorMessage
+                                                errors={formState.errors}
+                                                name="amount"
+                                                render={({ message }) => (
+                                                    <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="row">
+                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <Label htmlFor="fee">Tx Fee (orai):</Label>
+                                        </div>
+                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <TextField variant="primary" type="text" name="fee" id="fee" />
+                                            <ErrorMessage
+                                                errors={formState.errors}
+                                                name="fee"
+                                                render={({ message }) => (
+                                                    <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="row">
+                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <Label htmlFor="fee">Memo:</Label>
+                                        </div>
+                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <TextField variant="primary" type="text" name="memo" id="memo" />
+                                        </div>
+                                    </div>
+
+                                    <div className="text-right">
+                                        <ArrowButton type="submit">Send</ArrowButton>
+                                    </div>
+                                </form>
+                            </FormProvider>
+                        </FormCard>
+                    </div>
+                </MainLayout>
+            )}
+
+            {loading && <Loading message="Sending..." />}
+        </>
+    );
 };
 
-SendTokens.propTypes = {};
+SendTokens.propTypes = {
+    user: PropTypes.any,
+};
 SendTokens.defaultProps = {};
 
 export default SendTokens;

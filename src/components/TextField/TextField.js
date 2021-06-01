@@ -7,15 +7,17 @@ import styles from "./TextField.module.scss";
 
 const cx = cn.bind(styles);
 
-const TextField = ({ type, name, placeholder, autoComplete, className }) => {
+const TextField = ({ variant, type, name, placeholder, autoComplete, className, id }) => {
     const { register } = useFormContext();
     return (
         <input
             className={
-                cx("text-field") + (!_.isNil(className) ? ` ${className}` : "")
+                cx("text-field", !_.isNil(variant) && "text-field-" + variant) +
+                (!_.isNil(className) ? ` ${className}` : "")
             }
             type={type}
             name={name}
+            id={id}
             placeholder={placeholder}
             autoComplete={autoComplete}
             {...register(name)}
@@ -24,15 +26,18 @@ const TextField = ({ type, name, placeholder, autoComplete, className }) => {
 };
 
 TextField.propTypes = {
+    variant: PropTypes.string,
     type: PropTypes.string,
     name: PropTypes.string,
     placeholder: PropTypes.string,
     autoComplete: PropTypes.string,
+    id: PropTypes.string,
 };
 TextField.defaultProps = {
     type: "text",
     placeholder: "",
     autoComplete: "",
+    id: "",
 };
 
 export default TextField;

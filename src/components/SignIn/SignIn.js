@@ -6,7 +6,6 @@ import queryString from "query-string";
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { anotherAppLogin } from "src/utils";
 import { ErrorMessage } from "@hookform/error-message";
 import { pagePaths } from "src/consts/pagePaths";
 import AuthLayout from "src/components/AuthLayout";
