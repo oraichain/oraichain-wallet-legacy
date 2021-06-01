@@ -14,12 +14,13 @@ import UnauthenticatedRoute from "src/containers/UnauthenticatedRoute";
 import AuthenticatedRoute from "src/containers/AuthenticatedRoute";
 import AuthContainer from "src/containers/AuthContainer";
 import ImportWalletContainer from "src/containers/ImportWalletContainer";
+import SendTokensContainer from "src/containers/SendTokensContainer";
+import AlertBoxContainer from "src/containers/AlertBoxContainer";
+import TransactionContainer from "./containers/TransactionContainer";
 import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
 import SetRequest from "src/components/airequest/SetRequest";
 import GenerateMnemonics from "src/components/GenerateMnemonics";
-import Transaction from "src/components/Transaction";
-import SendTokensContainer from "./containers/SendTokensContainer";
 
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
@@ -50,7 +51,7 @@ const App = ({}) => {
                         <UnauthenticatedRoute path={pagePaths.SIGNIN} component={SignInContainer} />
                         <Route path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
                         <Route path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
-                        <AuthenticatedRoute path={pagePaths.TX} component={Transaction} />
+                        <AuthenticatedRoute path={pagePaths.TX} component={TransactionContainer} />
                         <Route path={pagePaths.SEND_TOKENS}>
                             <SendTokensContainer />
                         </Route>
@@ -64,6 +65,7 @@ const App = ({}) => {
                         </Route>
                     </Switch>
                 </Router>
+                <AlertBoxContainer />
             </PersistGate>
         </Provider>
     );

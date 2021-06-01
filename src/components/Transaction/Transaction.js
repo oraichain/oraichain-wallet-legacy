@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useHistory } from "react-router-dom";
-import { connect } from "react-redux";
+import PropTypes from "prop-types";
 import cn from "classnames/bind";
 import { FormProvider, useForm } from "react-hook-form";
 import queryString from "query-string";
@@ -27,11 +27,7 @@ import styles from "./Transaction.module.scss";
 
 const cx = cn.bind(styles);
 
-const mapStateToProps = (state) => ({
-    user: selectUser(state),
-});
-
-const Transaction = ({ user }) => {
+const Transaction = ({ user, showAlertBox }) => {
     const history = useHistory();
     const [openPin, setOpenPin] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -130,15 +126,25 @@ const Transaction = ({ user }) => {
             }
             // higher gas limit
             const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
+            showAlertBox({
+                variant: "success",
+                message: "Sent successfully",
+                onHide: () => {
+                    if (!_.isNil(window.opener)) {
+                        window.opener.postMessage(res.tx_response, "*");
+                        window.close();
+                    } else {
+                        txJsonRef.current.innerText = res.tx_response.raw_log;
+                    }
+                }
+            });
             setLoading(false);
-            if (!_.isNil(window.opener)) {
-                window.opener.postMessage(res.tx_response, "*");
-                window.close();
-            } else {
-                txJsonRef.current.innerText = res.tx_response.raw_log;
-            }
+
         } catch (ex) {
-            alert(ex.message);
+            showAlertBox({
+                variant: "error",
+                message: ex.message,
+            });
             setLoading(false);
         } finally {
             // setBlocking(false);
@@ -191,4 +197,10 @@ const Transaction = ({ user }) => {
     );
 };
 
-export default connect(mapStateToProps)(Transaction);
+Transaction.propTypes = {
+    user: PropTypes.any,
+    showAlertBox: PropTypes.func,
+};
+Transaction.defaultProps = {};
+
+export default Transaction;

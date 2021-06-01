@@ -8,6 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
 import { getTxBodySend } from "src/utils";
 import MainLayout from "src/components/MainLayout";
+import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
 import FormCard from "src/components/FormCard";
 import Label from "src/components/Label";
@@ -22,7 +23,7 @@ import styles from "./SendTokens.module.scss";
 // const message = Cosmos.message;
 const cx = cn.bind(styles);
 
-const SendTokens = ({ user }) => {
+const SendTokens = ({ user, showAlertBox }) => {
     const cosmos = window.cosmos;
     const [openPin, setOpenPin] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -48,17 +49,29 @@ const SendTokens = ({ user }) => {
             setLoading(true);
             const txBody = getTxBodySend(user, sendData.to, sendData.amount, sendData.memo);
             const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
-            window.open(
-                `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${res?.tx_response?.txhash ?? ""}`
-            );
             setLoading(false);
             setOpenPin(false);
-            if (!_.isNil(window?.opener)) {
-                window.opener.postMessage(res.tx_response, "*");
-                window.close();
-            }
+            showAlertBox({
+                variant: "success",
+                message: "Sent successfully",
+                onHide: () => {
+                    window.open(
+                        `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${
+                            res?.tx_response?.txhash ?? ""
+                        }`
+                    );
+
+                    if (!_.isNil(window?.opener)) {
+                        window.opener.postMessage(res.tx_response, "*");
+                        window.close();
+                    }
+                },
+            });
         } catch (ex) {
-            alert(ex.message);
+            showAlertBox({
+                variant: "error",
+                message: ex.message,
+            });
             setLoading(false);
         }
     };
@@ -175,6 +188,7 @@ const SendTokens = ({ user }) => {
 
 SendTokens.propTypes = {
     user: PropTypes.any,
+    showAlertBox: PropTypes.func,
 };
 SendTokens.defaultProps = {};
 

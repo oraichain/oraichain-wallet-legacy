@@ -5,10 +5,12 @@ import { persistReducer } from "redux-persist";
 import thunk from "redux-thunk";
 import menuSlice from "src/store/slices/menuSlice";
 import userSlice from "src/store/slices/userSlice";
+import alertSlice from "src/store/slices/alertSlice";
 
 const reducers = combineReducers({
     menu: menuSlice,
     user: userSlice,
+    alert: alertSlice
 });
 
 const persistConfig = {
