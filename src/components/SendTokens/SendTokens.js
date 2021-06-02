@@ -28,7 +28,7 @@ const SendTokens = ({ user, showAlertBox }) => {
     const cosmos = window.cosmos;
     const [openPin, setOpenPin] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [sendData, setSendData] = useState(null);
+    const [formData, setFormData] = useState(null);
 
     const schema = yup.object().shape({
         to: yup.string().required("The To is required"),
@@ -44,17 +44,16 @@ const SendTokens = ({ user, showAlertBox }) => {
     const { handleSubmit, formState, getValues } = methods;
 
     const onSubmit = (data) => {
-        console.log(data);
-        setSendData(data);
+        setFormData(data);
         setOpenPin(true);
     };
 
     const onChildKey = async (childKey) => {
         try {
             setLoading(true);
-            const txBody = getTxBodySend(user, sendData.to, (sendData.amount * 1000000)+"", sendData.memo);
+            const txBody = getTxBodySend(user, formData.to, (formData.amount * 1000000)+"", formData.memo);
             const res =
-                (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK", parseFloat(sendData.fee) * 1000000, parseFloat(sendData.gas))) ||
+                (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK", parseFloat(formData.fee) * 1000000, parseFloat(formData.gas))) ||
                 {};
             setLoading(false);
             setOpenPin(false);
@@ -187,7 +186,7 @@ const SendTokens = ({ user, showAlertBox }) => {
 
                                     <div className="row">
                                         <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                            <Label htmlFor="fee">Memo:</Label>
+                                            <Label htmlFor="memo">Memo:</Label>
                                         </div>
                                         <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
                                             <TextField variant="primary" type="text" name="memo" id="memo" />

@@ -7,11 +7,14 @@ import styles from "./TextArea.module.scss";
 
 const cx = cn.bind(styles);
 
-const TextArea = ({ name, placeholder, autoComplete, className, disabled }) => {
+const TextArea = ({ variant, name, placeholder, autoComplete, className, disabled }) => {
     const { register } = useFormContext();
     return (
         <textarea
-            className={cx("text-area") + (!_.isNil(className) ? ` ${className}` : "")}
+             className={
+                cx("text-area", !_.isNil(variant) && "text-area-" + variant) +
+                (!_.isNil(className) ? ` ${className}` : "")
+            }
             name={name}
             placeholder={placeholder}
             autoComplete={autoComplete}
@@ -22,6 +25,7 @@ const TextArea = ({ name, placeholder, autoComplete, className, disabled }) => {
 };
 
 TextArea.propTypes = {
+    variant: PropTypes.string,
     name: PropTypes.string,
     placeholder: PropTypes.string,
     autoComplete: PropTypes.string,

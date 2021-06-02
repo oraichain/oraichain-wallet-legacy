@@ -16,4 +16,9 @@
     &:focus-visible {
         outline: none;
     }
+
+    &-primary {
+        border: 1px solid #2B5072;
+        background: #213B58;
+    }
 }

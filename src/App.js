@@ -17,10 +17,11 @@ import ImportWalletContainer from "src/containers/ImportWalletContainer";
 import SendTokensContainer from "src/containers/SendTokensContainer";
 import AlertBoxContainer from "src/containers/AlertBoxContainer";
 import TransactionContainer from "./containers/TransactionContainer";
-import MainLayout from "src/components/MainLayout";
 import Home from "src/components/Home";
-import SetRequest from "src/components/airequest/SetRequest";
 import GenerateMnemonics from "src/components/GenerateMnemonics";
+import SetRequestContainer from "./containers/SetRequestContainer";
+import SetRequest from "./components/airequest/SetRequest";
+import MainLayout from "./components/MainLayout";
 
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
@@ -56,10 +57,14 @@ const App = ({}) => {
                             <SendTokensContainer />
                         </Route>
                         <Route path={pagePaths.AI_REQUEST_SET}>
+                            <SetRequestContainer />
+                        </Route>
+                        <Route path={"/test"}>
                             <MainLayout>
                                 <SetRequest />
                             </MainLayout>
                         </Route>
+
                         <Route path={pagePaths.HOME}>
                             <Home />
                         </Route>
