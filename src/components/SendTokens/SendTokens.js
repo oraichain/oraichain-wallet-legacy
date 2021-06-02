@@ -18,6 +18,7 @@ import ErrorText from "src/components/ErrorText";
 import ArrowButton from "src/components/ArrowButton";
 import Pin from "src/components/Pin";
 import Loading from "src/components/Loading";
+import SliderInput from "src/components/SliderInput";
 import styles from "./SendTokens.module.scss";
 
 // const message = Cosmos.message;
@@ -35,11 +36,15 @@ const SendTokens = ({ user, showAlertBox }) => {
     });
 
     const methods = useForm({
+        defaultValues: {
+            gas: 200000,
+        },
         resolver: yupResolver(schema),
     });
     const { handleSubmit, formState, getValues } = methods;
 
     const onSubmit = (data) => {
+        console.log(data);
         setSendData(data);
         setOpenPin(true);
     };
@@ -47,19 +52,21 @@ const SendTokens = ({ user, showAlertBox }) => {
     const onChildKey = async (childKey) => {
         try {
             setLoading(true);
-            const txBody = getTxBodySend(user, sendData.to, sendData.amount, sendData.memo);
-            const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
+            const txBody = getTxBodySend(user, sendData.to, (sendData.amount * 1000000)+"", sendData.memo);
+            const res =
+                (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK", parseFloat(sendData.fee) * 1000000, parseFloat(sendData.gas))) ||
+                {};
             setLoading(false);
             setOpenPin(false);
             showAlertBox({
                 variant: "success",
                 message: "Sent successfully",
                 onHide: () => {
-                    window.open(
-                        `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${
-                            res?.tx_response?.txhash ?? ""
-                        }`
-                    );
+                    if (!_.isNil(res?.tx_response?.txhash)) {
+                        window.open(
+                            `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${res.tx_response.txhash}`
+                        );
+                    }
 
                     if (!_.isNil(window?.opener)) {
                         window.opener.postMessage(res.tx_response, "*");
@@ -139,6 +146,22 @@ const SendTokens = ({ user, showAlertBox }) => {
                                             <ErrorMessage
                                                 errors={formState.errors}
                                                 name="amount"
+                                                render={({ message }) => (
+                                                    <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                )}
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="row">
+                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <Label htmlFor="gas">Gas:</Label>
+                                        </div>
+                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <SliderInput name="gas" id="gas" />
+                                            <ErrorMessage
+                                                errors={formState.errors}
+                                                name="gas"
                                                 render={({ message }) => (
                                                     <ErrorText className={cx("error-text")}>{message}</ErrorText>
                                                 )}
