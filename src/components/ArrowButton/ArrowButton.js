@@ -5,9 +5,15 @@ import styles from "./ArrowButton.module.scss";
 import RightArrowIcon from "../icons/RightArrowIcon";
 const cx = cn.bind(styles);
 
-const ArrowButton = ({ type, children }) => {
+const ArrowButton = ({ type, children, onClick }) => {
     return (
-        <button type={type} className={cx("arrow-button")}>
+        <button
+            type={type}
+            className={cx("arrow-button")}
+            onClick={() => {
+                onClick && onClick();
+            }}
+        >
             <span className={cx("arrow-button-text")}>{children}</span>
             <RightArrowIcon className={cx("arrow-button-icon")} />
         </button>
@@ -17,9 +23,10 @@ const ArrowButton = ({ type, children }) => {
 ArrowButton.propTypes = {
     type: PropTypes.string,
     children: PropTypes.any,
+    onClick: PropTypes.func,
 };
 ArrowButton.defaultProps = {
-    type: "button"
+    type: "button",
 };
 
 export default ArrowButton;

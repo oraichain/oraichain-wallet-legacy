@@ -5,6 +5,7 @@ import _ from "lodash";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { Provider } from "react-redux";
+import * as yup from "yup";
 import store from "src/store";
 import Cosmos from "@oraichain/cosmosjs";
 import { networks } from "src/config";
@@ -39,6 +40,17 @@ cosmos.setBech32MainPrefix(symbol);
 // global params
 window.cosmos = cosmos;
 window.localStorage.setItem("wallet.network", network);
+
+yup.addMethod(yup.string, "isNumeric", function () {
+    return this.test({
+        name: "isNumeric",
+        exclusive: false,
+        message: "Value must be a number",
+        test(value) {
+            return !isNaN(value);
+        },
+    });
+});
 
 const App = ({}) => {
     let persistor = persistStore(store);

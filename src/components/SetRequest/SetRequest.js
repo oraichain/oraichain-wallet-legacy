@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import cn from "classnames/bind";
 import PropTypes from "prop-types";
 import _ from "lodash";
@@ -6,6 +6,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
+import ReactJson from "react-json-view";
 import KSUID from "ksuid";
 import Cosmos from "@oraichain/cosmosjs";
 import bech32 from "bech32";
@@ -22,8 +23,11 @@ import ArrowButton from "src/components/ArrowButton";
 import Pin from "src/components/Pin";
 import Loading from "src/components/Loading";
 import SliderInput from "src/components/SliderInput";
+import TextArea from "src/components/TextArea";
+import BackButton from "src/components/BackButton";
+import PreviewButton from "src/components/PreviewButton";
 import styles from "./SetRequest.module.scss";
-import TextArea from "../TextArea";
+
 
 // const message = Cosmos.message;
 const cx = cn.bind(styles);
@@ -34,7 +38,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
     const [openPin, setOpenPin] = useState(false);
     const [loading, setLoading] = useState(false);
     const [formData, setFormData] = useState(null);
-    const txJsonRef = useRef(null);
+    const [jsonSrc, setJsonSrc] = useState(null);
 
     yup.addMethod(yup.string, "shouldBeJSON", function () {
         return this.test({
@@ -65,6 +69,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
             .required("The Validator count is required")
             .typeError("The Validator count must be a number"),
         input: yup.string().shouldBeJSON("shouldBeJSON"),
+        request_fees: yup.string().required("Tx Fee is required"),
         expected_output: yup.string().shouldBeJSON("shouldBeJSON"),
     });
 
@@ -141,14 +146,14 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                 return;
             }
             const requestId = JSON.parse(res.tx_response.raw_log)[0].events[0].attributes[0].value;
-            txJsonRef.current.innerText = res.tx_response.raw_log + "\n" + "request id: " + requestId;
+            // txJsonRef.current.innerText = res.tx_response.raw_log + "\n" + "request id: " + requestId;
             // check if the broadcast message is successful or not
             updateRequestId({ requestId });
             if (!_.isNil(window?.opener)) {
                 window.opener.postMessage(res.tx_response, "*");
                 window.close();
             } else {
-                txJsonRef.current.innerText = res.tx_response.raw_log;
+                // txJsonRef.current.innerText = res.tx_response.raw_log;
             }
         } catch (ex) {
             showAlertBox({
@@ -180,153 +185,184 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                 <MainLayout pageTitle="Set">
                     <div className={cx("set-request")}>
                         <FormCard>
-                            <FormProvider {...methods}>
-                                <form onSubmit={handleSubmit(onSubmit)}>
-                                    <TextField type="text" name="account" className="d-none" />
-                                    <TextField
-                                        type="password"
-                                        name="password"
-                                        className="d-none"
-                                        autoComplete="current-password"
-                                    />
+                            {jsonSrc ? (
+                                <>
+                                    <div className="d-flex flex-row justify-content-between align-items-center mb-4">
+                                        <BackButton
+                                            onClick={() => {
+                                                setJsonSrc(null);
+                                            }}
+                                        >
+                                            Back
+                                        </BackButton>
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 text-left text-lg-right">
-                                            <Label>Creator:</Label>
-                                        </div>
-                                        <div className="col-12 col-lg-8 text-left">
-                                            <StaticText>{user.address}</StaticText>
-                                        </div>
+                                        {/* <PreviewButton
+                                            onClick={() => {
+                                                window.open(
+                                                    `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${
+                                                        jsonSrc?.txhash ?? ""
+                                                    }`
+                                                );
+                                            }}
+                                        >
+                                            View on oraiscan
+                                        </PreviewButton> */}
                                     </div>
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                            <Label htmlFor="oscript_name">Oracle Script Name:</Label>
-                                        </div>
-                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                            <TextField
-                                                variant="primary"
-                                                type="text"
-                                                name="oscript_name"
-                                                id="oscript_name"
-                                            />
-                                            <ErrorMessage
-                                                errors={formState.errors}
-                                                name="oscript_name"
-                                                render={({ message }) => (
-                                                    <ErrorText className={cx("error-text")}>{message}</ErrorText>
-                                                )}
-                                            />
-                                        </div>
-                                    </div>
+                                    <ReactJson theme="monokai" style={{ backgroundColor: "inherit" }} src={jsonSrc} />
+                                </>
+                            ) : (
+                                <FormProvider {...methods}>
+                                    <form onSubmit={handleSubmit(onSubmit)}>
+                                        <TextField type="text" name="account" className="d-none" />
+                                        <TextField
+                                            type="password"
+                                            name="password"
+                                            className="d-none"
+                                            autoComplete="current-password"
+                                        />
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                            <Label htmlFor="des">Description:</Label>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 text-left text-lg-right">
+                                                <Label>Creator:</Label>
+                                            </div>
+                                            <div className="col-12 col-lg-8 text-left">
+                                                <StaticText>{user.address}</StaticText>
+                                            </div>
                                         </div>
-                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                            <TextField variant="primary" type="text" name="des" id="des" />
-                                            <ErrorMessage
-                                                errors={formState.errors}
-                                                name="des"
-                                                render={({ message }) => (
-                                                    <ErrorText className={cx("error-text")}>{message}</ErrorText>
-                                                )}
-                                            />
-                                        </div>
-                                    </div>
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                            <Label htmlFor="validator_count">Validator Count:</Label>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                                <Label htmlFor="oscript_name">Oracle Script Name:</Label>
+                                            </div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <TextField
+                                                    variant="primary"
+                                                    type="text"
+                                                    name="oscript_name"
+                                                    id="oscript_name"
+                                                />
+                                                <ErrorMessage
+                                                    errors={formState.errors}
+                                                    name="oscript_name"
+                                                    render={({ message }) => (
+                                                        <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                            <TextField
-                                                variant="primary"
-                                                type="text"
-                                                name="validator_count"
-                                                id="validator_count"
-                                            />
-                                            <ErrorMessage
-                                                errors={formState.errors}
-                                                name="validator_count"
-                                                render={({ message }) => (
-                                                    <ErrorText className={cx("error-text")}>{message}</ErrorText>
-                                                )}
-                                            />
-                                        </div>
-                                    </div>
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-start">
-                                            <Label htmlFor="input">Input:</Label>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                                <Label htmlFor="des">Description:</Label>
+                                            </div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <TextField variant="primary" type="text" name="des" id="des" />
+                                                <ErrorMessage
+                                                    errors={formState.errors}
+                                                    name="des"
+                                                    render={({ message }) => (
+                                                        <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                            <TextArea variant="primary" name="input" id="input" />
-                                        </div>
-                                    </div>
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-start">
-                                            <Label htmlFor="expected_output">Output:</Label>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                                <Label htmlFor="validator_count">Validator Count:</Label>
+                                            </div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <TextField
+                                                    variant="primary"
+                                                    type="text"
+                                                    name="validator_count"
+                                                    id="validator_count"
+                                                />
+                                                <ErrorMessage
+                                                    errors={formState.errors}
+                                                    name="validator_count"
+                                                    render={({ message }) => (
+                                                        <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                            <TextArea variant="primary" name="expected_output" id="expected_output" />
-                                        </div>
-                                    </div>
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                            <Label htmlFor="gas">Gas:</Label>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-start">
+                                                <Label htmlFor="input">Input(JSON):</Label>
+                                            </div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <TextArea variant="primary" name="input" id="input" />
+                                            </div>
                                         </div>
-                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                            <SliderInput name="gas" id="gas" />
-                                            <ErrorMessage
-                                                errors={formState.errors}
-                                                name="gas"
-                                                render={({ message }) => (
-                                                    <ErrorText className={cx("error-text")}>{message}</ErrorText>
-                                                )}
-                                            />
-                                        </div>
-                                    </div>
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                            <Label htmlFor="request_fees">Tx Fee (orai):</Label>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-start">
+                                                <Label htmlFor="expected_output">Output(JSON):</Label>
+                                            </div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <TextArea
+                                                    variant="primary"
+                                                    name="expected_output"
+                                                    id="expected_output"
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                            <TextField
-                                                variant="primary"
-                                                type="text"
-                                                name="request_fees"
-                                                id="request_fees"
-                                            />
-                                            <ErrorMessage
-                                                errors={formState.errors}
-                                                name="request_fees"
-                                                render={({ message }) => (
-                                                    <ErrorText className={cx("error-text")}>{message}</ErrorText>
-                                                )}
-                                            />
-                                        </div>
-                                    </div>
 
-                                    <div className="row">
-                                        <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                            <Label htmlFor="memo">Memo:</Label>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                                <Label htmlFor="gas">Gas:</Label>
+                                            </div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <SliderInput name="gas" id="gas" />
+                                                <ErrorMessage
+                                                    errors={formState.errors}
+                                                    name="gas"
+                                                    render={({ message }) => (
+                                                        <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
-                                        <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                            <TextField variant="primary" type="text" name="memo" id="memo" />
-                                        </div>
-                                    </div>
 
-                                    <div className="text-right">
-                                        <ArrowButton type="submit">Set</ArrowButton>
-                                    </div>
-                                </form>
-                            </FormProvider>
-                            <div className={cx("tx-json")} ref={txJsonRef}></div>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                                <Label htmlFor="request_fees">Tx Fee (orai):</Label>
+                                            </div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <TextField
+                                                    variant="primary"
+                                                    type="text"
+                                                    name="request_fees"
+                                                    id="request_fees"
+                                                />
+                                                <ErrorMessage
+                                                    errors={formState.errors}
+                                                    name="request_fees"
+                                                    render={({ message }) => (
+                                                        <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                    )}
+                                                />
+                                            </div>
+                                        </div>
+
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                                <Label htmlFor="memo">Memo:</Label>
+                                            </div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <TextField variant="primary" type="text" name="memo" id="memo" />
+                                            </div>
+                                        </div>
+
+                                        <div className="text-right">
+                                            <ArrowButton type="submit">Set</ArrowButton>
+                                        </div>
+                                    </form>
+                                </FormProvider>
+                            )}
                         </FormCard>
                     </div>
                 </MainLayout>
