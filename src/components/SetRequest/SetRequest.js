@@ -28,7 +28,6 @@ import BackButton from "src/components/BackButton";
 import PreviewButton from "src/components/PreviewButton";
 import styles from "./SetRequest.module.scss";
 
-
 // const message = Cosmos.message;
 const cx = cn.bind(styles);
 
@@ -65,12 +64,12 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
         oscript_name: yup.string().required("The To is required"),
         des: yup.string().required("Description field is required"),
         validator_count: yup
-            .number()
+            .string()
             .required("The Validator count is required")
-            .typeError("The Validator count must be a number"),
+            .isNumeric("The Validator count must be a number"),
         input: yup.string().shouldBeJSON("shouldBeJSON"),
-        request_fees: yup.string().required("Tx Fee is required"),
         expected_output: yup.string().shouldBeJSON("shouldBeJSON"),
+        request_fees: yup.string().required("Tx Fee is required").isNumeric("Tx Fee must be a number"),
     });
 
     const methods = useForm({

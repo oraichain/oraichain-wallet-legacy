@@ -41,11 +41,11 @@ cosmos.setBech32MainPrefix(symbol);
 window.cosmos = cosmos;
 window.localStorage.setItem("wallet.network", network);
 
-yup.addMethod(yup.string, "isNumeric", function () {
+yup.addMethod(yup.string, "isNumeric", function (message) {
     return this.test({
         name: "isNumeric",
         exclusive: false,
-        message: "Value must be a number",
+        message: _.isNil(message) ? "Value must be a number" : message,
         test(value) {
             return !isNaN(value);
         },
