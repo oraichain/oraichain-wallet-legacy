@@ -14,7 +14,7 @@ const AuthLayout = ({ children }) => {
     return (
         <div className={cx("auth-layout")}>
             <div className={cx("auth-layout-header")}>
-                <div className="container d-flex flex-row justify-content-start align-items-center">
+                <div className="container d-flex flex-row justify-content-center align-items-center">
                     <div className={cx("brand")} onClick={() => {
                         history.push(pagePaths.HOME);
                     }}>

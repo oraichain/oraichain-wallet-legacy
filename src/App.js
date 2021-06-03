@@ -76,10 +76,9 @@ const App = ({}) => {
             <PersistGate loading={null} persistor={persistor}>
                 <Router>
                     <Switch>
-                        <Route exact path={pagePaths.AUTH} component={AuthContainer} />
                         <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
-                        <Route exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
-                        <Route exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
+                        <UnauthenticatedRoute exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
+                        <UnauthenticatedRoute exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
                         <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
                         <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
                             <SendTokensContainer />
@@ -92,10 +91,10 @@ const App = ({}) => {
                                 <SetRequest />
                             </MainLayout>
                         </AuthenticatedRoute>
-
                         <AuthenticatedRoute exact path={pagePaths.HOME}>
                             <Home />
                         </AuthenticatedRoute>
+                        <Route exact path={pagePaths.AUTH} component={AuthContainer} />
                     </Switch>
                 </Router>
                 <AlertBoxContainer />
