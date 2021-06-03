@@ -6,11 +6,15 @@ import thunk from "redux-thunk";
 import menuSlice from "src/store/slices/menuSlice";
 import userSlice from "src/store/slices/userSlice";
 import alertSlice from "src/store/slices/alertSlice";
+import contractSlice from "src/store/slices/contractSlice";
+import requestSlice from "src/store/slices/requestSlice";
 
 const reducers = combineReducers({
     menu: menuSlice,
     user: userSlice,
-    alert: alertSlice
+    alert: alertSlice,
+    contract: contractSlice,
+    request: requestSlice,
 });
 
 const persistConfig = {

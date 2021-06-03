@@ -52,6 +52,22 @@ yup.addMethod(yup.string, "isNumeric", function (message) {
     });
 });
 
+yup.addMethod(yup.string, "isJSON", function (message) {
+    return this.test({
+        name: "isJSON",
+        exclusive: false,
+        message: _.isNil(message) ? "Value must be JSON" : message,
+        test(value) {
+            try {
+                JSON.parse(value);
+            } catch (e) {
+                return false;
+            }
+            return true;
+        },
+    });
+});
+
 const App = ({}) => {
     let persistor = persistStore(store);
 
@@ -60,26 +76,26 @@ const App = ({}) => {
             <PersistGate loading={null} persistor={persistor}>
                 <Router>
                     <Switch>
-                        <Route path={pagePaths.AUTH} component={AuthContainer} />
-                        <UnauthenticatedRoute path={pagePaths.SIGNIN} component={SignInContainer} />
-                        <Route path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
-                        <Route path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
-                        <AuthenticatedRoute path={pagePaths.TX} component={TransactionContainer} />
-                        <Route path={pagePaths.SEND_TOKENS}>
+                        <Route exact path={pagePaths.AUTH} component={AuthContainer} />
+                        <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
+                        <Route exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
+                        <Route exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
+                        <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
+                        <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
                             <SendTokensContainer />
-                        </Route>
-                        <Route path={pagePaths.AI_REQUEST_SET}>
+                        </AuthenticatedRoute>
+                        <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_SET}>
                             <SetRequestContainer />
-                        </Route>
-                        <Route path={"/test"}>
+                        </AuthenticatedRoute>
+                        <AuthenticatedRoute exact path={"/test"}>
                             <MainLayout>
                                 <SetRequest />
                             </MainLayout>
-                        </Route>
+                        </AuthenticatedRoute>
 
-                        <Route path={pagePaths.HOME}>
+                        <AuthenticatedRoute exact path={pagePaths.HOME}>
                             <Home />
-                        </Route>
+                        </AuthenticatedRoute>
                     </Switch>
                 </Router>
                 <AlertBoxContainer />
