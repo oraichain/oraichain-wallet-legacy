@@ -26,19 +26,19 @@ const ImportPrivateKey = ({ history }) => {
                 <FormProvider {...methods} >
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Field
-                            title="Walletname"
+                            title="Wallet name"
                             input={<input type="text" className={cx("text-field")} name="walletName" placeholder="" {...register("walletName", { required: true })} />}
                         />
-                        
+
                         <Field
                             title="Private Key"
                             input={<input type="password" className={cx("text-field")} name="privateKey" autoComplete="new-password" placeholder="" {...register("privateKey", { required: true })} />}
                         />
 
                         {(errors.privateKey || errors.walletName) && <ErrorText>Invalid account.</ErrorText>}
-                        
+
                         <Suggestion text="Enter private key. Private key is encrypted and stored in Keychain." />
-                        
+
                         <div className={cx("button-space")}>
                             <Button variant="primary" size="lg" submit={true}>
                                 Next

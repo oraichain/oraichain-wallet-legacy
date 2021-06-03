@@ -23,8 +23,8 @@ const EncryptedMnemonic = ({ setStep, step, queryParam, walletName, encryptedMne
     const history = useHistory();
 
     const schema = yup.object().shape({
-        account: yup.string().required("The Account is required"),
-        mnemonics: yup.string().required("The Encrypted Mnemonics is required"),
+        account: yup.string().required("The account is required"),
+        mnemonics: yup.string().required("The encrypted mnemonics is required"),
     });
 
     const methods = useForm({

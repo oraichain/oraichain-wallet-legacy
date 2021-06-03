@@ -54,8 +54,9 @@ const SignIn = ({ setUser }) => {
     }
 
     const onSubmit = (data) => {
+        console.log("on submit: ", data);
         const password = data.password || localStorage.getItem(data.walletName + "-password") || "";
-
+        console.log("on password submit: ", password)
         if (password === "") {
             setInvalidMnemonics(true);
         } else {
@@ -71,9 +72,9 @@ const SignIn = ({ setUser }) => {
     const signinForm = (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <FormTitle>SignIn</FormTitle>
+                <FormTitle>Sign In</FormTitle>
                 <FormField>
-                    <Label>Walletname</Label>
+                    <Label>Wallet name</Label>
                     <TextField type="text" autoComplete="username" name="walletName" />
                     <ErrorMessage
                         errors={formState.errors}
@@ -81,15 +82,16 @@ const SignIn = ({ setUser }) => {
                         render={({ message }) => <ErrorText>{message}</ErrorText>}
                     />
                 </FormField>
-
-                <FormField>
-                    <TextField type="password" autoComplete="current-password" name="password" className="d-none" />
-                    {invalidMnemonics && (
-                        <ErrorText>
-                            Could not retrieve account stored in Keychain. Press the button below the Import Wallet.
-                        </ErrorText>
-                    )}
-                </FormField>
+                {invalidMnemonics && (
+                    <FormField>
+                        <TextField type="password" autoComplete="current-password" name="password" className="d-none" />
+                        {invalidMnemonics && (
+                            <ErrorText>
+                                Could not retrieve account stored in Keychain. Press the button below the Import Wallet.
+                            </ErrorText>
+                        )}
+                    </FormField>
+                )}
 
                 <Suggestion text=" Unavailable in guest mode or incognito mode." />
 
@@ -112,9 +114,9 @@ const SignIn = ({ setUser }) => {
                 </div>
 
                 <QuestionLink
-                    questionText="Don't have Mnemonics?"
+                    questionText="Don't have mnemonics?"
                     linkTo={`${pagePaths.GENERATE_MNEMONICS}${history.location.search}`}
-                    linkText="Generate Mnemonics"
+                    linkText="Generate mnemonics"
                 />
             </form>
         </FormProvider>

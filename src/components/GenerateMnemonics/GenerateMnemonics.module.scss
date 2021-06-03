@@ -34,6 +34,17 @@
     line-height: 150%;
 }
 
+.copy-message-fail {
+    position: absolute;
+    bottom: 16px;
+    color: rgb(163, 30, 30);
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+}
+
 .show-mnemonics {
     display: flex;
     flex-direction: row;

@@ -46,10 +46,10 @@ const GenerateMnemonics = ({ history }) => {
             <FormContainer>
                 <FormProvider {...methods}>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <FormTitle>Generate Mnemonics</FormTitle>
+                        <FormTitle>Generate mnemonic</FormTitle>
                         <FormField>
                             <div className="d-flex flex-row justify-content-between align-items-center">
-                                <Label>Mnemonics</Label>
+                                <Label>Mnemonic</Label>
                                 <CopyToClipboard
                                     onCopy={copyToClipboard}
                                     text={getValues("mnemonics")}
@@ -75,9 +75,14 @@ const GenerateMnemonics = ({ history }) => {
                                 autoComplete="off"
                             />
 
-                            {copied && (
+                            {copied && !getValues("mnemonics") && (
+                                <div className={cx("copy-message-fail")}>
+                                    There is no mnemonic phrase to copy.
+                                </div>
+                            )}
+                            {copied && getValues("mnemonics") && (
                                 <div className={cx("copy-message")}>
-                                    Encrypted mnemonic phrase is copied.
+                                    Mnemonic phrase is copied.
                                 </div>
                             )}
                         </FormField>
@@ -90,13 +95,13 @@ const GenerateMnemonics = ({ history }) => {
                                 id="show-mnemonics"
                                 name=""
                                 onClick={toggleShowMnemonics}
-                                onChange={() => {}}
+                                onChange={() => { }}
                             />
                             <label
                                 htmlFor="show-mnemonics"
                                 className={cx("show-mnemonics-label")}
                             >
-                                Show the mnemonics
+                                Show the mnemonic
                             </label>
                         </div>
 
