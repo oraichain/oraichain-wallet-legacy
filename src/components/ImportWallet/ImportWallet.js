@@ -83,7 +83,7 @@ const ImportWallet = ({ history, user }) => {
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormTitle>Import Wallet</FormTitle>
                 <FormField>
-                    <Label>Walletname</Label>
+                    <Label>Wallet name</Label>
                     <TextField type="text" name="walletName" />
                     <ErrorMessage
                         errors={formState.errors}
@@ -99,7 +99,7 @@ const ImportWallet = ({ history, user }) => {
                     {invalidMnemonicsChecksum && <ErrorText>Invalid mnemonics checksum error.</ErrorText>}
                 </FormField>
 
-                <Suggestion text="Enter 12 / 16 / 24 words including spaces. Mnemonicphrase is encrypted and stored in Keychain." />
+                <Suggestion text="Enter 24 words including spaces. The mnemonic phrase is encrypted and stored in Keychain." />
 
                 <div className="d-flex flex-row justify-content-center mb-4">
                     <Button variant="primary" size="lg" submit={true}>
@@ -120,9 +120,9 @@ const ImportWallet = ({ history, user }) => {
                 </div>
 
                 <QuestionLink
-                    questionText="Don't have Mnemonics?"
+                    questionText="Don't have mnemonics?"
                     linkTo={`${pagePaths.GENERATE_MNEMONICS}${history.location.search}`}
-                    linkText="Generate Mnemonics"
+                    linkText="Generate mnemonics"
                 />
             </form>
         </FormProvider>

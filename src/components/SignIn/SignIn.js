@@ -71,9 +71,9 @@ const SignIn = ({ setUser }) => {
     const signinForm = (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <FormTitle>SignIn</FormTitle>
+                <FormTitle>Sign In</FormTitle>
                 <FormField>
-                    <Label>Walletname</Label>
+                    <Label>Wallet name</Label>
                     <TextField type="text" autoComplete="username" name="walletName" />
                     <ErrorMessage
                         errors={formState.errors}
@@ -112,9 +112,9 @@ const SignIn = ({ setUser }) => {
                 </div>
 
                 <QuestionLink
-                    questionText="Don't have Mnemonics?"
+                    questionText="Don't have mnemonics?"
                     linkTo={`${pagePaths.GENERATE_MNEMONICS}${history.location.search}`}
-                    linkText="Generate Mnemonics"
+                    linkText="Generate mnemonics"
                 />
             </form>
         </FormProvider>
