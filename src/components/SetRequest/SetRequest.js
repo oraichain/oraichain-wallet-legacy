@@ -26,6 +26,7 @@ import SliderInput from "src/components/SliderInput";
 import TextArea from "src/components/TextArea";
 import BackButton from "src/components/BackButton";
 import PreviewButton from "src/components/PreviewButton";
+import { gasValues } from "src/consts/gasValues";
 import styles from "./SetRequest.module.scss";
 
 // const message = Cosmos.message;
@@ -40,15 +41,16 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
     const [jsonSrc, setJsonSrc] = useState(null);
 
     const schema = yup.object().shape({
-        oscriptName: yup.string().required("The To is required"),
+        oscriptName: yup.string().required("The To is required."),
         description: yup.string().required("The Description is required"),
         validatorCount: yup
             .string()
             .required("The Validator count is required")
             .isNumeric("The Validator count must be a number"),
-        input: yup.string().required("The Input is required").isJSON("Input must be JSON"),
-        expected_output: yup.string().required("The Output is required").isJSON("Output must be JSON"),
+        input: yup.string().required("The Input is required").isJSON("The Input must be JSON"),
+        output: yup.string().required("The Output is required").isJSON("The Output must be JSON"),
         request_fees: yup.string().required("Tx Fee is required").isNumeric("Tx Fee must be a number"),
+        gas: yup.number().min(gasValues.MIN, "The Gas must be at least " + gasValues.MIN + ".").max(gasValues.MAX, "The Gas may not be greater than " + gasValues.MAX + ".")
     });
 
     const methods = useForm({
@@ -89,7 +91,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
             validator_count: new Long(formData.validatorCount),
             fees: `${formData.request_fees}orai`,
             input: Buffer.from(formData.input),
-            expected_output: Buffer.from(formData.expected_output),
+            expected_output: Buffer.from(formData.output),
         });
 
         const msgSendAny = new message.google.protobuf.Any({
@@ -285,13 +287,20 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
 
                                         <div className="row">
                                             <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-start">
-                                                <Label htmlFor="expected_output">Output(JSON):</Label>
+                                                <Label htmlFor="output">Output(JSON):</Label>
                                             </div>
                                             <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
                                                 <TextArea
                                                     variant="primary"
-                                                    name="expected_output"
-                                                    id="expected_output"
+                                                    name="output"
+                                                    id="output"
+                                                />
+                                                <ErrorMessage
+                                                    errors={formState.errors}
+                                                    name="output"
+                                                    render={({ message }) => (
+                                                        <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                    )}
                                                 />
                                             </div>
                                         </div>

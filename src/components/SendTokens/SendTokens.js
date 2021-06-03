@@ -23,6 +23,7 @@ import SliderInput from "src/components/SliderInput";
 import BackButton from "src/components/BackButton";
 import PreviewButton from "src/components/PreviewButton";
 import styles from "./SendTokens.module.scss";
+import { gasValues } from "src/consts/gasValues";
 
 // const message = Cosmos.message;
 const cx = cn.bind(styles);
@@ -35,9 +36,10 @@ const SendTokens = ({ user, showAlertBox }) => {
     const [jsonSrc, setJsonSrc] = useState(null);
 
     const schema = yup.object().shape({
-        to: yup.string().required("The To is required"),
-        amount: yup.string().required("The Amount is required").isNumeric("The Amount must be a number"),
-        fee: yup.string().required("The Tx Fee is required").isNumeric("The Tx Fee must be a number"),
+        to: yup.string().required("The To is required."),
+        amount: yup.string().required("The Amount is required.").isNumeric("The Amount must be a number."),
+        fee: yup.string().required("The Tx Fee is required.").isNumeric("The Tx Fee must be a number."),
+        gas: yup.number().min(gasValues.MIN, "The Gas must be at least " + gasValues.MIN + ".").max(gasValues.MAX, "The Gas may not be greater than " + gasValues.MAX + ".")
     });
 
     const methods = useForm({

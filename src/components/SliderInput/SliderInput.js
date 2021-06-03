@@ -2,7 +2,9 @@ import React from "react";
 import cn from "classnames/bind";
 import PropTypes from "prop-types";
 import { useFormContext } from "react-hook-form";
+import { gasValues } from "src/consts/gasValues";
 import styles from "./SliderInput.module.scss";
+
 const cx = cn.bind(styles);
 
 const SliderInput = ({ name, id, min, max }) => {
@@ -47,8 +49,8 @@ const SliderInput = ({ name, id, min, max }) => {
 
 SliderInput.propTypes = {};
 SliderInput.defaultProps = {
-    min: 200000,
-    max: 2000000,
+    min: gasValues.MIN,
+    max: gasValues.MAX,
 };
 
 export default SliderInput;

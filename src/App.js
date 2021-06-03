@@ -46,7 +46,7 @@ yup.addMethod(yup.string, "isNumeric", function (message) {
     return this.test({
         name: "isNumeric",
         exclusive: false,
-        message: _.isNil(message) ? "Value must be a number" : message,
+        message: _.isNil(message) ? "Value must be a number." : message,
         test(value) {
             return !isNaN(value);
         },
@@ -57,7 +57,7 @@ yup.addMethod(yup.string, "isJSON", function (message) {
     return this.test({
         name: "isJSON",
         exclusive: false,
-        message: _.isNil(message) ? "Value must be JSON" : message,
+        message: _.isNil(message) ? "Value must be JSON." : message,
         test(value) {
             try {
                 JSON.parse(value);
@@ -77,6 +77,7 @@ const App = ({}) => {
             <PersistGate loading={null} persistor={persistor}>
                 <Router>
                     <Switch>
+                        <Route path={pagePaths.AUTH} component={AuthContainer} />
                         <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
                         <UnauthenticatedRoute exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
                         <UnauthenticatedRoute exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
@@ -95,12 +96,12 @@ const App = ({}) => {
                         <AuthenticatedRoute exact path={pagePaths.HOME}>
                             <Home />
                         </AuthenticatedRoute>
-                        <Route exact path={pagePaths.AUTH} component={AuthContainer} />
-                        <Route exact path="*">
+                        <Route path="*">
                             <NotFoundContainer />
                         </Route>
                     </Switch>
                 </Router>
+
                 <AlertBoxContainer />
             </PersistGate>
         </Provider>
