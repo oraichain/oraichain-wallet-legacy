@@ -17,12 +17,13 @@ import AuthContainer from "src/containers/AuthContainer";
 import ImportWalletContainer from "src/containers/ImportWalletContainer";
 import SendTokensContainer from "src/containers/SendTokensContainer";
 import AlertBoxContainer from "src/containers/AlertBoxContainer";
-import TransactionContainer from "./containers/TransactionContainer";
+import TransactionContainer from "src/containers/TransactionContainer";
+import SetRequestContainer from "src/containers/SetRequestContainer";
+import NotFoundContainer from "src/containers/NotFoundContainer";
 import Home from "src/components/Home";
 import GenerateMnemonics from "src/components/GenerateMnemonics";
-import SetRequestContainer from "./containers/SetRequestContainer";
-import SetRequest from "./components/airequest/SetRequest";
-import MainLayout from "./components/MainLayout";
+import SetRequest from "src/components/airequest/SetRequest";
+import MainLayout from "src/components/MainLayout";
 
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
@@ -41,13 +42,29 @@ cosmos.setBech32MainPrefix(symbol);
 window.cosmos = cosmos;
 window.localStorage.setItem("wallet.network", network);
 
-yup.addMethod(yup.string, "isNumeric", function () {
+yup.addMethod(yup.string, "isNumeric", function (message) {
     return this.test({
         name: "isNumeric",
         exclusive: false,
-        message: "Value must be a number",
+        message: _.isNil(message) ? "Value must be a number" : message,
         test(value) {
             return !isNaN(value);
+        },
+    });
+});
+
+yup.addMethod(yup.string, "isJSON", function (message) {
+    return this.test({
+        name: "isJSON",
+        exclusive: false,
+        message: _.isNil(message) ? "Value must be JSON" : message,
+        test(value) {
+            try {
+                JSON.parse(value);
+            } catch (e) {
+                return false;
+            }
+            return true;
         },
     });
 });
@@ -60,25 +77,27 @@ const App = ({}) => {
             <PersistGate loading={null} persistor={persistor}>
                 <Router>
                     <Switch>
-                        <Route path={pagePaths.AUTH} component={AuthContainer} />
-                        <UnauthenticatedRoute path={pagePaths.SIGNIN} component={SignInContainer} />
-                        <Route path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
-                        <Route path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
-                        <AuthenticatedRoute path={pagePaths.TX} component={TransactionContainer} />
-                        <Route path={pagePaths.SEND_TOKENS}>
+                        <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
+                        <UnauthenticatedRoute exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
+                        <UnauthenticatedRoute exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
+                        <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
+                        <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
                             <SendTokensContainer />
-                        </Route>
-                        <Route path={pagePaths.AI_REQUEST_SET}>
+                        </AuthenticatedRoute>
+                        <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_SET}>
                             <SetRequestContainer />
-                        </Route>
-                        <Route path={"/test"}>
+                        </AuthenticatedRoute>
+                        <AuthenticatedRoute exact path={"/test"}>
                             <MainLayout>
                                 <SetRequest />
                             </MainLayout>
-                        </Route>
-
-                        <Route path={pagePaths.HOME}>
+                        </AuthenticatedRoute>
+                        <AuthenticatedRoute exact path={pagePaths.HOME}>
                             <Home />
+                        </AuthenticatedRoute>
+                        <Route exact path={pagePaths.AUTH} component={AuthContainer} />
+                        <Route exact path="*">
+                            <NotFoundContainer />
                         </Route>
                     </Switch>
                 </Router>

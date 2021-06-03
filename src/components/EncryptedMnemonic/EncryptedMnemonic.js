@@ -19,14 +19,7 @@ import copyIcon from "src/assets/icons/copy.svg";
 
 const cx = cn.bind(styles);
 
-const EncryptedMnemonic = ({
-    setStep,
-    step,
-    queryParam,
-    walletName,
-    encryptedMnemonics,
-}) => {
-    console.log("EncryptedMnemonic");
+const EncryptedMnemonic = ({ setStep, step, queryParam, walletName, encryptedMnemonics }) => {
     const history = useHistory();
 
     const schema = yup.object().shape({
@@ -76,25 +69,14 @@ const EncryptedMnemonic = ({
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
                 <FormTitle>Import Wallet</FormTitle>
-                <div className={cx("tutorial")}>
-                    Please copy and paste the mnemonic encryption below.
-                </div>
+                <div className={cx("tutorial")}>Please copy and paste the mnemonic encryption below.</div>
                 <FormField>
                     <div className="d-flex flex-row justify-content-between align-items-center">
                         <Label>Encrypted mnemonic pharse</Label>
-                        <CopyToClipboard
-                            onCopy={copyToClipboard}
-                            text={encryptedMnemonics}
-                        >
+                        <CopyToClipboard onCopy={copyToClipboard} text={encryptedMnemonics}>
                             <div className={cx("copy-button")}>
-                                <img
-                                    className={cx("copy-button-icon")}
-                                    src={copyIcon}
-                                    alt=""
-                                />
-                                <span className={cx("copy-button-text")}>
-                                    Copy
-                                </span>
+                                <img className={cx("copy-button-icon")} src={copyIcon} alt="" />
+                                <span className={cx("copy-button-text")}>Copy</span>
                             </div>
                         </CopyToClipboard>
                     </div>
@@ -103,43 +85,50 @@ const EncryptedMnemonic = ({
                     <ErrorMessage
                         errors={formState.errors}
                         name="encryptedMnemonics"
-                        render={({ message }) => (
-                            <ErrorText>{message}</ErrorText>
-                        )}
+                        render={({ message }) => <ErrorText>{message}</ErrorText>}
                     />
 
-                    {copied && (
-                        <div className={cx("copy-message")}>
-                            Encrypted mnemonic phrase is copied.
-                        </div>
-                    )}
+                    {copied && <div className={cx("copy-message")}>Encrypted mnemonic phrase is copied.</div>}
                 </FormField>
 
                 <TextField name="account" className="d-none" />
 
                 <FormField>
                     <Label>Encrypted mnemonic pharse</Label>
-                    <TextField
-                        type="password"
-                        name="mnemonics"
-                        autoComplete="new-password"
-                    />
-                    {formState.errors.mnemonics && (
-                        <ErrorText>Invalid mnemonics.</ErrorText>
-                    )}
-                    {invalidMnemonics && (
-                        <ErrorText>
-                            Encrypted mnemonic phrase does not match.
-                        </ErrorText>
-                    )}
+                    <TextField type="password" name="mnemonics" autoComplete="new-password" />
+                    {formState.errors.mnemonics && <ErrorText>Invalid mnemonics.</ErrorText>}
+                    {invalidMnemonics && <ErrorText>Encrypted mnemonic phrase does not match.</ErrorText>}
                 </FormField>
 
-                <a
-                    href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5"
-                    target="blank"
-                >
-                    <Suggestion text="Why do I have to encrypt my mnemonic pharse?" />
-                </a>
+                <Suggestion
+                    text="Why do I have to encrypt my mnemonic pharse?"
+                    showModalWhenClick={true}
+                    modalTitle={
+                        <h5>Why do I have to encrypt my mnemonic pharse?</h5>
+                    }
+                    modalBody={
+                        <>
+                            <p>Here are the reasons:</p>
+                            <ol>
+                                <li>
+                                    Keystore is an encrypted private key, it is not easy to write down all the code
+                                    correctly. Moreover, users often think that the keystore is secure and they transmit
+                                    or store it through the network. It will lead to leaking of keystore which will
+                                    greatly increase the risk of asset theft.
+                                </li>
+                                <li>
+                                    The security level of the private key is the same as mnemonic phrases. They are both
+                                    unencrypted private keys. However, it is inconvenient to copy and save the private
+                                    key. Once the transcription is wrong, it is difficult to correct and retrieve it.
+                                </li>
+                                <li>
+                                    Mnemonic phrases manage multi-chain wallets. Using only one Mnemonic phrase you can
+                                    manage assets on multiple chains.
+                                </li>
+                            </ol>
+                        </>
+                    }
+                />
 
                 <div className="d-flex flex-row justify-content-center mb-4">
                     <Button variant="primary" size="lg" submit={true}>

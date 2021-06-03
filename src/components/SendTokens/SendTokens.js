@@ -34,12 +34,10 @@ const SendTokens = ({ user, showAlertBox }) => {
     const [formData, setFormData] = useState(null);
     const [jsonSrc, setJsonSrc] = useState(null);
 
-
-
     const schema = yup.object().shape({
         to: yup.string().required("The To is required"),
-        amount: yup.string().required("The Amount is required").isNumeric(),
-        fee: yup.number().required("The Tx Fee is required").typeError("The Tx Fee must be a number"),
+        amount: yup.string().required("The Amount is required").isNumeric("The Amount must be a number"),
+        fee: yup.string().required("The Tx Fee is required").isNumeric("The Tx Fee must be a number"),
     });
 
     const methods = useForm({

@@ -28,7 +28,6 @@ import BackButton from "src/components/BackButton";
 import PreviewButton from "src/components/PreviewButton";
 import styles from "./SetRequest.module.scss";
 
-
 // const message = Cosmos.message;
 const cx = cn.bind(styles);
 
@@ -40,37 +39,16 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
     const [formData, setFormData] = useState(null);
     const [jsonSrc, setJsonSrc] = useState(null);
 
-    yup.addMethod(yup.string, "shouldBeJSON", function () {
-        return this.test({
-            name: "validate-json",
-            exclusive: false,
-            message: "Value must be JSON",
-            test(value) {
-                if (!_.isNil(value)) {
-                    try {
-                        let obj = JSON.parse(value);
-                        if (obj && typeof obj === "object") {
-                            return true;
-                        }
-                    } catch (error) {
-                        return false;
-                    }
-                }
-                return false;
-            },
-        });
-    });
-
     const schema = yup.object().shape({
-        oscript_name: yup.string().required("The To is required"),
-        des: yup.string().required("Description field is required"),
-        validator_count: yup
-            .number()
+        oscriptName: yup.string().required("The To is required"),
+        description: yup.string().required("The Description is required"),
+        validatorCount: yup
+            .string()
             .required("The Validator count is required")
-            .typeError("The Validator count must be a number"),
-        input: yup.string().shouldBeJSON("shouldBeJSON"),
-        request_fees: yup.string().required("Tx Fee is required"),
-        expected_output: yup.string().shouldBeJSON("shouldBeJSON"),
+            .isNumeric("The Validator count must be a number"),
+        input: yup.string().required("The Input is required").isJSON("Input must be JSON"),
+        expected_output: yup.string().required("The Output is required").isJSON("Output must be JSON"),
+        request_fees: yup.string().required("Tx Fee is required").isNumeric("Tx Fee must be a number"),
     });
 
     const methods = useForm({
@@ -82,7 +60,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
     const { handleSubmit, formState, getValues } = methods;
 
     const onSubmit = async (data) => {
-        const oscriptName = data?.oscript_name?.trim();
+        const oscriptName = data?.oscriptName?.trim();
         try {
             const oscript = await fetch(`${cosmos.url}/provider/oscript/${oscriptName}`).then((res) => res.json());
             if (!_.isNil(oscript?.code)) {
@@ -106,9 +84,9 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
     const getTxBody = (childKey) => {
         const msgSend = new message.oraichain.orai.airequest.MsgSetAIRequest({
             request_id: KSUID.randomSync().string,
-            oracle_script_name: formData.oscript_name,
+            oracle_script_name: formData.oscriptName,
             creator: bech32.fromWords(bech32.toWords(childKey.identifier)),
-            validator_count: new Long(formData.validator_count),
+            validator_count: new Long(formData.validatorCount),
             fees: `${formData.request_fees}orai`,
             input: Buffer.from(formData.input),
             expected_output: Buffer.from(formData.expected_output),
@@ -233,18 +211,18 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
 
                                         <div className="row">
                                             <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                                <Label htmlFor="oscript_name">Oracle Script Name:</Label>
+                                                <Label htmlFor="oscriptName">Oracle Script Name:</Label>
                                             </div>
                                             <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
                                                 <TextField
                                                     variant="primary"
                                                     type="text"
-                                                    name="oscript_name"
-                                                    id="oscript_name"
+                                                    name="oscriptName"
+                                                    id="oscriptName"
                                                 />
                                                 <ErrorMessage
                                                     errors={formState.errors}
-                                                    name="oscript_name"
+                                                    name="oscriptName"
                                                     render={({ message }) => (
                                                         <ErrorText className={cx("error-text")}>{message}</ErrorText>
                                                     )}
@@ -254,13 +232,13 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
 
                                         <div className="row">
                                             <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                                <Label htmlFor="des">Description:</Label>
+                                                <Label htmlFor="description">Description:</Label>
                                             </div>
                                             <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                                <TextField variant="primary" type="text" name="des" id="des" />
+                                                <TextField variant="primary" type="text" name="description" id="description" />
                                                 <ErrorMessage
                                                     errors={formState.errors}
-                                                    name="des"
+                                                    name="description"
                                                     render={({ message }) => (
                                                         <ErrorText className={cx("error-text")}>{message}</ErrorText>
                                                     )}
@@ -270,18 +248,18 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
 
                                         <div className="row">
                                             <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                                <Label htmlFor="validator_count">Validator Count:</Label>
+                                                <Label htmlFor="validatorCount">Validator Count:</Label>
                                             </div>
                                             <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
                                                 <TextField
                                                     variant="primary"
                                                     type="text"
-                                                    name="validator_count"
-                                                    id="validator_count"
+                                                    name="validatorCount"
+                                                    id="validatorCount"
                                                 />
                                                 <ErrorMessage
                                                     errors={formState.errors}
-                                                    name="validator_count"
+                                                    name="validatorCount"
                                                     render={({ message }) => (
                                                         <ErrorText className={cx("error-text")}>{message}</ErrorText>
                                                     )}
@@ -295,6 +273,13 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                             </div>
                                             <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
                                                 <TextArea variant="primary" name="input" id="input" />
+                                                <ErrorMessage
+                                                    errors={formState.errors}
+                                                    name="input"
+                                                    render={({ message }) => (
+                                                        <ErrorText className={cx("error-text")}>{message}</ErrorText>
+                                                    )}
+                                                />
                                             </div>
                                         </div>
 

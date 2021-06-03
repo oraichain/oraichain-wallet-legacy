@@ -1,4 +1,5 @@
 import { connect } from "react-redux";
+import { useLocation } from "react-router-dom";
 import _ from "lodash";
 import { selectUser } from "src/store/slices/userSlice";
 import { Redirect, Route } from "react-router";
@@ -8,24 +9,17 @@ const mapStateToProps = (state) => {
     const user = selectUser(state);
     const isLoggedIn = !_.isNil(user);
     return {
-        isLoggedIn: isLoggedIn
+        isLoggedIn: isLoggedIn,
     };
 };
 
 const UnauthenticatedRoute = ({ component: Component, isLoggedIn, ...rest }) => {
-    return (
-        <Route
-            {...rest}
-            render={(props) =>
-                isLoggedIn ? (
-                    <Redirect to={{ pathname: pagePaths.HOME, state: { from: props.location } }} />
+    const location = useLocation();
+    if (isLoggedIn) {
+        return <Redirect to={{ pathname: pagePaths.HOME, state: { from: location } }} />;
+    }
 
-                ) : (
-                    <Component {...props} />
-                )
-            }
-        />
-    );
+    return <Route {...rest} render={(props) => <Component {...props} />} />;
 };
 
 export default connect(mapStateToProps, null)(UnauthenticatedRoute);
