@@ -1,5 +1,21 @@
 .button-group {
-    display: grid;
-    grid-auto-flow: column;
-    grid-column-gap: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    @media (min-width: 992px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &>* {
+        width: 100%;
+        margin-bottom: 16px;
+
+        @media (min-width: 992px) {
+            width: fit-content;
+        }
+    }
 }

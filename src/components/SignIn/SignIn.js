@@ -96,7 +96,7 @@ const SignIn = ({ setUser }) => {
                 <Suggestion text=" Unavailable in guest mode or incognito mode." />
 
                 <div className="d-flex flex-row justify-content-center mb-4">
-                    <Button variant="primary" size="lg" submit={true}>
+                    <Button variant="primary" size="lg" type="submit">
                         Next
                     </Button>
                 </div>

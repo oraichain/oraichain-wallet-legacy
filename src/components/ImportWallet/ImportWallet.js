@@ -102,7 +102,7 @@ const ImportWallet = ({ history, user }) => {
                 <Suggestion text="Enter 24 words including spaces. The mnemonic phrase is encrypted and stored in Keychain." />
 
                 <div className="d-flex flex-row justify-content-center mb-4">
-                    <Button variant="primary" size="lg" submit={true}>
+                    <Button variant="primary" size="lg" type="submit">
                         Next
                     </Button>
                 </div>

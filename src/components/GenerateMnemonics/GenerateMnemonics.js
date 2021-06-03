@@ -108,7 +108,7 @@ const GenerateMnemonics = ({ history }) => {
                         <Suggestion text="Copy this mnemonic then go to import page." />
 
                         <div className="mb-4">
-                            <Button variant="primary" size="lg" submit={true}>
+                            <Button variant="primary" size="lg" type="submit">
                                 Generate
                             </Button>
                         </div>

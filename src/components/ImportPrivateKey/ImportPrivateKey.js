@@ -40,7 +40,7 @@ const ImportPrivateKey = ({ history }) => {
                         <Suggestion text="Enter private key. Private key is encrypted and stored in Keychain." />
 
                         <div className={cx("button-space")}>
-                            <Button variant="primary" size="lg" submit={true}>
+                            <Button variant="primary" size="lg" type="submit">
                                 Next
                             </Button>
                         </div>

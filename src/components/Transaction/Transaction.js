@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import PropTypes from "prop-types";
 import cn from "classnames/bind";
@@ -6,6 +6,7 @@ import { FormProvider, useForm } from "react-hook-form";
 import queryString from "query-string";
 import _ from "lodash";
 import Big from "big.js";
+import ReactJson from "react-json-view";
 import {
     getTxBodySend,
     getTxBodyMultiSend,
@@ -15,7 +16,6 @@ import {
     getTxBodyMsgWithdrawDelegatorReward,
     getTxBodyMsgWithdrawValidatorCommission,
 } from "src/utils";
-import { selectUser } from "src/store/slices/userSlice";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
 import FormTitle from "src/components/FormTitle";
@@ -23,6 +23,8 @@ import Pin from "src/components/Pin";
 import TextField from "src/components/TextField";
 import Button from "src/components/Button";
 import Loading from "src/components/Loading";
+import ButtonGroup from "src/components/ButtonGroup";
+import PreviewButton from "src/components/PreviewButton";
 import styles from "./Transaction.module.scss";
 
 const cx = cn.bind(styles);
@@ -30,8 +32,9 @@ const cx = cn.bind(styles);
 const Transaction = ({ user, showAlertBox }) => {
     const history = useHistory();
     const [openPin, setOpenPin] = useState(false);
+    const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
-    const txJsonRef = useRef(null);
+    const [jsonSrc, setJsonSrc] = useState(null);
     const methods = useForm({
         defaultValue: {
             account: user.name,
@@ -42,28 +45,26 @@ const Transaction = ({ user, showAlertBox }) => {
     const payload = JSON.parse(queryStringParse.raw_message || "{}");
     const cosmos = window.cosmos;
 
-    useEffect(() => {
-        if (!openPin && !_.isNil(txJsonRef?.current)) {
-            if (window.stdSignMsgByPayload) {
-                const txBody = window.stdSignMsgByPayload;
-                txJsonRef.current.innerHTML = JSON.stringify(txBody);
-            } else if (payload && payload.value) {
-                const cloneObj = JSON.parse(JSON.stringify(payload));
-                if (_.get(cloneObj, "value.fee.amount") && cloneObj.value.fee.amount[0]) {
-                    cloneObj.value.fee.amount[0] = new Big(cloneObj.value.fee.amount[0]).times(0.000001);
-                }
-                if (_.get(cloneObj, "value.msg.0.value.amount.0.amount")) {
-                    const amountString = _.get(cloneObj, "value.msg.0.value.amount.0.amount");
-                    _.set(cloneObj, "value.msg.0.value.amount.0.amount", new Big(amountString).times(0.000001));
-                }
-                if (_.get(cloneObj, "value.msg.0.value.amount.amount")) {
-                    const amountString = _.get(cloneObj, "value.msg.0.value.amount.amount");
-                    _.set(cloneObj, "value.msg.0.value.amount.amount", new Big(amountString).times(0.000001));
-                }
-                txJsonRef.current.innerHTML = JSON.stringify(cloneObj.value);
+    if (!showResult && !openPin && _.isNil(jsonSrc)) {
+        if (window.stdSignMsgByPayload) {
+            const txBody = window.stdSignMsgByPayload;
+            setJsonSrc(txBody);
+        } else if (payload && !_.isNil(payload.value)) {
+            const cloneObj = JSON.parse(JSON.stringify(payload));
+            if (_.get(cloneObj, "value.fee.amount") && cloneObj.value.fee.amount[0]) {
+                cloneObj.value.fee.amount[0] = new Big(cloneObj.value.fee.amount[0]).times(0.000001);
             }
+            if (_.get(cloneObj, "value.msg.0.value.amount.0.amount")) {
+                const amountString = _.get(cloneObj, "value.msg.0.value.amount.0.amount");
+                _.set(cloneObj, "value.msg.0.value.amount.0.amount", new Big(amountString).times(0.000001));
+            }
+            if (_.get(cloneObj, "value.msg.0.value.amount.amount")) {
+                const amountString = _.get(cloneObj, "value.msg.0.value.amount.amount");
+                _.set(cloneObj, "value.msg.0.value.amount.amount", new Big(amountString).times(0.000001));
+            }
+            setJsonSrc(cloneObj.value);
         }
-    }, [openPin, txJsonRef]);
+    }
 
     const deny = () => {
         if (!_.isNil(window?.opener)) {
@@ -134,12 +135,12 @@ const Transaction = ({ user, showAlertBox }) => {
                         window.opener.postMessage(res.tx_response, "*");
                         window.close();
                     } else {
-                        txJsonRef.current.innerText = res.tx_response.raw_log;
+                        setJsonSrc(res.tx_response);
+                        setShowResult(true);
                     }
-                }
+                },
             });
             setLoading(false);
-
         } catch (ex) {
             showAlertBox({
                 variant: "error",
@@ -153,46 +154,79 @@ const Transaction = ({ user, showAlertBox }) => {
 
     return (
         <AuthLayout>
-            <FormContainer>
-                {openPin ? (
-                    <Pin
-                        pinType="tx"
-                        onChildKey={onChildKey}
-                        closePin={() => {
-                            setOpenPin(false);
-                        }}
-                        encryptedMnemonics={getValues("password")}
-                    />
-                ) : (
-                    <FormProvider {...methods}>
-                        <form>
-                            <FormTitle>Sign Transaction</FormTitle>
-                            <TextField type="text" name="account" className="d-none" />
-                            <TextField
-                                type="password"
-                                name="password"
-                                className="d-none"
-                                autoComplete="current-password"
+            {showResult ? (
+                <>
+                    <FormTitle>Result of sign transaction</FormTitle>
+                    <div className="d-flex flex-row align-items-end mb-4">
+                        <PreviewButton
+                            onClick={() => {
+                                window.open(
+                                    `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${
+                                        jsonSrc?.txhash ?? ""
+                                    }`
+                                );
+                            }}
+                        >
+                            View on oraiscan
+                        </PreviewButton>
+                    </div>
+                    {jsonSrc && (
+                        <div className="w-100 overflow-auto">
+                            <ReactJson theme="monokai" style={{ backgroundColor: "inherit" }} src={jsonSrc} />
+                        </div>
+                    )}
+                </>
+            ) : (
+                <>
+                    {openPin ? (
+                        <FormContainer>
+                            <Pin
+                                pinType="tx"
+                                onChildKey={onChildKey}
+                                closePin={() => {
+                                    setOpenPin(false);
+                                }}
+                                encryptedMnemonics={getValues("password")}
                             />
-                            <div className={cx("tx-json")} ref={txJsonRef}></div>
+                        </FormContainer>
+                    ) : (
+                        <FormProvider {...methods}>
+                            <form>
+                                <FormTitle>Sign Transaction</FormTitle>
+                                <TextField type="text" name="account" className="d-none" />
+                                <TextField
+                                    type="password"
+                                    name="password"
+                                    className="d-none"
+                                    autoComplete="current-password"
+                                />
 
-                            <div className="d-flex flex-row justify-content-center my-4">
-                                <Button variant="primary" size="lg" onClick={allow}>
-                                    ALLOW
-                                </Button>
-                            </div>
+                                {jsonSrc && (
+                                    <div className="w-100 overflow-auto">
+                                        <ReactJson
+                                            theme="monokai"
+                                            style={{ backgroundColor: "inherit" }}
+                                            src={jsonSrc}
+                                        />
+                                    </div>
+                                )}
 
-                            <div className="d-flex flex-row justify-content-center mb-5">
-                                <Button variant="secondary" size="lg" onClick={deny}>
-                                    DENY
-                                </Button>
-                            </div>
-                        </form>
-                    </FormProvider>
-                )}
+                                <ButtonGroup className="mt-5">
+                                    <Button variant="primary" size="lg" onClick={allow}>
+                                        ALLOW
+                                    </Button>
 
-                {loading && <Loading message="Signing..." />}
-            </FormContainer>
+                                    <Button variant="secondary" size="lg" onClick={deny}>
+                                        DENY
+                                    </Button>
+                                </ButtonGroup>
+                            </form>
+                        </FormProvider>
+                    )}
+
+                    {loading && <Loading message="Signing..." />}
+                </>
+            )}
         </AuthLayout>
     );
 };
