@@ -17,12 +17,13 @@ import AuthContainer from "src/containers/AuthContainer";
 import ImportWalletContainer from "src/containers/ImportWalletContainer";
 import SendTokensContainer from "src/containers/SendTokensContainer";
 import AlertBoxContainer from "src/containers/AlertBoxContainer";
-import TransactionContainer from "./containers/TransactionContainer";
+import TransactionContainer from "src/containers/TransactionContainer";
+import SetRequestContainer from "src/containers/SetRequestContainer";
+import NotFoundContainer from "src/containers/NotFoundContainer";
 import Home from "src/components/Home";
 import GenerateMnemonics from "src/components/GenerateMnemonics";
-import SetRequestContainer from "./containers/SetRequestContainer";
-import SetRequest from "./components/airequest/SetRequest";
-import MainLayout from "./components/MainLayout";
+import SetRequest from "src/components/airequest/SetRequest";
+import MainLayout from "src/components/MainLayout";
 
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
@@ -95,6 +96,9 @@ const App = ({}) => {
                             <Home />
                         </AuthenticatedRoute>
                         <Route exact path={pagePaths.AUTH} component={AuthContainer} />
+                        <Route exact path="*">
+                            <NotFoundContainer />
+                        </Route>
                     </Switch>
                 </Router>
                 <AlertBoxContainer />

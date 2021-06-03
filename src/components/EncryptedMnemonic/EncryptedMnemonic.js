@@ -134,12 +134,7 @@ const EncryptedMnemonic = ({
                     )}
                 </FormField>
 
-                <a
-                    href="https://medium.com/cosmostation/introducing-keystation-end-to-end-encrypted-key-manager-for-dapps-built-with-the-cosmos-sdk-37dac753feb5"
-                    target="blank"
-                >
-                    <Suggestion text="Why do I have to encrypt my mnemonic pharse?" />
-                </a>
+                <Suggestion text="Why do I have to encrypt my mnemonic pharse?" />
 
                 <div className="d-flex flex-row justify-content-center mb-4">
                     <Button variant="primary" size="lg" submit={true}>
