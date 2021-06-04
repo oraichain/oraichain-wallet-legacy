@@ -1,14 +1,25 @@
 .main-layout {
-    &-main {
+    &-header {}
+
+    &-body {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: flex-start;
         align-items: flex-start;
         background: #142437;
+
+        @media (min-width: 992px) {
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
     }
 }
 
+
+
 .content {
+    width: 100%;
     flex-grow: 1;
     background: #142437;
     min-height: calc(100vh - 60px);

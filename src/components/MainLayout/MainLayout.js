@@ -12,8 +12,10 @@ const cx = cn.bind(styles);
 const MainLayout = ({ pageTitle, children }) => {
     return (
         <div className={cx("main-layout")}>
-            <NavBarContainer />
-            <div className={cx("main-layout-main")}>
+            <div className={cx("main-layout-header")}>
+                <NavBarContainer />
+            </div>
+            <div className={cx("main-layout-body")}>
                 <SideBarContainer />
                 <div className={cx("content")}>
                     <BreadcrumbContainer />

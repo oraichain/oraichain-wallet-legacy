@@ -61,7 +61,7 @@ const Wallet = ({ user, removeUser }) => {
 
             <div className="d-flex flex-row justify-content-center mt-4">
                 <Button
-                    variant="outline-secondary"
+                    variant="outline-primary"
                     fitContent
                     onClick={() => {
                         removeUser();
