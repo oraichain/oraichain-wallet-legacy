@@ -31,6 +31,7 @@ const path = url.searchParams.get("path");
 const lcd =
     process.env.REACT_APP_LCD || url.searchParams.get("lcd") || (networks[network]?.lcd ?? "http://localhost:1317");
 // init cosmos version
+console.log(network);
 const cosmos = new Cosmos(lcd, network);
 const symbol = networks[network]?.denom ?? "orai";
 cosmos.setBech32MainPrefix(symbol);

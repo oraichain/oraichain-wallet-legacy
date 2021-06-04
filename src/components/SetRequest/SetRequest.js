@@ -125,6 +125,8 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                 });
                 return;
             }
+
+            setJsonSrc(res?.tx_response ?? {});
             const requestId = JSON.parse(res.tx_response.raw_log)[0].events[0].attributes[0].value;
             // txJsonRef.current.innerText = res.tx_response.raw_log + "\n" + "request id: " + requestId;
             // check if the broadcast message is successful or not
@@ -143,6 +145,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
             return;
         } finally {
             setLoading(false);
+            setOpenPin(false);
         }
     };
 
@@ -176,7 +179,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                             Back
                                         </BackButton>
 
-                                        {/* <PreviewButton
+                                        <PreviewButton
                                             onClick={() => {
                                                 window.open(
                                                     `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${
@@ -186,10 +189,16 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                             }}
                                         >
                                             View on oraiscan
-                                        </PreviewButton> */}
+                                        </PreviewButton>
                                     </div>
 
-                                    <ReactJson theme="monokai" style={{ backgroundColor: "inherit" }} src={jsonSrc} />
+                                    <div className="w-100 overflow-auto">
+                                        <ReactJson
+                                            theme="monokai"
+                                            style={{ backgroundColor: "inherit" }}
+                                            src={jsonSrc}
+                                        />
+                                    </div>
                                 </>
                             ) : (
                                 <FormProvider {...methods}>
