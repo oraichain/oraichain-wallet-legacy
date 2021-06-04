@@ -1,22 +1,14 @@
 .side-bar {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
     flex-shrink: 0;
     background-color: #1E344D;
     width: 100%;
-    min-height: initial;
 
     @media (min-width: 992px) {
         width: initial;
-        min-height: calc(100vh - 60px);
     }
 }
 
 .menu {
-    display: inline-block;
-    flex-grow: 1;
-
     &-item {
         &-self {
             display: flex;
