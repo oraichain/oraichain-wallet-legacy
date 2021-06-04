@@ -49,7 +49,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
             .isNumeric("The Validator count must be a number"),
         input: yup.string().required("The Input is required").isJSON("The Input must be JSON"),
         output: yup.string().required("The Output is required").isJSON("The Output must be JSON"),
-        request_fees: yup.string().required("Tx Fee is required").isNumeric("Tx Fee must be a number"),
+        fees: yup.string().required("Tx Fee is required").isNumeric("Tx Fee must be a number"),
         gas: yup.number().min(gasValues.MIN, "The Gas must be at least " + gasValues.MIN + ".").max(gasValues.MAX, "The Gas may not be greater than " + gasValues.MAX + ".")
     });
 
@@ -89,7 +89,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
             oracle_script_name: formData.oscriptName,
             creator: bech32.fromWords(bech32.toWords(childKey.identifier)),
             validator_count: new Long(formData.validatorCount),
-            fees: `${formData.request_fees}orai`,
+            fees: `${formData.fees}orai`,
             input: Buffer.from(formData.input),
             expected_output: Buffer.from(formData.output),
         });
@@ -115,7 +115,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                 childKey,
                 txBody,
                 "BROADCAST_MODE_BLOCK",
-                parseFloat(formData.request_fees) * 1000000,
+                parseFloat(formData.fees) * 1000000,
                 parseFloat(formData.gas)
             );
             if (res.tx_response.code !== 0) {
@@ -255,9 +255,10 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                             <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
                                                 <TextField
                                                     variant="primary"
-                                                    type="text"
+                                                    type="number"
                                                     name="validatorCount"
                                                     id="validatorCount"
+                                                    step="1"
                                                 />
                                                 <ErrorMessage
                                                     errors={formState.errors}
@@ -323,18 +324,19 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
 
                                         <div className="row">
                                             <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
-                                                <Label htmlFor="request_fees">Tx Fee (orai):</Label>
+                                                <Label htmlFor="fees">Tx Fee (orai):</Label>
                                             </div>
                                             <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
                                                 <TextField
                                                     variant="primary"
-                                                    type="text"
-                                                    name="request_fees"
-                                                    id="request_fees"
+                                                    type="number"
+                                                    name="fees"
+                                                    id="fees"
+                                                    step="0.0000001"
                                                 />
                                                 <ErrorMessage
                                                     errors={formState.errors}
-                                                    name="request_fees"
+                                                    name="fees"
                                                     render={({ message }) => (
                                                         <ErrorText className={cx("error-text")}>{message}</ErrorText>
                                                     )}

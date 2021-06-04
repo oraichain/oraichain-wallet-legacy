@@ -193,6 +193,16 @@ const Transaction = ({ user, showAlertBox }) => {
                         <FormProvider {...methods}>
                             <form>
                                 <FormTitle>Sign Transaction</FormTitle>
+                                <ButtonGroup className="my-3">
+                                    <Button variant="primary" size="lg" onClick={allow}>
+                                        ALLOW
+                                    </Button>
+
+                                    <Button variant="secondary" size="lg" onClick={deny}>
+                                        DENY
+                                    </Button>
+                                </ButtonGroup>
+
                                 <TextField type="text" name="account" className="d-none" />
                                 <TextField
                                     type="password"
@@ -210,16 +220,6 @@ const Transaction = ({ user, showAlertBox }) => {
                                         />
                                     </div>
                                 )}
-
-                                <ButtonGroup className="mt-5">
-                                    <Button variant="primary" size="lg" onClick={allow}>
-                                        ALLOW
-                                    </Button>
-
-                                    <Button variant="secondary" size="lg" onClick={deny}>
-                                        DENY
-                                    </Button>
-                                </ButtonGroup>
                             </form>
                         </FormProvider>
                     )}
