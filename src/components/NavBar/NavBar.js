@@ -3,70 +3,55 @@ import { Link } from "react-router-dom";
 import cn from "classnames/bind";
 import _ from "lodash";
 import PropTypes from "prop-types";
-import SearchIcon from "src/components/icons/SearchIcon";
 import BarsIcon from "src/components/icons/BarsIcon";
-import styles from "./NavBar.module.scss";
 import logoUrl from "src/images/logo.png";
-import githubUrl from "src/images/github.png";
-import enLanguageUrl from "src/images/en_language.png";
-import vnLanguageUrl from "src/images/vn_language.png";
-import { Nav, Navbar } from "react-bootstrap";
+import { Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { pagePaths } from "src/consts/pagePaths";
+import UserIcon from "src/components/icons/UserIcon";
+import DownAngleIcon from "src/components/icons/DownAngleIcon";
+import Wallet from "src/components/Wallet";
+import styles from "./NavBar.module.scss";
 
 const cx = cn.bind(styles);
 
-const NavBar = ({ user }) => {
-    const toggleContent = <BarsIcon className={cx("navbar-toggler-icon")} />;
+const NavBar = ({ user, removeUser }) => {
+    const toggleIcon = <BarsIcon className={cx("navbar-toggler-icon")} />;
+    const navDropdownTitle = (
+        <div className={cx("nav-dropdown-title")}>
+            <UserIcon className={cx("user-icon")} />
+            <DownAngleIcon className={cx("arrow-icon")} />
+        </div>
+    );
+
     return (
         <div className={cx("nav-bar")}>
             <Navbar expand="lg">
                 <Navbar.Brand to="/" as={Link}>
                     <img src={logoUrl} className={cx("logo")} alt="" />
                 </Navbar.Brand>
-                <Navbar.Toggle
-                    aria-controls="basic-navbar-nav"
-                    children={toggleContent}
-                />
-
+                <Navbar.Toggle aria-controls="basic-navbar-nav" children={toggleIcon} />
 
                 <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className=" w-100 justify-content-end">
-                        <li class="nav-item">
-                            <div className={cx("search-button")}>
-                                <SearchIcon className={cx("search-button-icon")} />
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <img className={cx("nav-link-icon")} src={githubUrl} alt="" />
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <img className={cx("nav-link-icon")} src={enLanguageUrl} alt="" />
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <img className={cx("nav-link-icon")} src={vnLanguageUrl} alt="" />
-                            </a>
-                        </li>
-                        {(_.isNil(user) || Object.values(user).length === 0) && (
-                            <li class="nav-item">
-                                <Link class="nav-link" to="/signin">
-                                    Sign in
-                            </Link>
-                            </li>
+                    <Nav className="w-100 justify-content-end">
+                        {_.isNil(user) ? (
+                            <Nav.Link as={Link} to={pagePaths.SIGNIN}>
+                                Sigin
+                            </Nav.Link>
+                        ) : (
+                            <NavDropdown title={navDropdownTitle} id="navbarScrollingDropdown" alignRight>
+                                <Wallet user={user} removeUser={removeUser}/>
+                            </NavDropdown>
                         )}
                     </Nav>
                 </Navbar.Collapse>
             </Navbar>
         </div>
-
     );
 };
 
 NavBar.propTypes = {
     user: PropTypes.any,
+    removeUser: PropTypes.func,
 };
 NavBar.defaultProps = {};
 

@@ -4,6 +4,8 @@ import Message from "@oraichain/cosmosjs";
 import Big from "big.js";
 import { AES, enc } from "crypto-js";
 import _ from "lodash";
+import numeral from "numeral";
+import moment from "moment";
 
 const { message } = Message;
 
@@ -294,3 +296,12 @@ export const anotherAppLogin = (address, account, childKey) => {
 
     window.close();
 }
+
+export const formatFloat = (value, numberOfDigitsAfterDecimalPoint = 2) => {
+	return numeral(parseFloat(value)).format("0,0." + "0".repeat(numberOfDigitsAfterDecimalPoint));
+};
+
+export const formatDateTime = inputString => {
+	const m = moment(inputString);
+	return m.format("YYYY-MM-DD HH:mm:ss");
+};

@@ -11,10 +11,6 @@
         box-shadow: none;
     }
 
-    :global(.nav-item) {
-        padding-left: 30px;
-    }
-
     :global(.navbar-light .navbar-nav .nav-link) {
         color: white;
 
@@ -22,8 +18,11 @@
             color: white;
         }
     }
-}
 
+    :global(.dropdown-toggle::after) {
+        display: none;
+    }
+}
 
 .logo {
     display: inline-block;
@@ -31,29 +30,18 @@
     height: auto;
 }
 
-.search-button {
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    height: 100%;
-
-    &-icon {
-        color: #FFFFFF;
-        width: 21px;
-        height: auto;
-    }
-}
-
 .navbar-toggler-icon {
     display: inline-block;
     color: white;
 }
 
-.nav-link-icon {
+.user-icon {
     display: inline-block;
-    width: 24px;
-    height: 24px;
-    object-fit: cover;
-    border-radius: 100%;
+    margin-right: 8px;
+}
+
+.arrow-icon {
+    display: inline-block;
+    width: 12px;
+    height: auto;
 }

@@ -24,6 +24,17 @@
         }
     }
 
+    &-outline-primary {
+        color: #1A87FF;
+        background: #FFFFFF;
+        border: 1px solid #1A87FF;
+
+        &:hover {
+            color: #FFFFFF;
+            background: #1A87FF;
+        }
+    }
+
     &-secondary {
         color: #FFFFFF;
         background: #2B5072;
@@ -34,16 +45,18 @@
         }
     }
 
-    &-outline-primary {
-        color: #181818;
+    &-outline-secondary {
+        color: #2B5072;
         background: #FFFFFF;
-        border: 1px solid #1A87FF;
+        border: 1px solid #2B5072;
 
         &:hover {
             color: #FFFFFF;
-            background: #1A87FF;
+            background-color: #2B5072;
         }
     }
+
+
 
     &-outline-success {
         color: #181818;

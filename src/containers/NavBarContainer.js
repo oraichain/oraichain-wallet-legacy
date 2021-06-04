@@ -1,10 +1,14 @@
 import { connect } from "react-redux";
 import NavBar from "src/components/NavBar";
-import { selectUser } from "src/store/slices/userSlice";
+import { selectUser, removeUser } from "src/store/slices/userSlice";
 
 
 const mapStateToProps = (state) => ({
     user: selectUser(state),
 });
 
-export default connect(mapStateToProps, null)(NavBar);
+const mapDispatchToProps = (dispatch) => ({
+    removeUser: () => dispatch(removeUser()),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(NavBar);
