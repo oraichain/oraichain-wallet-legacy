@@ -39,7 +39,10 @@ const SendTokens = ({ user, showAlertBox }) => {
         to: yup.string().required("The To is required."),
         amount: yup.string().required("The Amount is required.").isNumeric("The Amount must be a number."),
         fee: yup.string().required("The Tx Fee is required.").isNumeric("The Tx Fee must be a number."),
-        gas: yup.number().min(gasValues.MIN, "The Gas must be at least " + gasValues.MIN + ".").max(gasValues.MAX, "The Gas may not be greater than " + gasValues.MAX + ".")
+        gas: yup
+            .number()
+            .min(gasValues.MIN, "The Gas must be at least " + gasValues.MIN + ".")
+            .max(gasValues.MAX, "The Gas may not be greater than " + gasValues.MAX + "."),
     });
 
     const methods = useForm({
@@ -234,8 +237,11 @@ const SendTokens = ({ user, showAlertBox }) => {
                                             </div>
                                         </div>
 
-                                        <div className="text-right">
-                                            <ArrowButton type="submit">Send</ArrowButton>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center"></div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <ArrowButton type="submit">Send</ArrowButton>
+                                            </div>
                                         </div>
                                     </form>
                                 </FormProvider>
