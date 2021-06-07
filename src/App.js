@@ -1,291 +1,112 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Route,
-  Redirect,
-  Switch,
-  useLocation,
-  useRouteMatch,
-  useHistory
-} from 'react-router';
-import { pathToRegexp, compile } from 'path-to-regexp';
-import { useTranslation } from 'react-i18next';
-import Select from 'react-select';
-import { Link } from 'react-router-dom';
-import getUnicodeFlagIcon from 'country-flag-icons/unicode';
-import { connect } from 'react-redux';
-import * as actions from './actions';
-import SignIn from './components/SignIn';
-import Send from './components/Send';
-import SwapWithdraw from './components/SwapWithdraw';
-import Import from './components/Import';
-import ImportPrivateKey from './components/ImportPrivateKey';
-import CreateWallet from './components/CreateWallet';
-import Session from './components/Session';
-import Home from './components/Home';
-import Transaction from './components/Transaction';
-import ContractQuery from './components/contract/Query';
-import ContractExecute from './components/contract/Execute';
-import ContractDeploy from './components/contract/Deploy';
-import ScriptSet from './components/provider/SetScript';
-import ScriptEdit from './components/provider/EditScript';
-import RequestSet from './components/airequest/SetRequest';
-import RequestGet from './components/airequest/GetRequest';
-import Cosmos from '@oraichain/cosmosjs';
-import { networks } from './config';
-import { customStyles } from './utils';
-
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import _ from "lodash";
+// import { Route, Redirect, Switch, useLocation, useRouteMatch, useHistory } from 'react-router';
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+import { Provider } from "react-redux";
+import * as yup from "yup";
+import store from "src/store";
+import Cosmos from "@oraichain/cosmosjs";
+import { networks } from "src/config";
+import { pagePaths } from "src/consts/pagePaths";
+import SignInContainer from "src/containers/SignInContainer";
+import UnauthenticatedRoute from "src/containers/UnauthenticatedRoute";
+import AuthenticatedRoute from "src/containers/AuthenticatedRoute";
+import AuthContainer from "src/containers/AuthContainer";
+import ImportWalletContainer from "src/containers/ImportWalletContainer";
+import SendTokensContainer from "src/containers/SendTokensContainer";
+import AlertBoxContainer from "src/containers/AlertBoxContainer";
+import TransactionContainer from "src/containers/TransactionContainer";
+import SetRequestContainer from "src/containers/SetRequestContainer";
+import NotFoundContainer from "src/containers/NotFoundContainer";
+import Home from "src/components/Home";
+import GenerateMnemonics from "src/components/GenerateMnemonics";
+import SetRequest from "src/components/airequest/SetRequest";
+import MainLayout from "src/components/MainLayout";
 
 const url = new window.URL(window.location.href);
-const network =
-  url.searchParams.get('payload') ||
-  window.localStorage.getItem('wallet.network') ||
-  'Oraichain';
-const path = url.searchParams.get('path');
+const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
+const path = url.searchParams.get("path");
 const lcd =
-  url.searchParams.get('lcd') ||
-  (networks[network]?.lcd ?? 'https://testnet-lcd.orai.io');
+  process.env.REACT_APP_LCD || url.searchParams.get("lcd") || (networks[network]?.lcd ?? "http://localhost:1317");
 // init cosmos version
+console.log(network);
 const cosmos = new Cosmos(lcd, network);
-const symbol = networks[network]?.denom ?? 'orai';
+const symbol = networks[network]?.denom ?? "orai";
 cosmos.setBech32MainPrefix(symbol);
-if (path && path !== 'undefined') {
-  cosmos.setPath(path);
-}
+// if (path && path !== 'undefined') {
+//   cosmos.setPath(path);
+// }
 
 // global params
 window.cosmos = cosmos;
-window.localStorage.setItem('wallet.network', network);
-const $ = window.jQuery;
+window.localStorage.setItem("wallet.network", network);
 
-// there is post message from parent window, just update the stdSignMsgByPayload and ready for broadcast
-window.addEventListener(
-  'message',
-  (e) => {
-    // not the client to send message
-    if (e.data.tx) {
-      const txBody = e.data.tx;
-      window.stdSignMsgByPayload = txBody;
-      $('#tx-json').html(JSON.stringify(txBody));
-    } else if (e.data.file) {
-      // console.log(e.data.file);
-      $('#filename').trigger('file', e.data.file);
-    }
-  },
-  false
-);
-
-// trigger when document ready
-$(() => {
-  // send ready signal
-  window.opener?.postMessage('ready', '*');
+yup.addMethod(yup.string, "isNumeric", function (message) {
+  return this.test({
+    name: "isNumeric",
+    exclusive: false,
+    message: _.isNil(message) ? "Value must be a number." : message,
+    test(value) {
+      return !isNaN(value);
+    },
+  });
 });
 
-const generateLanguage = (locale, location) => {
-  const ROUTE = '/:locale/:path*';
-  const definePath = compile(ROUTE);
-  const routeComponents = pathToRegexp(ROUTE).exec(location.pathname);
-
-  let subPaths = null;
-  if (routeComponents && routeComponents[2]) {
-    subPaths = routeComponents[2].split('/');
-  }
-
-  return definePath({
-    locale,
-    path: subPaths
-  });
-};
-
-const options = Object.keys(networks).map((value) => ({
-  value: value,
-  label: value
-}));
-
-const PrivateRoute = ({ component: Component, isLoggedIn, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={(props) =>
-        isLoggedIn ? (
-          <Component {...props} />
-        ) : (
-          <Redirect
-            to={{ pathname: '/signin', state: { from: props.location } }}
-          />
-        )
+yup.addMethod(yup.string, "isJSON", function (message) {
+  return this.test({
+    name: "isJSON",
+    exclusive: false,
+    message: _.isNil(message) ? "Value must be JSON." : message,
+    test(value) {
+      try {
+        JSON.parse(value);
+      } catch (e) {
+        return false;
       }
-    />
-  );
-};
-
-const App = ({ user, updateUser }) => {
-  const location = useLocation();
-  const history = useHistory();
-  const match = useRouteMatch();
-  const { locale } = match.params;
-  const { t, i18n } = useTranslation();
-  const [selectedOption, setSelectedOption] = useState({
-    value: network,
-    label: network
+      return true;
+    },
   });
-  const isLoggedIn = !!user;
+});
 
-  const changeNetwork = (option) => {
-    setSelectedOption(option);
-    cosmos.url = networks[option.value].lcd;
-    cosmos.chainId = option.value;
-    window.localStorage.setItem('wallet.network', option.value);
-  };
-
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
-  if (i18n.options.resources[locale]) {
-    if (i18n.language !== locale) {
-      changeLanguage(locale);
-    }
-  } else {
-    window.location.href = `/${i18n.options.fallbackLng}${location.pathname}`;
-  }
+const App = ({ }) => {
+  let persistor = persistStore(store);
 
   return (
-    <>
-      <div className="inner">
-        <div className="header">
-          <h1>
-            <Link to={`${match.url}`}>
-              <img src="/img/full-logo-dark.png" alt="Home" width={145} />
-            </Link>
-          </h1>
-          <Select
-            styles={customStyles}
-            defaultValue={selectedOption}
-            onChange={changeNetwork}
-            options={options}
-            className="select"
-          />
-        </div>
-        <div className="keystation-url-info">
-          <strong>
-            <i className="fa fa-fw fa-lock" />
-            {cosmos.chainId}
-          </strong>
-          {t('usingSecureConnection')}
-        </div>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Router>
+          <Switch>
+            <Route path={pagePaths.AUTH} component={AuthContainer} />
+            <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
+            <UnauthenticatedRoute exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
+            <UnauthenticatedRoute exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
+            <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
+            <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
+              <SendTokensContainer />
+            </AuthenticatedRoute>
+            <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_SET}>
+              <SetRequestContainer />
+            </AuthenticatedRoute>
+            <AuthenticatedRoute exact path={"/test"}>
+              <MainLayout>
+                <SetRequest />
+              </MainLayout>
+            </AuthenticatedRoute>
+            <AuthenticatedRoute exact path={pagePaths.HOME}>
+              <Home />
+            </AuthenticatedRoute>
+            <Route path="*">
+              <NotFoundContainer />
+            </Route>
+          </Switch>
+        </Router>
 
-        <Switch>
-          <Route path={`${match.url}/signin`} component={SignIn} />
-          <Route path={`${match.url}/import`} component={Import} />
-          <Route
-            path={`${match.url}/import-privatekey`}
-            component={ImportPrivateKey}
-          />
-          <Route path={`${match.url}/create-wallet`} component={CreateWallet} />
-          <PrivateRoute
-            exact
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/`}
-            component={Home}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/contract/query`}
-            component={ContractQuery}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/contract/execute`}
-            component={ContractExecute}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/contract/deploy`}
-            component={ContractDeploy}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/provider/set`}
-            component={ScriptSet}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/provider/edit`}
-            component={ScriptEdit}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/airequest/set`}
-            component={RequestSet}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/airequest/get`}
-            component={RequestGet}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/send`}
-            component={Send}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/swapwithdraw`}
-            component={SwapWithdraw}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/transaction`}
-            component={Transaction}
-          />
-          <PrivateRoute
-            isLoggedIn={isLoggedIn}
-            path={`${match.url}/session`}
-            component={Session}
-          />
-          {isLoggedIn ? null : <Redirect from="*" to="/signin" />}
-        </Switch>
-      </div>
-      <div className="footer">
-        <div>
-          <Link to={generateLanguage('vn', location)}>
-            <button onClick={() => changeLanguage('vn')}>
-              {getUnicodeFlagIcon('VN')}
-            </button>
-          </Link>
-
-          <Link to={generateLanguage('en', location)}>
-            <button onClick={() => changeLanguage('en')}>
-              {getUnicodeFlagIcon('US')}
-            </button>
-          </Link>
-        </div>
-
-        {user && !location.pathname?.match(/\/(?:signin|import)\b/) && (
-          <button onClick={() => updateUser(null)}>
-            Logout <i className="fa fa-sign-out" />
-          </button>
-        )}
-
-        <a
-          href="https://github.com/oraichain/cosmosjs.git"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button>
-            <i className="fa fa-fw fa-github" />
-          </button>
-        </a>
-      </div>
-    </>
+        <AlertBoxContainer />
+      </PersistGate>
+    </Provider>
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    user: state.user
-  };
-}
-
-export default connect(mapStateToProps, actions)(App);
+export default App;

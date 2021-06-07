@@ -1,0 +1,73 @@
+.account-input,
+.password-input {
+    display: none;
+}
+
+.title {
+    margin-left: 30px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 150%;
+    color: #f6f7fb;
+}
+
+.file {
+    border: 0;
+    &:focus {
+        outline: none;
+    }
+}
+
+.set-request {
+    border-radius: 6px;
+    color: #fff;
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 14px;
+    padding-bottom: 30px;
+
+    .row-custom {
+        padding-top: 20px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+    }
+
+    .form-control-custom {
+        color: #f6f7fb;
+        background: #213b58;
+        border: 0;
+        width: 100%;
+    }
+
+    .keystation-form {
+        background: #1e344d;
+
+        .keystation-tx-info {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}
+
+.password {
+    display: none;
+}
+
+.account {
+    display: none;
+}
+
+.file {
+    border: none;
+}
+
+.button-submit {
+    margin-bottom: 30px;
+}

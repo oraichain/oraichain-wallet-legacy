@@ -1,0 +1,40 @@
+.main-layout {
+    &-header {}
+
+    &-body {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+        background: #142437;
+
+        @media (min-width: 992px) {
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+    }
+}
+
+
+
+.content {
+    width: 100%;
+    flex-grow: 1;
+    background: #142437;
+    min-height: calc(100vh - 60px);
+}
+
+.page-title {
+    color: rgba(255, 255, 255, 0.85);
+    padding-left: 30px;
+    padding-right: 30px;
+    padding-top: 0;
+    padding-bottom: 20px;
+    background: #192B40;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 24px;
+    line-height: 150%;
+}

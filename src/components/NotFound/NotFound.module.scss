@@ -1,0 +1,23 @@
+.not-found {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+    background-color: #142437;
+}
+
+.title {
+    margin-bottom: 16px;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 150%;
+    color: #FFFFFF;
+}
+
+.action {
+    max-width: 500px;
+}

@@ -1,0 +1,174 @@
+.pin {
+    width: 100%;
+    padding: 32px;
+    border-radius: 10px;
+    background-color: #192B40;
+
+    &-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+
+    &-body {}
+}
+
+.close-button {
+    cursor: pointer;
+    user-select: none;
+
+    &-icon {
+        color: white;
+    }
+}
+
+.title {
+    margin-bottom: 16px;
+    color: white;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 120%;
+    letter-spacing: -0.5px;
+    text-align: center;
+}
+
+.description {
+    margin-bottom: 8px;
+    color: white;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+}
+
+.warning {
+    color: #ffc107;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 150%;
+    text-align: center;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-4px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(4px, 0, 0);
+    }
+}
+
+.confirmation-status {
+    margin: 35px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+        width: 139px;
+        height: 24px;
+        max-height: 24px;
+    }
+}
+
+.circle {
+    transition: all 100ms ease-out;
+    fill: white;
+
+    &.entered {
+        fill: #007bff;
+    }
+
+    &.success {
+        fill: #28a745;
+    }
+
+    &.error {
+        animation-name: shake;
+        animation-duration: 200ms;
+        fill: #dc3545;
+    }
+}
+
+.numpad {
+    display: grid;
+    grid-template-columns: auto auto auto;
+
+    &-button {
+        color: white;
+        font-family: Roboto;
+        font-style: normal;
+        font-size: 30px;
+        line-height: 130%;
+        text-align: center;
+        letter-spacing: -0.02em;
+        user-select: none;
+        cursor: pointer;
+    }
+}
+
+.charpad {
+    &-row {
+        display: grid;
+        grid-auto-flow: column;
+        grid-gap: 8px;
+
+        margin-bottom: 16px;
+
+        &:nth-child(1) {
+            padding: 0;
+        }
+
+        &:nth-child(2) {
+            padding: 0 8px;
+        }
+
+        &:nth-child(3) {
+            padding: 0 16px;
+        }
+    }
+
+    &-button {
+        border: none;
+        border-radius: 0;
+        color: white;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 22px;
+        text-align: center;
+        letter-spacing: -0.02em;
+        text-transform: uppercase;
+        user-select: none;
+        cursor: pointer;
+
+        @media (min-width: 576px) {
+            border-radius: 9px;
+            border: 1px solid white;
+        }
+    }
+}

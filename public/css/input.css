@@ -1,280 +1,280 @@
 input {
-  caret-color: #fff;
-  color: #fff !important;
-}
-
-.input {
-  position: relative;
-  z-index: 1;
-  display: inline-block;
-  margin: 1em;
-  max-width: 350px;
-  width: calc(100% - 2em);
-  vertical-align: top;
-}
-
-.input__field {
-  position: relative;
-  display: block;
-  float: right;
-  padding: 0.8em;
-  width: 60%;
-  border: none;
-  border-radius: 0;
-  color: #aaa;
-  font-weight: 400;
-  font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  -webkit-appearance: none; /* for box shadows to show on iOS */
-}
-
-.input__field:focus {
-  outline: none;
-}
-
-.input__label {
-  display: inline-block;
-  float: right;
-  padding: 0 1em;
-  width: 40%;
-  color: #696969;
-  font-weight: bold;
-  font-size: 70.25%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.input__label-content {
-  position: relative;
-  display: block;
-  padding: 1.6em 0;
-  width: 100%;
-}
-
-.graphic {
-  position: absolute;
-  top: 0;
-  left: 0;
-  fill: none;
-}
-
-.icon {
-  color: #ddd;
-  font-size: 150%;
-}
-
-/* Individual styles */
-
-/* Fumi */
-.input--fumi {
-  overflow: hidden;
-  padding: 0.25em 0;
-}
-
-.input--fumi::after {
-  content: '';
-  width: 1px;
-  position: absolute;
-  top: 0.5em;
-  bottom: 0.5em;
-  left: 2.5em;
-  background: rgb(16 22 26 / 50%);
-  z-index: 100;
-}
-
-.input__field--fumi {
-  padding: 1.5em 1em 0.25em 3.15em;
-  width: 100%;
-  color: #9c6cff;
-}
-
-.input__label--fumi {
-  position: absolute;
-  width: 100%;
-  text-align: left;
-  padding-left: 4.5em;
-  pointer-events: none;
-}
-
-.icon--fumi {
-  width: 2em;
-  position: absolute;
-  top: 0;
-  left: 0;
-  padding: 1em 0 0 0.5em;
-}
-
-.input__label-content--fumi {
-  padding: 1.7em 0;
-  display: inline-block;
-  -webkit-transform-origin: 0 0;
-  transform-origin: 0 0;
-}
-
-.input__label-content--fumi span {
-  display: inline-block;
-}
-
-.input__field--fumi:focus + .input__label--fumi .input__label-content--fumi,
-.input--filled .input__label-content--fumi {
-  -webkit-animation: anim-fumi-1 0.3s forwards;
-  animation: anim-fumi-1 0.3s forwards;
-}
-
-@-webkit-keyframes anim-fumi-1 {
-  50% {
-    -webkit-transform: translate3d(0, 3em, 0);
-    transform: translate3d(0, 3em, 0);
+    /* caret-color: #fff;
+    color: #fff !important; */
   }
-  51% {
-    -webkit-transform: translate3d(0, -3em, 0) scale3d(0.85, 0.85, 1);
-    transform: translate3d(0, -3em, 0) scale3d(0.85, 0.85, 1);
+  
+  .input {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    margin: 1em;
+    max-width: 350px;
+    width: calc(100% - 2em);
+    vertical-align: top;
   }
-  100% {
-    color: #a3a3a3;
-    -webkit-transform: translate3d(0, -1.1em, 0) scale3d(0.85, 0.85, 1);
-    transform: translate3d(0, -1.1em, 0) scale3d(0.85, 0.85, 1);
+  
+  .input__field {
+    position: relative;
+    display: block;
+    float: right;
+    padding: 0.8em;
+    width: 60%;
+    border: none;
+    border-radius: 0;
+    color: #aaa;
+    font-weight: 400;
+    font-family: 'Avenir Next', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    -webkit-appearance: none; /* for box shadows to show on iOS */
   }
-}
-
-@keyframes anim-fumi-1 {
-  50% {
-    -webkit-transform: translate3d(0, 3em, 0);
-    transform: translate3d(0, 3em, 0);
+  
+  .input__field:focus {
+    outline: none;
   }
-  51% {
-    -webkit-transform: translate3d(0, -3em, 0) scale3d(0.85, 0.85, 1);
-    transform: translate3d(0, -3em, 0) scale3d(0.85, 0.85, 1);
+  
+  .input__label {
+    display: inline-block;
+    float: right;
+    padding: 0 1em;
+    width: 40%;
+    color: #696969;
+    font-weight: bold;
+    font-size: 70.25%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
   }
-  100% {
-    color: #a3a3a3;
-    -webkit-transform: translate3d(0, -1.1em, 0) scale3d(0.85, 0.85, 1);
-    transform: translate3d(0, -1.1em, 0) scale3d(0.85, 0.85, 1);
+  
+  .input__label-content {
+    position: relative;
+    display: block;
+    padding: 1.6em 0;
+    width: 100%;
   }
-}
-
-.input__field--fumi:focus + .input__label--fumi .icon--fumi,
-.input--filled .icon--fumi {
-  -webkit-animation: anim-fumi-2 0.3s forwards;
-  animation: anim-fumi-2 0.3s forwards;
-}
-
-@-webkit-keyframes anim-fumi-2 {
-  50% {
-    opacity: 1;
-    -webkit-transform: translate3d(0, -3em, 0);
-    transform: translate3d(0, -3em, 0);
+  
+  .graphic {
+    position: absolute;
+    top: 0;
+    left: 0;
+    fill: none;
   }
-  50.25% {
-    opacity: 0;
-    -webkit-transform: translate3d(0, -3em, 0);
-    transform: translate3d(0, -3em, 0);
+  
+  .icon {
+    color: #ddd;
+    font-size: 150%;
   }
-  50.75% {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 3em, 0);
-    transform: translate3d(0, 3em, 0);
+  
+  /* Individual styles */
+  
+  /* Fumi */
+  .input--fumi {
+    overflow: hidden;
+    padding: 0.25em 0;
   }
-  51% {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 3em, 0);
-    transform: translate3d(0, 3em, 0);
+  
+  .input--fumi::after {
+    content: '';
+    width: 1px;
+    position: absolute;
+    top: 0.5em;
+    bottom: 0.5em;
+    left: 2.5em;
+    background: rgb(16 22 26 / 50%);
+    z-index: 100;
   }
-  100% {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
+  
+  .input__field--fumi {
+    padding: 1.5em 1em 0.25em 3.15em;
+    width: 100%;
     color: #9c6cff;
   }
-}
-
-@keyframes anim-fumi-2 {
-  50% {
-    opacity: 1;
-    -webkit-transform: translate3d(0, -3em, 0);
-    transform: translate3d(0, -3em, 0);
+  
+  .input__label--fumi {
+    position: absolute;
+    width: 100%;
+    text-align: left;
+    padding-left: 4.5em;
+    pointer-events: none;
   }
-  50.25% {
-    opacity: 0;
-    -webkit-transform: translate3d(0, -3em, 0);
-    transform: translate3d(0, -3em, 0);
+  
+  .icon--fumi {
+    width: 2em;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 1em 0 0 0.5em;
   }
-  50.75% {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 3em, 0);
-    transform: translate3d(0, 3em, 0);
+  
+  .input__label-content--fumi {
+    padding: 1.7em 0;
+    display: inline-block;
+    -webkit-transform-origin: 0 0;
+    transform-origin: 0 0;
   }
-  51% {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 3em, 0);
-    transform: translate3d(0, 3em, 0);
+  
+  .input__label-content--fumi span {
+    display: inline-block;
   }
-  100% {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-    color: #9c6cff;
+  
+  .input__field--fumi:focus + .input__label--fumi .input__label-content--fumi,
+  .input--filled .input__label-content--fumi {
+    -webkit-animation: anim-fumi-1 0.3s forwards;
+    animation: anim-fumi-1 0.3s forwards;
   }
-}
-
-.notification-modal {
-  display: none;
-  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
-  width: 350px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  padding: 5px 0;
-  border-radius: 6px;
-  position: absolute;
-  z-index: 10;
-  top: 0%;
-  margin-top: 20px;
-  left: 50%;
-  margin-left: -175px;
-}
-
-.no-select {
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
-}
-
-.keystation-form .field {
-  margin-bottom: 10px;
-  margin-top: 10px;
-}
-
-.keystation-form .field > span {
-  display: block;
-}
-
-.keystation-form .field > input {
-  height: 20px;
-  border-radius: 0;
-  box-shadow: 0 1px 0 hsl(0deg 0% 100% / 15%);
-  color: #fff;
-}
-
-.keystation-form .field.readonly {
-  justify-content: space-between;
-  display: flex;
-  align-items: center;
-}
-
-.keystation-form .field.readonly > span {
-  text-align: left;
-}
-
-.keystation-form .field.readonly > input {
-  font-weight: bold;
-  color: #008000;
-}
+  
+  @-webkit-keyframes anim-fumi-1 {
+    50% {
+      -webkit-transform: translate3d(0, 3em, 0);
+      transform: translate3d(0, 3em, 0);
+    }
+    51% {
+      -webkit-transform: translate3d(0, -3em, 0) scale3d(0.85, 0.85, 1);
+      transform: translate3d(0, -3em, 0) scale3d(0.85, 0.85, 1);
+    }
+    100% {
+      color: #a3a3a3;
+      -webkit-transform: translate3d(0, -1.1em, 0) scale3d(0.85, 0.85, 1);
+      transform: translate3d(0, -1.1em, 0) scale3d(0.85, 0.85, 1);
+    }
+  }
+  
+  @keyframes anim-fumi-1 {
+    50% {
+      -webkit-transform: translate3d(0, 3em, 0);
+      transform: translate3d(0, 3em, 0);
+    }
+    51% {
+      -webkit-transform: translate3d(0, -3em, 0) scale3d(0.85, 0.85, 1);
+      transform: translate3d(0, -3em, 0) scale3d(0.85, 0.85, 1);
+    }
+    100% {
+      color: #a3a3a3;
+      -webkit-transform: translate3d(0, -1.1em, 0) scale3d(0.85, 0.85, 1);
+      transform: translate3d(0, -1.1em, 0) scale3d(0.85, 0.85, 1);
+    }
+  }
+  
+  .input__field--fumi:focus + .input__label--fumi .icon--fumi,
+  .input--filled .icon--fumi {
+    -webkit-animation: anim-fumi-2 0.3s forwards;
+    animation: anim-fumi-2 0.3s forwards;
+  }
+  
+  @-webkit-keyframes anim-fumi-2 {
+    50% {
+      opacity: 1;
+      -webkit-transform: translate3d(0, -3em, 0);
+      transform: translate3d(0, -3em, 0);
+    }
+    50.25% {
+      opacity: 0;
+      -webkit-transform: translate3d(0, -3em, 0);
+      transform: translate3d(0, -3em, 0);
+    }
+    50.75% {
+      opacity: 0;
+      -webkit-transform: translate3d(0, 3em, 0);
+      transform: translate3d(0, 3em, 0);
+    }
+    51% {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 3em, 0);
+      transform: translate3d(0, 3em, 0);
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      color: #9c6cff;
+    }
+  }
+  
+  @keyframes anim-fumi-2 {
+    50% {
+      opacity: 1;
+      -webkit-transform: translate3d(0, -3em, 0);
+      transform: translate3d(0, -3em, 0);
+    }
+    50.25% {
+      opacity: 0;
+      -webkit-transform: translate3d(0, -3em, 0);
+      transform: translate3d(0, -3em, 0);
+    }
+    50.75% {
+      opacity: 0;
+      -webkit-transform: translate3d(0, 3em, 0);
+      transform: translate3d(0, 3em, 0);
+    }
+    51% {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 3em, 0);
+      transform: translate3d(0, 3em, 0);
+    }
+    100% {
+      opacity: 1;
+      -webkit-transform: translate3d(0, 0, 0);
+      transform: translate3d(0, 0, 0);
+      color: #9c6cff;
+    }
+  }
+  
+  .notification-modal {
+    display: none;
+    border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+    width: 350px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+    position: absolute;
+    z-index: 10;
+    top: 0%;
+    margin-top: 20px;
+    left: 50%;
+    margin-left: -175px;
+  }
+  
+  .no-select {
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently supported by Chrome, Opera and Firefox */
+  }
+  
+  .keystation-form .field {
+    margin-bottom: 10px;
+    margin-top: 10px;
+  }
+  
+  .keystation-form .field > span {
+    display: block;
+  }
+  
+  .keystation-form .field > input {
+    height: 20px;
+    border-radius: 0;
+    box-shadow: 0 1px 0 hsl(0deg 0% 100% / 15%);
+    color: #fff;
+  }
+  
+  .keystation-form .field.readonly {
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+  }
+  
+  .keystation-form .field.readonly > span {
+    text-align: left;
+  }
+  
+  .keystation-form .field.readonly > input {
+    font-weight: bold;
+    color: #008000;
+  }

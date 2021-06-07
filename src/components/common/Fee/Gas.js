@@ -16,7 +16,7 @@ export default function({onChangeGas, gas, className}) {
 			<span className={cx("gas-span")}> Gas </span>
 			<InputNumber
 				value={gas}
-				className={cx("input-text")}
+				className={cx("input-number")}
 				formatter={value => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
 				parser={value => value.replace(/\s?|(,*)/g, "")}
 				onChange={onChangeGas}

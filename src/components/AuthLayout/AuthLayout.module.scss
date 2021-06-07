@@ -1,0 +1,39 @@
+.auth-layout {
+    min-height: 100vh;
+    background-color: #142437;
+
+    &-header {
+        display: flex;
+        height: 50px;
+        background-color: #192B40;
+    }
+
+    &-body {
+        padding: 32px 0;
+        background-color: #142437;
+    }
+}
+
+.brand {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    user-select: none;
+
+    &-icon {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        margin-right: 8px;
+    }
+
+    &-text {
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 150%;
+        color: #FFFFFF;
+    }
+}

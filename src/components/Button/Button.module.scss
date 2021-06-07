@@ -1,0 +1,98 @@
+.button {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    padding-left: 100px;
+    padding-right: 100px;
+    cursor: pointer;
+
+    &:focus {
+        outline: none;
+    }
+
+
+    &-primary {
+        color: #FFFFFF;
+        background: #1A87FF;
+        border: 1px solid #1A87FF;
+
+        &:hover {
+            background-color: lighten(#1A87FF, 5%);
+        }
+    }
+
+    &-outline-primary {
+        color: #1A87FF;
+        background: #FFFFFF;
+        border: 1px solid #1A87FF;
+
+        &:hover {
+            color: #FFFFFF;
+            background: #1A87FF;
+        }
+    }
+
+    &-secondary {
+        color: #FFFFFF;
+        background: #2B5072;
+        border: 1px solid #2B5072;
+
+        &:hover {
+            background-color: lighten(#2B5072, 5%);
+        }
+    }
+
+    &-outline-secondary {
+        color: #2B5072;
+        background: #FFFFFF;
+        border: 1px solid #2B5072;
+
+        &:hover {
+            color: #FFFFFF;
+            background-color: #2B5072;
+        }
+    }
+
+
+
+    &-outline-success {
+        color: #181818;
+        background: #FFFFFF;
+        border: 1px solid #22B59A;
+
+        &:hover {
+            color: #FFFFFF;
+            background: #22B59A;
+        }
+    }
+
+    &-lg {
+        display: flex;
+        padding-top: 13px;
+        padding-bottom: 13px;
+        border-radius: 24px;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 150%;
+    }
+
+    &-sm {
+        display: inline-flex;
+        padding: 8px 24px;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 14px;
+        line-height: 150%;
+        border-radius: 4px;
+    }
+
+    &-fit-content {
+        width: fit-content;
+    }
+}
