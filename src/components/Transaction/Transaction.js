@@ -172,7 +172,11 @@ const Transaction = ({ user, showAlertBox }) => {
                     </div>
                     {jsonSrc && (
                         <div className="w-100 overflow-auto">
-                            <ReactJson theme="monokai" style={{ backgroundColor: "inherit" }} src={jsonSrc} />
+                            <ReactJson
+                                theme="monokai"
+                                style={{ backgroundColor: "inherit", wordBreak: "break-all" }}
+                                src={jsonSrc}
+                            />
                         </div>
                     )}
                 </>
@@ -215,7 +219,7 @@ const Transaction = ({ user, showAlertBox }) => {
                                     <div className="w-100 overflow-auto">
                                         <ReactJson
                                             theme="monokai"
-                                            style={{ backgroundColor: "inherit" }}
+                                            style={{ backgroundColor: "inherit", wordBreak: "break-all" }}
                                             src={jsonSrc}
                                         />
                                     </div>

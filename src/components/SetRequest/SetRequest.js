@@ -195,7 +195,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                     <div className="w-100 overflow-auto">
                                         <ReactJson
                                             theme="monokai"
-                                            style={{ backgroundColor: "inherit" }}
+                                            style={{ backgroundColor: "inherit", wordBreak: "break-all" }}
                                             src={jsonSrc}
                                         />
                                     </div>
