@@ -30,14 +30,14 @@ export const menuSlice = createSlice({
     initialState: {
         menuItems: {
             byId: {
-                [menuItemIds.INTERACT_WASM_CONTRACT]: {
-                    id: menuItemIds.INTERACT_WASM_CONTRACT,
-                    icon: <DocumentIcon />,
-                    activeIcon: <ActiveDocumentIcon />,
-                    text: "Interact Wasm Contract",
-                    expanded: false,
-                    subMenuItemIds: [subMenuItemIds.QUERY, subMenuItemIds.EXECUTE, subMenuItemIds.DEPLOY],
-                },
+                // [menuItemIds.INTERACT_WASM_CONTRACT]: {
+                //     id: menuItemIds.INTERACT_WASM_CONTRACT,
+                //     icon: <DocumentIcon />,
+                //     activeIcon: <ActiveDocumentIcon />,
+                //     text: "Interact Wasm Contract",
+                //     expanded: false,
+                //     subMenuItemIds: [subMenuItemIds.QUERY, subMenuItemIds.EXECUTE, subMenuItemIds.DEPLOY],
+                // },
                 [menuItemIds.SEND_TOKENS]: {
                     id: menuItemIds.SEND_TOKENS,
                     icon: <GraphIcon />,
@@ -53,14 +53,14 @@ export const menuSlice = createSlice({
                 //     expanded: false,
                 //     subMenuItemIds: [subMenuItemIds.SET_PROVIDER_SCRIPTS, subMenuItemIds.EDIT_PROVIDER_SCRIPTS]
                 // },
-                [menuItemIds.INTERACT_WITH_AI_REQUEST]: {
-                    id: menuItemIds.INTERACT_WITH_AI_REQUEST,
-                    icon: <SettingIcon />,
-                    activeIcon: <ActiveSettingIcon />,
-                    text: "Interact with ai request",
-                    expanded: false,
-                    subMenuItemIds: [subMenuItemIds.SET_REQUEST, subMenuItemIds.GET_REQUEST],
-                }
+                // [menuItemIds.INTERACT_WITH_AI_REQUEST]: {
+                //     id: menuItemIds.INTERACT_WITH_AI_REQUEST,
+                //     icon: <SettingIcon />,
+                //     activeIcon: <ActiveSettingIcon />,
+                //     text: "Interact with ai request",
+                //     expanded: false,
+                //     subMenuItemIds: [subMenuItemIds.SET_REQUEST, subMenuItemIds.GET_REQUEST],
+                // }
             },
             allIds: Object.values(menuItemIds),
             activeId: null,
