@@ -24,6 +24,7 @@ import Pin from "src/components/Pin";
 import Loading from "src/components/Loading";
 import SliderInput from "src/components/SliderInput";
 import TextArea from "src/components/TextArea";
+import ButtonGroup from "src/components/ButtonGroup";
 import BackButton from "src/components/BackButton";
 import PreviewButton from "src/components/PreviewButton";
 import { gasValues } from "src/consts/gasValues";
@@ -174,7 +175,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                         <FormCard>
                             {jsonSrc ? (
                                 <>
-                                    <div className="d-flex flex-row justify-content-between align-items-center mb-4">
+                                    <ButtonGroup>
                                         <BackButton
                                             onClick={() => {
                                                 setJsonSrc(null);
@@ -194,7 +195,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                         >
                                             View on oraiscan
                                         </PreviewButton>
-                                    </div>
+                                    </ButtonGroup>
 
                                     <div className="w-100 overflow-auto">
                                         <ReactJson

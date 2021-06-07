@@ -20,6 +20,7 @@ import ArrowButton from "src/components/ArrowButton";
 import Pin from "src/components/Pin";
 import Loading from "src/components/Loading";
 import SliderInput from "src/components/SliderInput";
+import ButtonGroup from "src/components/ButtonGroup";
 import BackButton from "src/components/BackButton";
 import PreviewButton from "src/components/PreviewButton";
 import styles from "./SendTokens.module.scss";
@@ -114,7 +115,7 @@ const SendTokens = ({ user, showAlertBox }) => {
                         <FormCard>
                             {jsonSrc ? (
                                 <>
-                                    <div className="d-flex flex-row justify-content-between align-items-center mb-4">
+                                    <ButtonGroup className="my-3">
                                         <BackButton
                                             onClick={() => {
                                                 setJsonSrc(null);
@@ -134,7 +135,7 @@ const SendTokens = ({ user, showAlertBox }) => {
                                         >
                                             View on oraiscan
                                         </PreviewButton>
-                                    </div>
+                                    </ButtonGroup>
 
                                     <div className="w-100 overflow-auto">
                                         <ReactJson

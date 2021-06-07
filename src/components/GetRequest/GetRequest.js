@@ -18,6 +18,7 @@ import TextField from "src/components/TextField";
 import ErrorText from "src/components/ErrorText";
 import ArrowButton from "src/components/ArrowButton";
 import Loading from "src/components/Loading";
+import ButtonGroup from "src/components/ButtonGroup";
 import BackButton from "src/components/BackButton";
 import PreviewButton from "src/components/PreviewButton";
 import styles from "./GetRequest.module.scss";
@@ -80,7 +81,7 @@ const GetRequest = ({ user, showAlertBox }) => {
                     <FormCard>
                         {jsonSrc ? (
                             <>
-                                <div className="d-flex flex-row justify-content-between align-items-center mb-4">
+                                <ButtonGroup>
                                     <BackButton
                                         onClick={() => {
                                             setJsonSrc(null);
@@ -100,7 +101,7 @@ const GetRequest = ({ user, showAlertBox }) => {
                                     >
                                         View on oraiscan
                                     </PreviewButton>
-                                </div>
+                                </ButtonGroup>
 
                                 <div className="w-100 overflow-auto">
                                     <ReactJson

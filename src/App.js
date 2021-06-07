@@ -23,8 +23,6 @@ import GetRequestContainer from "src/containers/GetRequestContainer";
 import NotFoundContainer from "src/containers/NotFoundContainer";
 import Home from "src/components/Home";
 import GenerateMnemonics from "src/components/GenerateMnemonics";
-import MainLayout from "src/components/MainLayout";
-import GetRequest from "src/components/airequest/GetRequest";
 
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
@@ -91,11 +89,6 @@ const App = ({ }) => {
                         </AuthenticatedRoute>
                         <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_GET}>
                             <GetRequestContainer />
-                        </AuthenticatedRoute>
-                        <AuthenticatedRoute exact path={"/test"}>
-                            <MainLayout>
-                                <GetRequest />
-                            </MainLayout>
                         </AuthenticatedRoute>
                         <AuthenticatedRoute exact path={pagePaths.HOME}>
                             <Home />

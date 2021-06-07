@@ -301,6 +301,11 @@ export const formatFloat = (value, numberOfDigitsAfterDecimalPoint = 2) => {
 	return numeral(parseFloat(value)).format("0,0." + "0".repeat(numberOfDigitsAfterDecimalPoint));
 };
 
+export const formatInteger = (value) => {
+	return numeral(parseFloat(value)).format("0,0");
+};
+
+
 export const formatDateTime = inputString => {
 	const m = moment(inputString);
 	return m.format("YYYY-MM-DD HH:mm:ss");
