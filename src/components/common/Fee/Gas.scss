@@ -1,0 +1,23 @@
+.select-gas {
+	display: flex;
+	width: 100%;
+	align-items: center;
+	padding: 8px;
+
+	.gas-span {
+		margin-right: 5px;
+	}
+
+	.input-text {
+		background: #1E344D;
+		border: #2B5072;
+		width: 32%;
+		// @include media("<medium") {
+		// 	width: 60%;
+		// }
+	}
+
+	.input-range {
+		margin-left: 10px;
+	}
+}

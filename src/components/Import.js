@@ -21,8 +21,8 @@ const Import = () => {
   const importMnemonics = () => {
     window.pinType = 'import';
 
-    var account = $('#account').val();
-    var mnemonics = $('#mnemonics').val();
+    const account = $('#account').val();
+    const mnemonics = $('#mnemonics').val();
 
     if ($.trim(account) === '') {
       $('#formInfoMessage').hide();
@@ -67,8 +67,8 @@ const Import = () => {
   };
 
   const submitForm = (checksum = true) => {
-    var account = $.trim($('#hidden-account').val());
-    var mnemonics = $.trim($('#mnemonics').val());
+    const account = $.trim($('#hidden-account').val());
+    const mnemonics = $.trim($('#mnemonics').val());
 
     if (account === '') {
       $('#formInfoMessage').hide();

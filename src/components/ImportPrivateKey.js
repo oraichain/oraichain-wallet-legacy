@@ -19,8 +19,8 @@ const ImportPrivateKey = () => {
   const importPrivateKey = () => {
     window.pinType = 'import';
 
-    var account = $('#account').val();
-    var privatekey = $('#privatekey').val();
+    const account = $('#account').val();
+    const privatekey = $('#privatekey').val();
 
     if ($.trim(account) === '') {
       $('#formInfoMessage').hide();
@@ -47,8 +47,8 @@ const ImportPrivateKey = () => {
   };
 
   const submitForm = () => {
-    var account = $.trim($('#hidden-account').val());
-    var privatekey = $.trim($('#privatekey').val());
+    const account = $.trim($('#hidden-account').val());
+    const privatekey = $.trim($('#privatekey').val());
 
     if (account === '') {
       $('#formInfoMessage').hide();
