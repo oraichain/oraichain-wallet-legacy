@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
 const UnauthenticatedRoute = ({ component: Component, isLoggedIn, ...rest }) => {
     const location = useLocation();
     if (isLoggedIn) {
-        return <Redirect to={{ pathname: pagePaths.HOME, state: { from: location } }} />;
+        return <Redirect to={{ pathname: pagePaths.HOME, search: location.search, state: { from: location } }} />;
     }
 
     return <Route {...rest} render={(props) => <Component {...props} />} />;

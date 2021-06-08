@@ -81,6 +81,7 @@ const App = ({ }) => {
                         <UnauthenticatedRoute exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
                         <UnauthenticatedRoute exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
                         <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
+                        <AuthenticatedRoute exact path={pagePaths.TRANSACTION} component={TransactionContainer} />
                         <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
                             <SendTokensContainer />
                         </AuthenticatedRoute>
