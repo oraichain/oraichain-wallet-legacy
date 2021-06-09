@@ -42,7 +42,13 @@ const Transaction = ({ user, showAlertBox }) => {
     });
     const { getValues } = methods;
     const queryStringParse = queryString.parse(history.location.search) || {};
-    const payload = JSON.parse(queryStringParse.raw_message || "{}");
+    let payload = {};
+    if (!_.isNil(queryStringParse?.raw_message)) {
+        payload = JSON.parse(queryStringParse.raw_message);
+    } else if (!_.isNil(queryStringParse?.payload)) {
+        payload = JSON.parse(queryStringParse.payload);
+    }
+
     const cosmos = window.cosmos;
 
     if (!showResult && !openPin && _.isNil(jsonSrc)) {
