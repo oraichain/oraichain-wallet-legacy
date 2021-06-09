@@ -25,7 +25,7 @@ import Home from "src/components/Home";
 import GenerateMnemonics from "src/components/GenerateMnemonics";
 
 const url = new window.URL(window.location.href);
-const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
+const network =  url.searchParams.get("network") || process.env.REACT_APP_NETWORK || window.localStorage.getItem("wallet.network") || "Oraichain";
 const path = url.searchParams.get("path");
 const lcd =
   process.env.REACT_APP_LCD || url.searchParams.get("lcd") || (networks[network]?.lcd ?? "http://localhost:1317");
