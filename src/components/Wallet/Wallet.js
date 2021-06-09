@@ -9,7 +9,7 @@ import RefreshButton from "src/components/RefreshButton";
 import Button from "src/components/Button";
 import styles from "./Wallet.module.scss";
 import { lcdApiPaths } from "src/consts/apiPaths";
-import { formatFloat } from "src/utils";
+import { formatInteger } from "src/utils";
 const cx = cn.bind(styles);
 
 const Wallet = ({ user, removeUser }) => {
@@ -28,7 +28,7 @@ const Wallet = ({ user, removeUser }) => {
             balanceElement = (
                 <div className={cx("balance")}>
                     <div className={cx("balance-amount")}>
-                        {_.isNil(data?.balances?.[0]?.amount) ? "-" : formatFloat(data.balances[0].amount)}
+                        {_.isNil(data?.balances?.[0]?.amount) ? "-" : formatInteger(data.balances[0].amount)}
                     </div>
                     <div className={cx("balance-denom")}>
                         {_.isNil(data?.balances?.[0]?.denom) ? "-" : data.balances[0].denom}

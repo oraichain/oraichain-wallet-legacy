@@ -19,11 +19,10 @@ import SendTokensContainer from "src/containers/SendTokensContainer";
 import AlertBoxContainer from "src/containers/AlertBoxContainer";
 import TransactionContainer from "src/containers/TransactionContainer";
 import SetRequestContainer from "src/containers/SetRequestContainer";
+import GetRequestContainer from "src/containers/GetRequestContainer";
 import NotFoundContainer from "src/containers/NotFoundContainer";
 import Home from "src/components/Home";
 import GenerateMnemonics from "src/components/GenerateMnemonics";
-import SetRequest from "src/components/airequest/SetRequest";
-import MainLayout from "src/components/MainLayout";
 
 const url = new window.URL(window.location.href);
 const network = url.searchParams.get("network") || window.localStorage.getItem("wallet.network") || "Oraichain";
@@ -31,7 +30,6 @@ const path = url.searchParams.get("path");
 const lcd =
   process.env.REACT_APP_LCD || url.searchParams.get("lcd") || (networks[network]?.lcd ?? "http://localhost:1317");
 // init cosmos version
-console.log(network);
 const cosmos = new Cosmos(lcd, network);
 const symbol = networks[network]?.denom ?? "orai";
 cosmos.setBech32MainPrefix(symbol);
@@ -73,35 +71,34 @@ yup.addMethod(yup.string, "isJSON", function (message) {
 const App = ({ }) => {
   let persistor = persistStore(store);
 
-  return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <Router>
-          <Switch>
-            <Route path={pagePaths.AUTH} component={AuthContainer} />
-            <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
-            <UnauthenticatedRoute exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
-            <UnauthenticatedRoute exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
-            <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
-            <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
-              <SendTokensContainer />
-            </AuthenticatedRoute>
-            <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_SET}>
-              <SetRequestContainer />
-            </AuthenticatedRoute>
-            <AuthenticatedRoute exact path={"/test"}>
-              <MainLayout>
-                <SetRequest />
-              </MainLayout>
-            </AuthenticatedRoute>
-            <AuthenticatedRoute exact path={pagePaths.HOME}>
-              <Home />
-            </AuthenticatedRoute>
-            <Route path="*">
-              <NotFoundContainer />
-            </Route>
-          </Switch>
-        </Router>
+    return (
+        <Provider store={store}>
+            <PersistGate loading={null} persistor={persistor}>
+                <Router>
+                    <Switch>
+                        <Route path={pagePaths.AUTH} component={AuthContainer} />
+                        <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
+                        <UnauthenticatedRoute exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
+                        <UnauthenticatedRoute exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
+                        <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
+                        <AuthenticatedRoute exact path={pagePaths.TRANSACTION} component={TransactionContainer} />
+                        <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
+                            <SendTokensContainer />
+                        </AuthenticatedRoute>
+                        <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_SET}>
+                            <SetRequestContainer />
+                        </AuthenticatedRoute>
+                        <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_GET}>
+                            <GetRequestContainer />
+                        </AuthenticatedRoute>
+                        <AuthenticatedRoute exact path={pagePaths.HOME}>
+                            <Home />
+                        </AuthenticatedRoute>
+                        <Route path="*">
+                            <NotFoundContainer />
+                        </Route>
+                    </Switch>
+                </Router>
 
         <AlertBoxContainer />
       </PersistGate>
