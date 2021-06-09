@@ -90,47 +90,36 @@ const Transaction = ({ user, showAlertBox }) => {
             const type = _.get(payload, "type");
             let txBody;
             const memo = _.get(payload, "value.memo") || "";
-            switch (type) {
-                case "cosmos-sdk/MsgDelegate": {
-                    const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
-                    const validator_address = _.get(payload, "value.msg.0.value.validator_address");
-                    txBody = getTxBodyDelegate(user, validator_address, amount, memo);
-                    break;
-                }
-                case "cosmos-sdk/MsgUndelegate": {
-                    const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
-                    const validator_address = _.get(payload, "value.msg.0.value.validator_address");
-                    txBody = getTxBodyUndelegate(user, validator_address, amount, memo);
-                    break;
-                }
-                case "cosmos-sdk/MsgCreateValidator": {
-                    txBody = getTxCreateValidator(_.get(payload, "value.msg.0.value"));
-                    break;
-                }
-                case "cosmos-sdk/MsgWithdrawDelegationReward": {
-                    txBody = getTxBodyMsgWithdrawDelegatorReward(
-                        user,
-                        _.get(payload, "value.msg.0.value.validator_address")
-                    );
-                    break;
-                }
-                case "cosmos-sdk/MsgWithdrawValidatorCommission": {
-                    txBody = getTxBodyMsgWithdrawValidatorCommission(
-                        _.get(payload, "value.msg.0.value.validator_address")
-                    );
-                    break;
-                }
-                default: {
-                    const msgs = _.get(payload, "value.msg");
-                    if (msgs.length > 1) {
-                        txBody = getTxBodyMultiSend(user, msgs, memo);
-                    } else {
-                        const amount = new Big(_.get(payload, "value.msg.0.value.amount.0.amount") || 0).toString();
-                        const to = _.get(payload, "value.msg.0.value.to_address");
-                        txBody = getTxBodySend(user, to, amount, memo);
-                    }
+            if (type.includes("MsgDelegate")) {
+                const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
+                const validator_address = _.get(payload, "value.msg.0.value.validator_address");
+                txBody = getTxBodyDelegate(user, validator_address, amount, memo);
+            } else if (type.includes("MsgUndelegate")) {
+                const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
+                const validator_address = _.get(payload, "value.msg.0.value.validator_address");
+                txBody = getTxBodyUndelegate(user, validator_address, amount, memo);
+            } else if (type.includes("MsgCreateValidator")) {
+                txBody = getTxCreateValidator(_.get(payload, "value.msg.0.value"));
+            } else if (type.includes("MsgWithdrawDelegationReward")) {
+                txBody = getTxBodyMsgWithdrawDelegatorReward(
+                    user,
+                    _.get(payload, "value.msg.0.value.validator_address")
+                );
+            } else if (type.includes("MsgWithdrawValidatorCommission")) {
+                txBody = getTxBodyMsgWithdrawValidatorCommission(
+                    _.get(payload, "value.msg.0.value.validator_address")
+                );
+            } else {
+                const msgs = _.get(payload, "value.msg");
+                if (msgs.length > 1) {
+                    txBody = getTxBodyMultiSend(user, msgs, memo);
+                } else {
+                    const amount = new Big(_.get(payload, "value.msg.0.value.amount.0.amount") || 0).toString();
+                    const to = _.get(payload, "value.msg.0.value.to_address");
+                    txBody = getTxBodySend(user, to, amount, memo);
                 }
             }
+
             // higher gas limit
             const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
             showAlertBox({
