@@ -1,7 +1,7 @@
 import { React, useRef, useState } from "react";
+import { useHistory } from "react-router-dom";
 import cn from "classnames/bind";
 import _ from "lodash";
-import queryString from "query-string";
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -22,11 +22,13 @@ import Button from "src/components/Button";
 import Pin from "src/components/Pin";
 import EncryptedMnemonic from "src/components/EncryptedMnemonic";
 import QuestionLink from "src/components/QuestionLink";
-import styles from "./ImportWallet.module.scss";
+import styles from "./ImportWalletWithMnemonics.module.scss";
 
 const cx = cn.bind(styles);
 
-const ImportWallet = ({ history, user }) => {
+const ImportWalletWithMnemonics = ({}) => {
+    const history = useHistory();
+
     const schema = yup.object().shape({
         walletName: yup.string().required("The Wallet Name is required"),
         mnemonics: yup.string().required("The Mnemonics is required"),
@@ -37,15 +39,14 @@ const ImportWallet = ({ history, user }) => {
     });
     const { handleSubmit, formState } = methods;
     const cosmos = window.cosmos;
-    const queryParse = queryString.parse(history.location.search);
     const enteredPin = useRef("");
     const [step, setStep] = useState(1);
-    const [data, setData] = useState({});
+    const [formData, setFormData] = useState({});
     const [encryptedMnemonics, setEncryptedMnemonics] = useState("");
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
     const [invalidMnemonicsChecksum, setInvalidMnemonicsChecksum] = useState(false);
+    let address = "";
 
-    var address = "";
     const isMnemonicsValid = (mnemonics, disablechecksum = false) => {
         let validFlag = true;
         // To check the checksum, it is a process to check whether there is an error in creating an address, so you can input any path and prefix.
@@ -70,8 +71,12 @@ const ImportWallet = ({ history, user }) => {
             setInvalidMnemonics(false);
             setInvalidMnemonicsChecksum(true);
         } else {
-            data.address = address;
-            setData(data);
+            console.log("ADDRESS", address);
+            setFormData(
+                Object.assign({}, data, {
+                    address: address,
+                })
+            );
             setInvalidMnemonics(false);
             setInvalidMnemonicsChecksum(false);
             setStep(2);
@@ -81,7 +86,7 @@ const ImportWallet = ({ history, user }) => {
     const importWalletForm = (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <FormTitle>Import Wallet</FormTitle>
+                <FormTitle>Import Wallet With Mnemonics</FormTitle>
                 <FormField>
                     <Label>Wallet name</Label>
                     <TextField type="text" name="walletName" />
@@ -95,8 +100,17 @@ const ImportWallet = ({ history, user }) => {
                 <FormField>
                     <Label>Mnemonics</Label>
                     <TextArea name="mnemonics" />
-                    {(formState.errors.mnemonics || invalidMnemonics) && <ErrorText>Mnemonics is not valid.</ErrorText>}
-                    {invalidMnemonicsChecksum && <ErrorText>Invalid mnemonics checksum error.</ErrorText>}
+                    <ErrorMessage
+                        errors={formState.errors}
+                        name="mnemonics"
+                        render={({ message }) => <ErrorText>{message}</ErrorText>}
+                    />
+                    {!formState?.errors?.mnemonics && (
+                        <>
+                            {invalidMnemonics && <ErrorText>Mnemonics is not valid.</ErrorText>}
+                            {invalidMnemonicsChecksum && <ErrorText>Invalid mnemonics checksum error.</ErrorText>}
+                        </>
+                    )}
                 </FormField>
 
                 <Suggestion text="Enter 24 words including spaces. The mnemonic phrase is encrypted and stored in Keychain." />
@@ -137,7 +151,7 @@ const ImportWallet = ({ history, user }) => {
                         setStep={setStep}
                         step={step}
                         message="Please set your PIN"
-                        mnemonics={data.mnemonics}
+                        mnemonics={formData.mnemonics}
                         setEncryptedMnemonics={setEncryptedMnemonics}
                     />
                 )}
@@ -156,7 +170,7 @@ const ImportWallet = ({ history, user }) => {
                 {step === 4 && (
                     <EncryptedMnemonic
                         step={step}
-                        walletName={data.walletName}
+                        walletName={formData.walletName}
                         encryptedMnemonics={encryptedMnemonics}
                         queryParam={history.location.search}
                         setStep={setStep}
@@ -164,8 +178,8 @@ const ImportWallet = ({ history, user }) => {
                 )}
                 {step === 5 && (
                     <ConnectWalletContainer
-                        account={data.walletName}
-                        address={data.address}
+                        account={formData.walletName}
+                        address={formData.address}
                         encryptedMnemonics={encryptedMnemonics}
                         enteredPin={enteredPin.current}
                     />
@@ -175,7 +189,7 @@ const ImportWallet = ({ history, user }) => {
     );
 };
 
-ImportWallet.propTypes = {};
-ImportWallet.defaultProps = {};
+ImportWalletWithMnemonics.propTypes = {};
+ImportWalletWithMnemonics.defaultProps = {};
 
-export default ImportWallet;
+export default ImportWalletWithMnemonics;

@@ -56,7 +56,7 @@ const SignIn = ({ setUser }) => {
     const onSubmit = (data) => {
         console.log("on submit: ", data);
         const password = data.password || localStorage.getItem(data.walletName + "-password") || "";
-        console.log("on password submit: ", password)
+        console.log("on password submit: ", password);
         if (password === "") {
             setInvalidMnemonics(true);
         } else {
@@ -101,15 +101,27 @@ const SignIn = ({ setUser }) => {
                     </Button>
                 </div>
 
-                <div className="d-flex flex-row justify-content-center mb-5">
+                <div className="d-flex flex-row justify-content-center mb-3">
                     <Button
                         variant="secondary"
                         size="lg"
                         onClick={() => {
-                            history.push(`/import-wallet${history.location.search}`);
+                            history.push(`${pagePaths.IMPORT_WALLET_WITH_MNEMONICS}${history.location.search}`);
                         }}
                     >
-                        Import Wallet
+                        Import Wallet With Mnemonics
+                    </Button>
+                </div>
+
+                <div className="d-flex flex-row justify-content-center mt-4 mb-5">
+                    <Button
+                        variant="secondary"
+                        size="lg"
+                        onClick={() => {
+                            history.push(`${pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}${history.location.search}`);
+                        }}
+                    >
+                        Import Wallet With Private Key
                     </Button>
                 </div>
 

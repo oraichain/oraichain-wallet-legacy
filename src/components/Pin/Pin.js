@@ -66,6 +66,9 @@ const Pin = ({
             setTimeout(() => {
                 const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
                 const address = cosmos.getAddress(childKey);
+                const {privateKey} = childKey;
+                console.log('PRIVATE KEY', Buffer.from(privateKey).toString('hex'));
+
                 setPinEvaluateStatus("success");
                 setTimeout(() => {
                     if (pinType === "confirm") {
