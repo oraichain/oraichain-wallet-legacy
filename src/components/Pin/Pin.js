@@ -21,6 +21,7 @@ const Pin = ({
     onChildKey,
     closePin,
     setUser,
+    setEncryptedPrivateKey,
 }) => {
     const cosmos = window.cosmos;
 
@@ -109,6 +110,10 @@ const Pin = ({
 
     const encryptMnemonic = () => {
         const enteredPin = pinArray.join("");
+        if (pinType === "confirm-private-key") {
+            setEncryptedPrivateKey && setEncryptedPrivateKey(encryptAES(mnemonics, enteredPin));
+            return nextStep();
+        }
         setEncryptedMnemonics(encryptAES(mnemonics, enteredPin));
         nextStep();
     };

@@ -5,20 +5,27 @@ import _ from "lodash";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import illustrationImage from "src/assets/img/keychain.png";
-import { getChildkeyFromDecrypted, decryptAES, anotherAppLogin } from "../../utils";
+import { getChildkeyFromDecrypted, decryptAES, anotherAppLogin,getChildkeyFromPrivateKey, getOraiAddressFromPrivateKey } from "../../utils";
 import FormTitle from "src/components/FormTitle";
 import styles from "./ConnectWallet.module.scss";
 import { pagePaths } from "src/consts/pagePaths";
 
 const cx = cn.bind(styles);
 
-const ConnectWallet = ({ account, address, encryptedMnemonics, enteredPin, setUser }) => {
+const ConnectWallet = ({ account, address, encryptedMnemonics, enteredPin, setUser, privateKey }) => {
     const history = useHistory();
 
     const connect = () => {
-        const decryptedMnemonics = decryptAES(encryptedMnemonics, enteredPin);
-        const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
-        setUser({ address: address, account: account, childKey });
+        let childKey;
+        if (privateKey) {
+            childKey = getChildkeyFromPrivateKey(privateKey);
+            address = getOraiAddressFromPrivateKey(privateKey);
+        } else {
+            const decryptedMnemonics = decryptAES(encryptedMnemonics, enteredPin);
+            childKey = getChildkeyFromDecrypted(decryptedMnemonics);
+        }
+        
+        setUser({ address, account, childKey });
 
         if (_.isNil(window?.opener)) {
             history.push(pagePaths.HOME);

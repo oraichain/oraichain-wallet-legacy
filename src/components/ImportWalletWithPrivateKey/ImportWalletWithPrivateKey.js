@@ -4,10 +4,12 @@ import cn from "classnames/bind";
 import _ from "lodash";
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
+import * as bip32 from "bip32";
+
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
 import { pagePaths } from "src/consts/pagePaths";
-import { cleanMnemonics, countWords } from "src/utils";
+import { getChildkeyFromDecrypted } from "src/utils";
 import ConnectWalletContainer from "src/containers/ConnectWalletContainer";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -31,41 +33,31 @@ const ImportWalletWithPrivateKey = ({}) => {
 
     const schema = yup.object().shape({
         walletName: yup.string().required("The Wallet Name is required"),
-        privateKey: yup.string().required("The Private Key is required").isPrivateKey("The Private Key is not valid"),
+       //  privateKey: yup.string().required("The Private Key is required").isPrivateKey("The Private Key is not valid"),
     });
 
     const methods = useForm({
         resolver: yupResolver(schema),
     });
-    const { handleSubmit, formState } = methods;
+    const { handleSubmit, formState, watch } = methods;
     const cosmos = window.cosmos;
-    const enteredPin = useRef("");
     const [step, setStep] = useState(1);
-    const [formData, setFormData] = useState({});
-    const [encryptedMnemonics, setEncryptedMnemonics] = useState("");
+    const [encryptedPrivateKey, setEncryptedPrivateKey] = useState("");
     let address = "";
 
-    const isMnemonicsValid = (mnemonics, disablechecksum = false) => {
-        let validFlag = true;
-        // To check the checksum, it is a process to check whether there is an error in creating an address, so you can input any path and prefix.
-        try {
-            if (disablechecksum) {
-                address = cosmos.getAddress(mnemonics, false);
-            } else {
-                address = cosmos.getAddress(cleanMnemonics(mnemonics));
-            }
-        } catch (e) {
-            validFlag = false;
-        }
-        return validFlag;
-    };
+    const formData = watch();
 
     const onSubmit = (data) => {
-        setFormData(
-            Object.assign({}, data, {
-                address: address,
-            })
-        );
+        // console.log(data);
+        // let { privateKey } = data;
+        // const buffer = Buffer.from(privateKey, "hex");
+        // const { publicKey } = bip32.fromPrivateKey(buffer, Buffer.from(new Array(32)));
+        // console.log(getCosmosAddress(publicKey, 'orai'));
+
+    //     privateKey = getChildkeyFromDecrypted(privateKey);
+    //    //  const buffer = Buffer.from(privateKey, "hex");
+    //     console.log(buf2hex(privateKey.privateKey, "hex"));
+
         setStep(2);
     };
 
@@ -137,8 +129,7 @@ const ImportWalletWithPrivateKey = ({}) => {
                         setStep={setStep}
                         step={step}
                         message="Please set your PIN"
-                        mnemonics={formData.mnemonics}
-                        setEncryptedMnemonics={setEncryptedMnemonics}
+                        pinType="confirm-private-key"
                     />
                 )}
                 {step === 3 && (
@@ -146,28 +137,25 @@ const ImportWalletWithPrivateKey = ({}) => {
                         setStep={setStep}
                         step={step}
                         message="Please confirm your PIN"
-                        pinType="confirm"
-                        encryptedMnemonics={encryptedMnemonics}
-                        setEnteredPin={(pin) => {
-                            enteredPin.current = pin;
-                        }}
+                        pinType="confirm-private-key"
+                        privateKey={formData.privateKey}
+                        setEncryptedPrivateKey={setEncryptedPrivateKey}
                     />
                 )}
                 {step === 4 && (
                     <EncryptedMnemonic
                         step={step}
                         walletName={formData.walletName}
-                        encryptedMnemonics={encryptedMnemonics}
                         queryParam={history.location.search}
                         setStep={setStep}
+                        encryptedMnemonics={encryptedPrivateKey}
                     />
                 )}
                 {step === 5 && (
                     <ConnectWalletContainer
                         account={formData.walletName}
                         address={formData.address}
-                        encryptedMnemonics={encryptedMnemonics}
-                        enteredPin={enteredPin.current}
+                        privateKey={formData.privateKey}
                     />
                 )}
             </FormContainer>
