@@ -49,7 +49,7 @@ const renderOrainScan = () => {
       })
       .end()[0];
 
-    $('#app').hide().html(`<div class="inner" style="display: none;">
+    $('#app').hide().html(`<div class="inner">
     <h1><img src="img/keystation_logo_.png" alt="" width="145"></h1>
     <h2>Sign In</h2>
   
@@ -73,10 +73,14 @@ const renderOrainScan = () => {
         <button type="button" onclick="sendEventToParent()" id="nextBtn">Next</button>
     </form>
   
-    <a href="import?client=https%3A%2F%2F${oraiscanWalletBase}%2F&amp;lcd=https%3A%2F%2Flcd.orai.io&amp;path=44%2F118%2F0%2F0%2F0&amp;payload=%22orai%22&amp;option=">Import Wallet</a>
+    <a href="import?client=${encodeURIComponent(
+      window.location.origin
+    )}%2F&amp;lcd=https%3A%2F%2Flcd.orai.io&amp;path=44%2F118%2F0%2F0%2F0&amp;payload=%22orai%22&amp;option=">Import Wallet</a>
   
     
-    <a class="disableChecksum" style="position:fixed;bottom:0;left:0;color:#fff;" href="import?client=https%3A%2F%2F${oraiscanWalletBase}%2F&amp;lcd=https%3A%2F%2Flcd.orai.io&amp;path=44%2F118%2F0%2F0%2F0&amp;payload=%22orai%22&amp;option=disablechecksum">■</a>
+    <a class="disableChecksum" style="position:fixed;bottom:0;left:0;color:#fff;" href="import?client=${encodeURIComponent(
+      window.location.origin
+    )}%2F&amp;lcd=https%3A%2F%2Flcd.orai.io&amp;path=44%2F118%2F0%2F0%2F0&amp;payload=%22orai%22&amp;option=disablechecksum">■</a>
   
     
     <div class="pin-wrap">
