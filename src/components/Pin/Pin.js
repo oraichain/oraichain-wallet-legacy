@@ -58,10 +58,26 @@ const Pin = ({
         }
 
         if (pinArray.length === 5) {
-            pinType === "confirm" || pinType === "signin" || pinType === "tx" || pinType === "confirm-encryted-mnemonics"
-                ? evaluatePin() : encryptMnemonic();
+            if (pinType === "enter-pin") {
+                return handleEnteredPin();
+            }
+            if (pinType === "confirm-private-key") {
+                return confirmPrivateKey();
+            }
+            pinType === "confirm" || pinType === "signin" || pinType === "tx" || pinType === "confirm-encryted-mnemonics" ? evaluatePin() : encryptMnemonic();
         }
     };
+
+    const handleEnteredPin = () => {
+        const enteredPin = pinArray.join("");
+        setEnteredPin(enteredPin);
+    }
+
+    const confirmPrivateKey = () => {
+        const enteredPin = pinArray.join("");
+        setEncryptedPrivateKey && setEncryptedPrivateKey(encryptAES(mnemonics, enteredPin));
+        return nextStep();
+    }
 
     const evaluatePin = () => {
         const enteredPin = pinArray.join("");
@@ -120,10 +136,6 @@ const Pin = ({
 
     const encryptMnemonic = () => {
         const enteredPin = pinArray.join("");
-        if (pinType === "confirm-private-key") {
-            setEncryptedPrivateKey && setEncryptedPrivateKey(encryptAES(mnemonics, enteredPin));
-            return nextStep();
-        }
         setEncryptedMnemonics(encryptAES(mnemonics, enteredPin));
         nextStep();
     };
