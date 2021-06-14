@@ -44,6 +44,36 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
       gtag('config', 'UA-146700011-1');
+
+      function getParameterByName(name, url) {
+          if (!url) url = window.location.href;
+          name = name.replace(/[\[\]]/g, '\\$&');
+          var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+            results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, ' '));
+      }
+
+      function sendEventToParent() {
+          var account = $(".input-account").val();
+          var password = $("input[type=password]").val();
+
+          if ($.trim(account) == "") {
+            $("#formInfoMessage").hide();
+            $("#errorOnSignIn").show().find('span').text("Invalid account.");
+            return;
+          }
+
+          if ($.trim(password) == "") {
+            $("#formInfoMessage").hide();
+            $("#errorOnSignIn").show().find('span').text("Could not retrieve account stored in Keychain. Press the button below the Import Wallet.");
+            return;
+          }
+
+          window.pinType = "signin";          
+          $(".pin-wrap").addClass("open");
+      }
     </script>    
   </head>
   <body>

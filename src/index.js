@@ -27,6 +27,7 @@ const renderDefault = () => {
 };
 
 const renderOrainScan = () => {
+  window.lcd = process.env.REACT_APP_LCD || 'https://lcd.orai.io';
   $(() => {
     // remove default mainstyle
     const oraiscanWalletBase =
