@@ -22,6 +22,8 @@ const Pin = ({
     closePin,
     setUser,
     setEncryptedPrivateKey,
+    formData,
+    setFormData,
 }) => {
     const cosmos = window.cosmos;
 
@@ -56,7 +58,8 @@ const Pin = ({
         }
 
         if (pinArray.length === 5) {
-            pinType === "confirm" || pinType === "signin" || pinType === "tx" ? evaluatePin() : encryptMnemonic();
+            pinType === "confirm" || pinType === "signin" || pinType === "tx" || pinType === "confirm-encryted-mnemonics"
+                ? evaluatePin() : encryptMnemonic();
         }
     };
 
@@ -67,8 +70,8 @@ const Pin = ({
             setTimeout(() => {
                 const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
                 const address = cosmos.getAddress(childKey);
-                const {privateKey} = childKey;
-                console.log('PRIVATE KEY', Buffer.from(privateKey).toString('hex'));
+                // const { privateKey } = childKey;
+                // console.log('PRIVATE KEY', Buffer.from(privateKey).toString('hex'));
 
                 setPinEvaluateStatus("success");
                 setTimeout(() => {
@@ -93,6 +96,13 @@ const Pin = ({
                         }
                     } else if (pinType === "tx") {
                         onChildKey(childKey);
+                    } else if (pinType === "confirm-encryted-mnemonics") {
+                        setFormData(
+                            Object.assign({}, formData, {
+                                address: address,
+                            })
+                        );
+                        nextStep();
                     }
                 }, 300);
             }, 200);

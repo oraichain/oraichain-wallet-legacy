@@ -23,6 +23,7 @@ import NotFoundContainer from "src/containers/NotFoundContainer";
 import Home from "src/components/Home";
 import GenerateMnemonics from "src/components/GenerateMnemonics";
 import ImportWalletWithMnemonics from "src/components/ImportWalletWithMnemonics";
+import ImportWalletWithEncryptedMnemonics from "./components/ImportWalletWithEncryptedMnemonics";
 import ImportWalletWithPrivateKey from "src/components/ImportWalletWithPrivateKey";
 
 const url = new window.URL(window.location.href);
@@ -99,6 +100,11 @@ const App = ({}) => {
                             exact
                             path={pagePaths.IMPORT_WALLET_WITH_MNEMONICS}
                             component={ImportWalletWithMnemonics}
+                        />
+                        <UnauthenticatedRoute
+                            exact
+                            path={pagePaths.IMPORT_WALLET_WITH_ENCRYPTED_MNEMONICS}
+                            component={ImportWalletWithEncryptedMnemonics}
                         />
                         <UnauthenticatedRoute
                             exact

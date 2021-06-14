@@ -113,6 +113,18 @@ const SignIn = ({ setUser }) => {
                     </Button>
                 </div>
 
+                <div className="d-flex flex-row justify-content-center mb-3">
+                    <Button
+                        variant="secondary"
+                        size="lg"
+                        onClick={() => {
+                            history.push(`${pagePaths.IMPORT_WALLET_WITH_ENCRYPTED_MNEMONICS}${history.location.search}`);
+                        }}
+                    >
+                        Import Wallet With Encrypted Mnemonics
+                    </Button>
+                </div>
+
                 <div className="d-flex flex-row justify-content-center mt-4 mb-5">
                     <Button
                         variant="secondary"
