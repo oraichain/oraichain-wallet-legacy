@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "oraiwallet"
+    "default": "oraichain-mainnet"
   },
   "targets": {
     "oraichain-mainnet": {

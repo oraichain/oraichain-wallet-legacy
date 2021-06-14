@@ -24,6 +24,7 @@ import Pin from "src/components/Pin";
 import Loading from "src/components/Loading";
 import SliderInput from "src/components/SliderInput";
 import TextArea from "src/components/TextArea";
+import ButtonGroup from "src/components/ButtonGroup";
 import BackButton from "src/components/BackButton";
 import PreviewButton from "src/components/PreviewButton";
 import { gasValues } from "src/consts/gasValues";
@@ -50,11 +51,15 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
         input: yup.string().required("The Input is required").isJSON("The Input must be JSON"),
         output: yup.string().required("The Output is required").isJSON("The Output must be JSON"),
         fees: yup.string().required("Tx Fee is required").isNumeric("Tx Fee must be a number"),
-        gas: yup.number().min(gasValues.MIN, "The Gas must be at least " + gasValues.MIN + ".").max(gasValues.MAX, "The Gas may not be greater than " + gasValues.MAX + ".")
+        gas: yup
+            .number()
+            .min(gasValues.MIN, "The Gas must be at least " + gasValues.MIN + ".")
+            .max(gasValues.MAX, "The Gas may not be greater than " + gasValues.MAX + "."),
     });
 
     const methods = useForm({
         defaultValues: {
+            user: user.account,
             gas: 200000,
         },
         resolver: yupResolver(schema),
@@ -170,7 +175,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                         <FormCard>
                             {jsonSrc ? (
                                 <>
-                                    <div className="d-flex flex-row justify-content-between align-items-center mb-4">
+                                    <ButtonGroup>
                                         <BackButton
                                             onClick={() => {
                                                 setJsonSrc(null);
@@ -190,7 +195,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                         >
                                             View on oraiscan
                                         </PreviewButton>
-                                    </div>
+                                    </ButtonGroup>
 
                                     <div className="w-100 overflow-auto">
                                         <ReactJson
@@ -246,7 +251,12 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                                 <Label htmlFor="description">Description:</Label>
                                             </div>
                                             <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                                <TextField variant="primary" type="text" name="description" id="description" />
+                                                <TextField
+                                                    variant="primary"
+                                                    type="text"
+                                                    name="description"
+                                                    id="description"
+                                                />
                                                 <ErrorMessage
                                                     errors={formState.errors}
                                                     name="description"
@@ -300,11 +310,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                                 <Label htmlFor="output">Output(JSON):</Label>
                                             </div>
                                             <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
-                                                <TextArea
-                                                    variant="primary"
-                                                    name="output"
-                                                    id="output"
-                                                />
+                                                <TextArea variant="primary" name="output" id="output" />
                                                 <ErrorMessage
                                                     errors={formState.errors}
                                                     name="output"
@@ -362,8 +368,11 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                                             </div>
                                         </div>
 
-                                        <div className="text-right">
-                                            <ArrowButton type="submit">Set</ArrowButton>
+                                        <div className="row">
+                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center"></div>
+                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                                <ArrowButton type="submit">Set</ArrowButton>
+                                            </div>
                                         </div>
                                     </form>
                                 </FormProvider>
