@@ -10,8 +10,8 @@ const render = () => {
   // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
   reportWebVitals(console.log);
   const searchParams = new URLSearchParams(window.location.search);
-  const domain = searchParams.get('domain') || localStorage.get('domain');
-  localStorage.set('domain', domain);
+  const domain = searchParams.get('domain') || localStorage.getItem('domain');
+  localStorage.setItem('domain', domain);
   switch (domain) {
     case 'oraiscan':
       return renderOrainScan();
