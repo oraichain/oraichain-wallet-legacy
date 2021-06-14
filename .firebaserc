@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "oraiwallet"
+  },
+  "targets": {
+    "oraichain-mainnet": {
+      "hosting": {
+        "testnet-wallet": [
+          "testnet-wallet"
+        ]
+      }
+    }
   }
 }
