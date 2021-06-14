@@ -94,13 +94,15 @@ const renderOrainScan = () => {
         );
       })
       .remove();
+    const oraiscanWalletBase =
+      process.env.REACT_APP_ORAI_SCAN_WALLET || 'https://api.wallet.orai.io';
     $('head').append(`  
-<link rel="stylesheet" href="https://api.wallet.orai.io/css/styles.css" />
-<script src="https://api.wallet.orai.io/js/bundle.js?t=20200225"></script>
-<script src="https://api.wallet.orai.io/js/classie.js"></script>
-<script src="https://api.wallet.orai.io/js/classie.js"></script>
-<script src="https://api.wallet.orai.io/js/input.js"></script>
-<script src="https://api.wallet.orai.io/js/pin.js?t=20210524"></script>
+<link rel="stylesheet" href="${oraiscanWalletBase}/css/styles.css" />
+<script src="${oraiscanWalletBase}/js/bundle.js?t=20200225"></script>
+<script src="${oraiscanWalletBase}/js/classie.js"></script>
+<script src="${oraiscanWalletBase}/js/classie.js"></script>
+<script src="${oraiscanWalletBase}/js/input.js"></script>
+<script src="${oraiscanWalletBase}/js/pin.js?t=20210524"></script>
 `);
     window.onload = () => $('#app').show();
   });
