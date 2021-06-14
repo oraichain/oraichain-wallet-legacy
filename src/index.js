@@ -87,19 +87,15 @@ const renderOrainScan = () => {
 
   $(() => {
     // remove default mainstyle
-    $('head>link')
-      .filter((i, e) => {
-        return ['bootstrap.min.css', 'styles.css'].includes(
-          e.href.split('/').pop()
-        );
-      })
-      .remove();
     const oraiscanWalletBase =
       process.env.REACT_APP_ORAI_SCAN_WALLET || 'https://api.wallet.orai.io';
-    $('head').append(
-      `<link rel="stylesheet" href="${oraiscanWalletBase}/css/styles.css"/>`
-    );
+    $('head>link').each((i, e) => {
+      const name = e.href.split('/').pop();
+      if (['styles.css', 'normalize.custom.css', 'input.css'].includes(name))
+        e.href = `${oraiscanWalletBase}/css/${name}`;
+    });
 
+    // show when css is loaded
     window.onload = () => {
       $('#app').show();
       [
