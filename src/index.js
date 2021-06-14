@@ -1,33 +1,33 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from 'src/App';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'src/index.css';
 import reportWebVitals from './reportWebVitals';
 
-const $ = (window.jQuery = require('jquery'));
+const $ = window.jQuery;
 
 const render = () => {
-  const searchParams = new URLSearchParams(window.location.search);
-  const domain = searchParams.get('domain');
-  switch (domain) {
-    case 'oraiscan':
-      renderOrainScan();
-    default:
-      renderDefault();
-  }
-};
-
-const renderDefault = () => {
-  ReactDOM.render(<App />, document.getElementById('app'));
-
   // If you want to start measuring performance in your app, pass a function
   // to log results (for example: reportWebVitals(console.log))
   // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
   reportWebVitals(console.log);
+  const searchParams = new URLSearchParams(window.location.search);
+  const domain = searchParams.get('domain');
+  switch (domain) {
+    case 'oraiscan':
+      return renderOrainScan();
+    default:
+      return renderDefault();
+  }
+};
+
+const renderDefault = () => {
+  const App = require('src/App').default;
+  require('bootstrap/dist/css/bootstrap.min.css');
+  require('src/index.css');
+  ReactDOM.render(<App />, document.getElementById('app'));
 };
 
 const renderOrainScan = () => {
+  console.log('render oraiscan');
   $('#app').hide().html(`<div class="inner">
   <h1><img src="img/keystation_logo_.png" alt="" width="145"></h1>
   <h2>Sign In</h2>
@@ -96,16 +96,28 @@ const renderOrainScan = () => {
       .remove();
     const oraiscanWalletBase =
       process.env.REACT_APP_ORAI_SCAN_WALLET || 'https://api.wallet.orai.io';
-    $('head').append(`  
-<link rel="stylesheet" href="${oraiscanWalletBase}/css/styles.css" />
-<script src="${oraiscanWalletBase}/js/bundle.js?t=20200225"></script>
-<script src="${oraiscanWalletBase}/js/classie.js"></script>
-<script src="${oraiscanWalletBase}/js/classie.js"></script>
-<script src="${oraiscanWalletBase}/js/input.js"></script>
-<script src="${oraiscanWalletBase}/js/pin.js?t=20210524"></script>
-`);
-    window.onload = () => $('#app').show();
+    $('head').append(
+      `<link rel="stylesheet" href="${oraiscanWalletBase}/css/styles.css"/>`
+    );
+
+    window.onload = () => {
+      $('#app').show();
+      [
+        '/js/bundle.js?t=20200225',
+        '/js/classie.js',
+        '/js/input.js',
+        '/js/pin.js?t=20210524'
+      ].forEach((src) => scriptc(oraiscanWalletBase + src));
+    };
   });
+};
+
+const scriptc = (src) => {
+  var __d = document;
+  var __h = __d.getElementsByTagName('head')[0];
+  var s = __d.createElement('script');
+  s.setAttribute('src', src);
+  __h.appendChild(s);
 };
 
 render();
