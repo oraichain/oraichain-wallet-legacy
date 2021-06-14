@@ -5,7 +5,6 @@ import PropTypes from "prop-types";
 import _ from "lodash";
 import { FormProvider, useForm } from "react-hook-form";
 import { pagePaths } from "src/consts/pagePaths";
-import { anotherAppLogin } from "src/utils";
 import Pin from "src/components/Pin";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -43,7 +42,7 @@ const Auth = ({ user, removeUser }) => {
                 <Pin
                     pinType="confirm"
                     walletName={user.account}
-                    encryptedMnemonics={watch("password")}
+                    encryptedPassword={watch("password")}
                     closePin={() => {
                         window.close();
                     }}

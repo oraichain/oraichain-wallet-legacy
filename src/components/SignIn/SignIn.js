@@ -156,7 +156,7 @@ const SignIn = ({ setUser }) => {
                         step={step}
                         pinType="signin"
                         walletName={pinData?.walletName}
-                        encryptedMnemonics={pinData?.password}
+                        encryptedPassword={pinData?.password}
                         setStep={setStep}
                         setUser={setUser}
                     />

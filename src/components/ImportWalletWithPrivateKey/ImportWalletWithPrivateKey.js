@@ -5,11 +5,9 @@ import _ from "lodash";
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import * as bip32 from "bip32";
-
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
 import { pagePaths } from "src/consts/pagePaths";
-import { getChildkeyFromDecrypted } from "src/utils";
 import ConnectWalletContainer from "src/containers/ConnectWalletContainer";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -22,18 +20,18 @@ import ErrorText from "src/components/ErrorText";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import Pin from "src/components/Pin";
-import EncryptedMnemonic from "src/components/EncryptedMnemonic";
+import EncryptedPrivateKey from "src/components/ImportWalletWithPrivateKey/EncryptedPrivateKey";
 import QuestionLink from "src/components/QuestionLink";
 import styles from "./ImportWalletWithPrivateKey.module.scss";
 
 const cx = cn.bind(styles);
 
-const ImportWalletWithPrivateKey = ({}) => {
+const ImportWalletWithPrivateKey = ({ }) => {
     const history = useHistory();
 
     const schema = yup.object().shape({
         walletName: yup.string().required("The Wallet Name is required"),
-       //  privateKey: yup.string().required("The Private Key is required").isPrivateKey("The Private Key is not valid"),
+        privateKey: yup.string().required("The Private Key is required").isPrivateKey("The Private Key is not valid"),
     });
 
     const methods = useForm({
@@ -43,7 +41,6 @@ const ImportWalletWithPrivateKey = ({}) => {
     const cosmos = window.cosmos;
     const [step, setStep] = useState(1);
     const [encryptedPrivateKey, setEncryptedPrivateKey] = useState("");
-    let address = "";
 
     const formData = watch();
 
@@ -54,9 +51,9 @@ const ImportWalletWithPrivateKey = ({}) => {
         // const { publicKey } = bip32.fromPrivateKey(buffer, Buffer.from(new Array(32)));
         // console.log(getCosmosAddress(publicKey, 'orai'));
 
-    //     privateKey = getChildkeyFromDecrypted(privateKey);
-    //    //  const buffer = Buffer.from(privateKey, "hex");
-    //     console.log(buf2hex(privateKey.privateKey, "hex"));
+        //     privateKey = getChildkeyFromDecrypted(privateKey);
+        //    //  const buffer = Buffer.from(privateKey, "hex");
+        //     console.log(buf2hex(privateKey.privateKey, "hex"));
 
         setStep(2);
     };
@@ -83,12 +80,6 @@ const ImportWalletWithPrivateKey = ({}) => {
                         name="privateKey"
                         render={({ message }) => <ErrorText>{message}</ErrorText>}
                     />
-                    {/* {!formState?.errors?.privateKey && (
-                        <>
-                            {invalidMnemonics && <ErrorText>Mnemonics is not valid.</ErrorText>}
-                            {invalidMnemonicsChecksum && <ErrorText>Invalid mnemonics checksum error.</ErrorText>}
-                        </>
-                    )} */}
                 </FormField>
 
                 <Suggestion text="Enter private key.Private key is encrypted and stored in Keychain." />
@@ -126,29 +117,29 @@ const ImportWalletWithPrivateKey = ({}) => {
                 {step === 1 && importWalletForm}
                 {step === 2 && (
                     <Pin
+                        title="Please set your PIN"
                         setStep={setStep}
                         step={step}
-                        message="Please set your PIN"
-                        pinType="confirm-private-key"
-                    />
-                )}
-                {step === 3 && (
-                    <Pin
-                        setStep={setStep}
-                        step={step}
-                        message="Please confirm your PIN"
-                        pinType="confirm-private-key"
                         privateKey={formData.privateKey}
                         setEncryptedPrivateKey={setEncryptedPrivateKey}
                     />
                 )}
+                {step === 3 && (
+                    <Pin
+                        title="Please confirm your PIN"
+                        setStep={setStep}
+                        step={step}
+                        pinType="confirm"
+                        encryptedPassword={encryptedPrivateKey}
+                    />
+                )}
                 {step === 4 && (
-                    <EncryptedMnemonic
+                    <EncryptedPrivateKey
                         step={step}
                         walletName={formData.walletName}
                         queryParam={history.location.search}
                         setStep={setStep}
-                        encryptedMnemonics={encryptedPrivateKey}
+                        encryptedPrivateKey={encryptedPrivateKey}
                     />
                 )}
                 {step === 5 && (

@@ -5,7 +5,7 @@ import _ from "lodash";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import illustrationImage from "src/assets/img/keychain.png";
-import { getChildkeyFromDecrypted, decryptAES, anotherAppLogin,getChildkeyFromPrivateKey, getOraiAddressFromPrivateKey } from "../../utils";
+import { getChildkeyFromDecrypted, decryptAES, anotherAppLogin, getChildkeyFromPrivateKey, getOraiAddressFromPrivateKey } from "../../utils";
 import FormTitle from "src/components/FormTitle";
 import styles from "./ConnectWallet.module.scss";
 import { pagePaths } from "src/consts/pagePaths";

@@ -9,11 +9,11 @@ import FormField from "src/components/FormField";
 import Label from "src/components/Label";
 import TextField from "src/components/TextField";
 import Button from "src/components/Button";
-import styles from "./Connect.module.scss";
+import styles from "./SaveAccount.module.scss";
 
 const cx = cn.bind(styles);
 
-const EncryptedMnemonic = ({ setStep, step, queryParam, formData }) => {
+const SaveAccount = ({ setStep, step, queryParam, formData }) => {
     const history = useHistory();
 
     const schema = yup.object().shape({
@@ -96,7 +96,7 @@ const EncryptedMnemonic = ({ setStep, step, queryParam, formData }) => {
     );
 };
 
-EncryptedMnemonic.propTypes = {};
-EncryptedMnemonic.defaultProps = {};
+SaveAccount.propTypes = {};
+SaveAccount.defaultProps = {};
 
-export default EncryptedMnemonic;
+export default SaveAccount;

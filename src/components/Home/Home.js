@@ -16,8 +16,10 @@ const Home = () => {
     const location = useLocation();
     const user = useSelector((state) => state.user);
     const [privateKey, setPrivateKey] = useState();
+    const [mnemonics, setMnemonics] = useState();
+    const [encryptedMnemonics, setEncryptedMnemonics] = useState();
     const [showPin, setShowPin] = useState(false);
-    const [enteredPin, setEnteredPin] = useState();
+    // const [enteredPin, setEnteredPin] = useState();
 
     useEffect(() => {
         if (!_.isNil(window?.opener)) {
@@ -29,40 +31,41 @@ const Home = () => {
     }, []);
 
     const exportPrivateKey = () => {
-        const { privateKey } = user.childKey;
-        const privateKeyStr = Buffer.from(privateKey).toString("hex");
+        const { __D } = user.childKey;
+        const privateKeyStr = Buffer.from(__D).toString("hex");
         setPrivateKey(privateKeyStr);
     }
 
-    const decryptPwToMnemonic = () => {
+    const getMnemonicFromStorage = () => {
         const storageKey = user.account + "-password";
-        setShowPin(true);
-        console.log(localStorage.getItem(storageKey))
+        console.log(localStorage.getItem(storageKey));
+        if (storageKey !== "") {
+            setEncryptedMnemonics(localStorage.getItem(storageKey));
+            setShowPin(true);
+        }
     }
 
-    const handleEnterPin = (pin) => {
-        console.log(pin)
+    const decryptPwToMnemonic = (mnemonics) => {
         setShowPin(false);
-        setEnteredPin(pin);
+        setMnemonics(mnemonics);
     }
 
     return (
         <MainLayout>
             <div className={cx("home")}></div>
             <button onClick={exportPrivateKey}> Export Private Key </button>
-            { privateKey && <div className={cx("private-key")}> {privateKey} </div>}
+            {privateKey && <div className={cx("private-key")}> Your private key: {privateKey} </div>}
 
-
-            <button onClick={decryptPwToMnemonic}> Decrypt Password to Mnemonic </button>
-            { privateKey && <div className={cx("private-key")}> {privateKey} </div>}
+            <button onClick={getMnemonicFromStorage}> Decrypt Password to Mnemonic </button>
+            {mnemonics && <div className={cx("mnemonic")}> Your mnemonic: {mnemonics} </div>}
 
             {
                 showPin &&
                 <Pin
-                    type="enter-pin"
-                    message="Please confirm your PIN"
-                    pinType="confirm"
-                    setEnteredPin={handleEnterPin}
+                    title="Enter your PIN"
+                    pinType="decrypt-mnemonics"
+                    encryptedPassword={encryptedMnemonics}
+                    decryptPwToMnemonic={decryptPwToMnemonic}
                 />
             }
         </MainLayout>

@@ -19,12 +19,12 @@ import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import Pin from "src/components/Pin";
 import styles from "./ImportWalletWithEncryptedMnemonics.module.scss";
-import Connect from "./Connect/Connect";
+import SaveAccount from "./SaveAccount/SaveAccount";
 import TextArea from "../TextArea";
 
 const cx = cn.bind(styles);
 
-const ImportWalletWithEncryptedMnemonics = ({}) => {
+const ImportWalletWithEncryptedMnemonics = ({ }) => {
     const history = useHistory();
 
     const schema = yup.object().shape({
@@ -104,7 +104,7 @@ const ImportWalletWithEncryptedMnemonics = ({}) => {
                         setStep={setStep}
                         step={step}
                         pinType="confirm-encryted-mnemonics"
-                        encryptedMnemonics={formData.encryptedMnemonics}
+                        encryptedPassword={formData.encryptedMnemonics}
                         formData={formData}
                         setFormData={setFormData}
                         setEnteredPin={(pin) => {
@@ -113,7 +113,7 @@ const ImportWalletWithEncryptedMnemonics = ({}) => {
                     />
                 )}
                 {step === 3 && (
-                    <Connect
+                    <SaveAccount
                         step={step}
                         formData={formData}
                         queryParam={history.location.search}

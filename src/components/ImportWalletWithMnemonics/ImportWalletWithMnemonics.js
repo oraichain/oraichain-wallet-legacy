@@ -20,7 +20,7 @@ import ErrorText from "src/components/ErrorText";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import Pin from "src/components/Pin";
-import EncryptedMnemonic from "src/components/EncryptedMnemonic";
+import EncryptedMnemonic from "src/components/ImportWalletWithMnemonics/EncryptedMnemonic";
 import QuestionLink from "src/components/QuestionLink";
 import styles from "./ImportWalletWithMnemonics.module.scss";
 
@@ -161,7 +161,7 @@ const ImportWalletWithMnemonics = ({ }) => {
                         setStep={setStep}
                         step={step}
                         pinType="confirm"
-                        encryptedMnemonics={encryptedMnemonics}
+                        encryptedPassword={encryptedMnemonics}
                         setEnteredPin={(pin) => {
                             enteredPin.current = pin;
                         }}

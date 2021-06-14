@@ -120,7 +120,7 @@ const GenerateMnemonics = ({ history }) => {
                                 size="lg"
                                 onClick={() => {
                                     history.push(
-                                        `{${pagePaths.IMPORT_WALLET_WITH_MNEMONICS}${history.location.search}`
+                                        `${pagePaths.IMPORT_WALLET_WITH_MNEMONICS}${history.location.search}`
                                     );
                                 }}
                             >

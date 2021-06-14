@@ -3,7 +3,7 @@ import cn from "classnames/bind";
 import { ArrowBack, Close } from "@material-ui/icons";
 import PropTypes from "prop-types";
 import _ from "lodash";
-import { getChildkeyFromDecrypted, encryptAES, decryptAES, anotherAppLogin } from "src/utils";
+import { getChildkeyFromDecrypted, encryptAES, decryptAES, anotherAppLogin, getChildkeyFromPrivateKey } from "src/utils";
 import styles from "./Pin.module.scss";
 
 const cx = cn.bind(styles);
@@ -14,15 +14,17 @@ const Pin = ({
     pinType,
     walletName,
     mnemonics,
-    encryptedMnemonics,
+    privateKey,
+    encryptedPassword,
+    formData,
     setStep,
     setEnteredPin,
     setEncryptedMnemonics,
+    setEncryptedPrivateKey,
     onChildKey,
     closePin,
     setUser,
-    setEncryptedPrivateKey,
-    formData,
+    decryptPwToMnemonic,
     setFormData,
 }) => {
     const cosmos = window.cosmos;
@@ -58,34 +60,25 @@ const Pin = ({
         }
 
         if (pinArray.length === 5) {
-            if (pinType === "enter-pin") {
-                return handleEnteredPin();
-            }
-            if (pinType === "confirm-private-key") {
-                return confirmPrivateKey();
-            }
-            pinType === "confirm" || pinType === "signin" || pinType === "tx" || pinType === "confirm-encryted-mnemonics" ? evaluatePin() : encryptMnemonic();
+            pinType !== undefined && pinType !== "" ? evaluatePin() : handleSetNewPin();
         }
     };
 
-    const handleEnteredPin = () => {
-        const enteredPin = pinArray.join("");
-        setEnteredPin(enteredPin);
-    }
-
-    const confirmPrivateKey = () => {
-        const enteredPin = pinArray.join("");
-        setEncryptedPrivateKey && setEncryptedPrivateKey(encryptAES(mnemonics, enteredPin));
-        return nextStep();
-    }
-
     const evaluatePin = () => {
         const enteredPin = pinArray.join("");
-        const decryptedMnemonics = decryptAES(encryptedMnemonics, enteredPin);
-        if (decryptedMnemonics !== "") {
-            setTimeout(() => {
-                const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
+        const decryptedPassword = decryptAES(encryptedPassword, enteredPin);
+
+        if (decryptedPassword !== "") {
+            if (pinType === "decrypt-mnemonics") {
+                decryptPwToMnemonic(decryptedPassword);
+                return;
+            }
+
+            const childKey = getChildKey(decryptedPassword);
+
+            if (childKey !== "") {
                 const address = cosmos.getAddress(childKey);
+                console.log("pinData", { childKey, address });
                 // const { privateKey } = childKey;
                 // console.log('PRIVATE KEY', Buffer.from(privateKey).toString('hex'));
 
@@ -121,24 +114,40 @@ const Pin = ({
                         nextStep();
                     }
                 }, 300);
-            }, 200);
-        } else {
-            setTimeout(() => {
-                setPinEvaluateStatus("error");
-                setTimeout(() => {
-                    setPinEvaluateStatus("");
-                    setPinArray([]);
-                }, 300);
-            }, 200);
+
+                return setEnteredPin && setEnteredPin(enteredPin);
+            }
         }
-        setEnteredPin?.(enteredPin);
+
+        setTimeout(() => {
+            setPinEvaluateStatus("error");
+            setTimeout(() => {
+                setPinEvaluateStatus("");
+                setPinArray([]);
+            }, 300);
+        }, 200);
     };
 
-    const encryptMnemonic = () => {
+    const getChildKey = (decryptedPassword) => {
+        let childKey = "";
+        try {
+            childKey = getChildkeyFromDecrypted(decryptedPassword);
+        } catch (e) {
+            try {
+                childKey = getChildkeyFromPrivateKey(decryptedPassword);
+            } catch (e) {
+                return "";
+            }
+        }
+        return childKey;
+    }
+
+    const handleSetNewPin = () => {
         const enteredPin = pinArray.join("");
-        setEncryptedMnemonics(encryptAES(mnemonics, enteredPin));
+        setEncryptedPrivateKey && setEncryptedPrivateKey(encryptAES(privateKey, enteredPin));
+        setEncryptedMnemonics && setEncryptedMnemonics(encryptAES(mnemonics, enteredPin));
         nextStep();
-    };
+    }
 
     const NumPad = () => (
         <div className={cx("numpad")}>
