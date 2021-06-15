@@ -8,6 +8,7 @@ import _ from "lodash";
 import { pagePaths } from "src/consts/pagePaths";
 import MainLayout from "src/components/MainLayout";
 import styles from "./Home.module.scss";
+import { isMnemonicsValid } from "src/utils";
 
 const cx = cn.bind(styles);
 
@@ -47,7 +48,7 @@ const Home = () => {
 
     const decryptPwToMnemonic = (mnemonics) => {
         setShowPin(false);
-        setMnemonics(mnemonics);
+        mnemonics && setMnemonics(mnemonics);
     }
 
     return (
@@ -57,15 +58,21 @@ const Home = () => {
             {privateKey && <div className={cx("private-key")}> Your private key: {privateKey} </div>}
 
             <button onClick={getMnemonicFromStorage}> Decrypt Password to Mnemonic </button>
-            {mnemonics && <div className={cx("mnemonic")}> Your mnemonic: {mnemonics} </div>}
+            {mnemonics && (
+                isMnemonicsValid(mnemonics) ? (
+                    <div className={cx("mnemonic")}> Your mnemonic: {mnemonics} </div>
+                ) : (
+                    <div className={cx("mnemonic")}> Unable to decrypt to a suitable mnemonic </div>
+                )
+            )}
 
             {
                 showPin &&
                 <Pin
                     title="Enter your PIN"
                     pinType="decrypt-mnemonics"
+                    closePin={decryptPwToMnemonic}
                     encryptedPassword={encryptedMnemonics}
-                    decryptPwToMnemonic={decryptPwToMnemonic}
                 />
             }
         </MainLayout>

@@ -54,9 +54,7 @@ const SignIn = ({ setUser }) => {
     }
 
     const onSubmit = (data) => {
-        console.log("on submit: ", data);
         const password = data.password || localStorage.getItem(data.walletName + "-password") || "";
-        console.log("on password submit: ", password);
         if (password === "") {
             setInvalidMnemonics(true);
         } else {

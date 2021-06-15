@@ -1,16 +1,15 @@
-import { React, useState, useRef } from "react";
+import { React, useState } from "react";
 import cn from "classnames/bind";
 import _ from "lodash";
-import { ArrowBack, Close } from "@material-ui/icons";
+import { Close } from "@material-ui/icons";
 import PropTypes from "prop-types";
 import { getChildkeyFromDecrypted, encryptAES, decryptAES, anotherAppLogin, getChildkeyFromPrivateKey } from "src/utils";
 import styles from "./Pin.module.scss";
-import { useEffect } from "react";
 
 const cx = cn.bind(styles);
 
 const randomNumbers = _.shuffle(_.range(10));
-let indexNum = 0;
+const randomCharacters = _.shuffle(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']);
 
 const Pin = ({
     title,
@@ -28,7 +27,6 @@ const Pin = ({
     onChildKey,
     closePin,
     setUser,
-    decryptPwToMnemonic,
     setFormData,
 }) => {
     const cosmos = window.cosmos;
@@ -73,8 +71,8 @@ const Pin = ({
         const decryptedPassword = decryptAES(encryptedPassword, enteredPin);
 
         if (decryptedPassword !== "") {
-            if (pinType === "decrypt-mnemonics") {
-                decryptPwToMnemonic(decryptedPassword);
+            if (pinType === "decrypt-mnemonics") { 
+                closePin && closePin(decryptedPassword);
                 return;
             }
 
@@ -153,129 +151,58 @@ const Pin = ({
         nextStep();
     }
 
-    const getRandomNum = () => {
-        const num = randomNumbers[indexNum++];
-        if (indexNum === 10) {
-            indexNum = 0;
+    const NumPad = () => {
+        const shuffledNumPad = [];
+
+        for (let i = 0; i < 10; i++) {
+            const num = randomNumbers[i];
+            shuffledNumPad.push(
+                <div className={cx("numpad-button")} key={num} onClick={() => onKeyClick(num)}>
+                    {num}
+                </div>
+            );
+            if (i === 8) {
+                shuffledNumPad.push(
+                    <div className={cx("numpad-button")} key="back" onClick={() => onKeyClick("back")}>
+                        ←
+                    </div>
+                );
+            }
         }
-        return (
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(num)}>
-                {num}
+        shuffledNumPad.push(
+            <div className={cx("numpad-button")} key="reset" onClick={() => onKeyClick("reset")}>
+                <Close />
             </div>
         );
-    }
 
-    const NumPad = () => (
-        <div className={cx("numpad")}>
-                {getRandomNum()}
-                {getRandomNum()}
-                {getRandomNum()}
-                {getRandomNum()}
-                {getRandomNum()}
-                {getRandomNum()}
-                {getRandomNum()}
-                {getRandomNum()}
-                {getRandomNum()}
-                <div className={cx("numpad-button")} onClick={() => onKeyClick("back")}>
-                    <ArrowBack />
-                </div>
-                {getRandomNum()}
-                <div className={cx("numpad-button")} onClick={() => onKeyClick("reset")}>
-                    <Close />
-                </div>
-            </div>
-    );
+        return <div className={cx("numpad")}>{shuffledNumPad}</div>
+    };
 
     const CharPad = () => {
         const rows = [];
 
-            ["Q", "W", "E", "R", "T", "Y"].forEach((char) => {
-                rows.push(
-                    <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-                        {char}
-                    </div>
-                );
-            });
-            ["Q", "W", "E", "R", "T", "Y"].forEach((char) => {
-                rows.push(
-                    <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-                        {char}
-                    </div>
-                );
-            });
-            ["Q", "W", "E", "R", "T", "Y"].forEach((char) => {
-                rows.push(
-                    <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-                        {char}
-                    </div>
-                );
-            });
-            ["Q", "W", "E", "R", "T", "Y"].forEach((char) => {
-                rows.push(
-                    <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-                        {char}
-                    </div>
-                );
-            });
-
-           
-
-        // rows.push(
-        //     <div className={cx("charpad-row")} key="charpad-row-2">
-        //         {["A", "S", "D", "F", "G", "H", "J"].map((char) => (
-        //             <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-        //                 {char}
-        //             </div>
-        //         ))}
-        //     </div>
-        // );
-
-        // rows.push(
-        //     <div className={cx("charpad-row")} key="charpad-row-2">
-        //         {["A", "S", "D", "F", "G", "H", "J"].map((char) => (
-        //             <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-        //                 {char}
-        //             </div>
-        //         ))}
-        //     </div>
-        // );
-
-        // rows.push(
-        //     <div className={cx("charpad-row")} key="charpad-row-2">
-        //         {["A", "S", "D", "F", "G", "H", "J"].map((char) => (
-        //             <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-        //                 {char}
-        //             </div>
-        //         ))}
-        //     </div>
-        // );
-
-        // rows.push(
-        //     <div className={cx("charpad-row")} key="charpad-row-3">
-        //         {["back", "Z", "X", "C", "V", "B", "N", "M", "reset"].map((char) => {
-        //             switch (char) {
-        //                 case "back":
-        //                     return (
-        //                         <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick("back")}>
-        //                             <ArrowBack />
-        //                         </div>
-        //                     );
-        //                 case "reset":
-        //                     return (
-        //                         <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick("reset")}>
-        //                             <Close />
-        //                         </div>
-        //                     );
-        //                 default:
-        //                     return (
-        //                         <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-        //                             {char}
-        //                         </div>
-        //                     );
-        //             }
-        //         })}
-        //     </div>
-        // );
+        for (let i = 0; i < 26; i++) {
+            const char = randomCharacters[i];
+            rows.push(
+                <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
+                    {char}
+                </div>
+            );
+            if (i === 20) {
+                
+            }
+        }
+        rows.push(
+            <div className={cx("charpad-button")} key="back" onClick={() => onKeyClick("back")}>
+                ←
+            </div>
+        );
+        rows.push(
+            <div className={cx("charpad-button")} key="reset" onClick={() => onKeyClick("reset")}>
+                <Close />
+            </div>
+        );
+        
 
         return <div className={cx("charpad")}> {rows} </div>;
     };
@@ -287,7 +214,7 @@ const Pin = ({
                     className={cx("close-button")}
                     onClick={() => {
                         prevStep();
-                        closePin?.();
+                        closePin && closePin();
                     }}
                 >
                     <Close className={cx("close-button-icon")} />
