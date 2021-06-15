@@ -185,7 +185,7 @@ const Transaction = ({ user, showAlertBox }) => {
                                 closePin={() => {
                                     setOpenPin(false);
                                 }}
-                                encryptedMnemonics={getValues("password")}
+                                encryptedPassword={getValues("password")}
                             />
                         </FormContainer>
                     ) : (

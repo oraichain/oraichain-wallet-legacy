@@ -1,12 +1,15 @@
 import { React, useState } from "react";
 import cn from "classnames/bind";
-import { ArrowBack, Close } from "@material-ui/icons";
-import PropTypes from "prop-types";
 import _ from "lodash";
-import { getChildkeyFromDecrypted, encryptAES, decryptAES, anotherAppLogin } from "src/utils";
+import { Close } from "@material-ui/icons";
+import PropTypes from "prop-types";
+import { getChildkeyFromDecrypted, encryptAES, decryptAES, anotherAppLogin, getChildkeyFromPrivateKey } from "src/utils";
 import styles from "./Pin.module.scss";
 
 const cx = cn.bind(styles);
+
+const randomNumbers = _.shuffle(_.range(10));
+const randomCharacters = _.shuffle(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']);
 
 const Pin = ({
     title,
@@ -14,13 +17,17 @@ const Pin = ({
     pinType,
     walletName,
     mnemonics,
-    encryptedMnemonics,
+    privateKey,
+    encryptedPassword,
+    formData,
     setStep,
     setEnteredPin,
     setEncryptedMnemonics,
+    setEncryptedPrivateKey,
     onChildKey,
     closePin,
     setUser,
+    setFormData,
 }) => {
     const cosmos = window.cosmos;
 
@@ -55,17 +62,28 @@ const Pin = ({
         }
 
         if (pinArray.length === 5) {
-            pinType === "confirm" || pinType === "signin" || pinType === "tx" ? evaluatePin() : encryptMnemonic();
+            pinType !== undefined && pinType !== "" ? evaluatePin() : handleSetNewPin();
         }
     };
 
     const evaluatePin = () => {
         const enteredPin = pinArray.join("");
-        const decryptedMnemonics = decryptAES(encryptedMnemonics, enteredPin);
-        if (decryptedMnemonics !== "") {
-            setTimeout(() => {
-                const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
+        const decryptedPassword = decryptAES(encryptedPassword, enteredPin);
+
+        if (decryptedPassword !== "") {
+            if (pinType === "decrypt-mnemonics") { 
+                closePin && closePin(decryptedPassword);
+                return;
+            }
+
+            const childKey = getChildKey(decryptedPassword);
+
+            if (childKey !== "") {
                 const address = cosmos.getAddress(childKey);
+                console.log("pinData", { childKey, address });
+                // const { privateKey } = childKey;
+                // console.log('PRIVATE KEY', Buffer.from(privateKey).toString('hex'));
+
                 setPinEvaluateStatus("success");
                 setTimeout(() => {
                     if (pinType === "confirm") {
@@ -89,117 +107,102 @@ const Pin = ({
                         }
                     } else if (pinType === "tx") {
                         onChildKey(childKey);
+                    } else if (pinType === "confirm-encryted-mnemonics") {
+                        setFormData(
+                            Object.assign({}, formData, {
+                                address: address,
+                            })
+                        );
+                        nextStep();
                     }
                 }, 300);
-            }, 200);
-        } else {
-            setTimeout(() => {
-                setPinEvaluateStatus("error");
-                setTimeout(() => {
-                    setPinEvaluateStatus("");
-                    setPinArray([]);
-                }, 300);
-            }, 200);
+
+                return setEnteredPin && setEnteredPin(enteredPin);
+            }
         }
-        setEnteredPin?.(enteredPin);
+
+        setTimeout(() => {
+            setPinEvaluateStatus("error");
+            setTimeout(() => {
+                setPinEvaluateStatus("");
+                setPinArray([]);
+            }, 300);
+        }, 200);
     };
 
-    const encryptMnemonic = () => {
+    const getChildKey = (decryptedPassword) => {
+        let childKey = "";
+        try {
+            childKey = getChildkeyFromDecrypted(decryptedPassword);
+        } catch (e) {
+            try {
+                childKey = getChildkeyFromPrivateKey(decryptedPassword);
+            } catch (e) {
+                return "";
+            }
+        }
+        return childKey;
+    }
+
+    const handleSetNewPin = () => {
         const enteredPin = pinArray.join("");
-        setEncryptedMnemonics(encryptAES(mnemonics, enteredPin));
+        setEncryptedPrivateKey && setEncryptedPrivateKey(encryptAES(privateKey, enteredPin));
+        setEncryptedMnemonics && setEncryptedMnemonics(encryptAES(mnemonics, enteredPin));
         nextStep();
-    };
+    }
 
-    const NumPad = () => (
-        <div className={cx("numpad")}>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(7)}>
-                7
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(8)}>
-                8
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(9)}>
-                9
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(4)}>
-                4
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(5)}>
-                5
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(6)}>
-                6
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(1)}>
-                1
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(2)}>
-                2
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(3)}>
-                3
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick("back")}>
-                <ArrowBack />
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick(0)}>
-                0
-            </div>
-            <div className={cx("numpad-button")} onClick={() => onKeyClick("reset")}>
+    const NumPad = () => {
+        const shuffledNumPad = [];
+
+        for (let i = 0; i < 10; i++) {
+            const num = randomNumbers[i];
+            shuffledNumPad.push(
+                <div className={cx("numpad-button")} key={num} onClick={() => onKeyClick(num)}>
+                    {num}
+                </div>
+            );
+            if (i === 8) {
+                shuffledNumPad.push(
+                    <div className={cx("numpad-button")} key="back" onClick={() => onKeyClick("back")}>
+                        ←
+                    </div>
+                );
+            }
+        }
+        shuffledNumPad.push(
+            <div className={cx("numpad-button")} key="reset" onClick={() => onKeyClick("reset")}>
                 <Close />
             </div>
-        </div>
-    );
+        );
+
+        return <div className={cx("numpad")}>{shuffledNumPad}</div>
+    };
 
     const CharPad = () => {
         const rows = [];
 
+        for (let i = 0; i < 26; i++) {
+            const char = randomCharacters[i];
+            rows.push(
+                <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
+                    {char}
+                </div>
+            );
+            if (i === 20) {
+                
+            }
+        }
         rows.push(
-            <div className={cx("charpad-row")} key="charpad-row-1">
-                {["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"].map((char) => (
-                    <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-                        {char}
-                    </div>
-                ))}
+            <div className={cx("charpad-button")} key="back" onClick={() => onKeyClick("back")}>
+                ←
             </div>
         );
-
         rows.push(
-            <div className={cx("charpad-row")} key="charpad-row-2">
-                {["A", "S", "D", "F", "G", "H", "J", "K", "L"].map((char) => (
-                    <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-                        {char}
-                    </div>
-                ))}
+            <div className={cx("charpad-button")} key="reset" onClick={() => onKeyClick("reset")}>
+                <Close />
             </div>
         );
-
-        rows.push(
-            <div className={cx("charpad-row")} key="charpad-row-3">
-                {["back", "Z", "X", "C", "V", "B", "N", "M", "reset"].map((char) => {
-                    switch (char) {
-                        case "back":
-                            return (
-                                <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick("back")}>
-                                    <ArrowBack />
-                                </div>
-                            );
-                        case "reset":
-                            return (
-                                <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick("reset")}>
-                                    <Close />
-                                </div>
-                            );
-                        default:
-                            return (
-                                <div className={cx("charpad-button")} key={char} onClick={() => onKeyClick(char)}>
-                                    {char}
-                                </div>
-                            );
-                    }
-                })}
-            </div>
-        );
+        
 
         return <div className={cx("charpad")}> {rows} </div>;
     };
@@ -211,7 +214,7 @@ const Pin = ({
                     className={cx("close-button")}
                     onClick={() => {
                         prevStep();
-                        closePin?.();
+                        closePin && closePin();
                     }}
                 >
                     <Close className={cx("close-button-icon")} />

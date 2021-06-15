@@ -14,7 +14,6 @@ import SignInContainer from "src/containers/SignInContainer";
 import UnauthenticatedRoute from "src/containers/UnauthenticatedRoute";
 import AuthenticatedRoute from "src/containers/AuthenticatedRoute";
 import AuthContainer from "src/containers/AuthContainer";
-import ImportWalletContainer from "src/containers/ImportWalletContainer";
 import SendTokensContainer from "src/containers/SendTokensContainer";
 import AlertBoxContainer from "src/containers/AlertBoxContainer";
 import TransactionContainer from "src/containers/TransactionContainer";
@@ -23,12 +22,19 @@ import GetRequestContainer from "src/containers/GetRequestContainer";
 import NotFoundContainer from "src/containers/NotFoundContainer";
 import Home from "src/components/Home";
 import GenerateMnemonics from "src/components/GenerateMnemonics";
+import ImportWalletWithMnemonics from "src/components/ImportWalletWithMnemonics";
+import ImportWalletWithEncryptedMnemonics from "./components/ImportWalletWithEncryptedMnemonics";
+import ImportWalletWithPrivateKey from "src/components/ImportWalletWithPrivateKey";
 
 const url = new window.URL(window.location.href);
-const network =  url.searchParams.get("network") || process.env.REACT_APP_NETWORK || window.localStorage.getItem("wallet.network") || "Oraichain";
+const network =
+    url.searchParams.get("network") ||
+    process.env.REACT_APP_NETWORK ||
+    window.localStorage.getItem("wallet.network") ||
+    "Oraichain";
 const path = url.searchParams.get("path");
 const lcd =
-  process.env.REACT_APP_LCD || url.searchParams.get("lcd") || (networks[network]?.lcd ?? "http://localhost:1317");
+    process.env.REACT_APP_LCD || url.searchParams.get("lcd") || (networks[network]?.lcd ?? "http://localhost:1317");
 // init cosmos version
 const cosmos = new Cosmos(lcd, network);
 const symbol = networks[network]?.denom ?? "orai";
@@ -42,34 +48,45 @@ window.cosmos = cosmos;
 window.localStorage.setItem("wallet.network", network);
 
 yup.addMethod(yup.string, "isNumeric", function (message) {
-  return this.test({
-    name: "isNumeric",
-    exclusive: false,
-    message: _.isNil(message) ? "Value must be a number." : message,
-    test(value) {
-      return !isNaN(value);
-    },
-  });
+    return this.test({
+        name: "isNumeric",
+        exclusive: false,
+        message: _.isNil(message) ? "Value must be a number." : message,
+        test(value) {
+            return !isNaN(value);
+        },
+    });
 });
 
 yup.addMethod(yup.string, "isJSON", function (message) {
-  return this.test({
-    name: "isJSON",
-    exclusive: false,
-    message: _.isNil(message) ? "Value must be JSON." : message,
-    test(value) {
-      try {
-        JSON.parse(value);
-      } catch (e) {
-        return false;
-      }
-      return true;
-    },
-  });
+    return this.test({
+        name: "isJSON",
+        exclusive: false,
+        message: _.isNil(message) ? "Value must be JSON." : message,
+        test(value) {
+            try {
+                JSON.parse(value);
+            } catch (e) {
+                return false;
+            }
+            return true;
+        },
+    });
 });
 
-const App = ({ }) => {
-  let persistor = persistStore(store);
+yup.addMethod(yup.string, "isPrivateKey", function (message) {
+    return this.test({
+        name: "isPrivateKey",
+        exclusive: false,
+        message: _.isNil(message) ? "Value must be private key." : message,
+        test(value) {
+            return value.length === 60 + cosmos.bech32MainPrefix.length;
+        },
+    });
+});
+
+const App = ({}) => {
+    let persistor = persistStore(store);
 
     return (
         <Provider store={store}>
@@ -79,7 +96,21 @@ const App = ({ }) => {
                         <Route path={pagePaths.AUTH} component={AuthContainer} />
                         <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
                         <UnauthenticatedRoute exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
-                        <UnauthenticatedRoute exact path={pagePaths.IMPORT_WALLET} component={ImportWalletContainer} />
+                        <UnauthenticatedRoute
+                            exact
+                            path={pagePaths.IMPORT_WALLET_WITH_MNEMONICS}
+                            component={ImportWalletWithMnemonics}
+                        />
+                        <UnauthenticatedRoute
+                            exact
+                            path={pagePaths.IMPORT_WALLET_WITH_ENCRYPTED_MNEMONICS}
+                            component={ImportWalletWithEncryptedMnemonics}
+                        />
+                        <UnauthenticatedRoute
+                            exact
+                            path={pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}
+                            component={ImportWalletWithPrivateKey}
+                        />
                         <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
                         <AuthenticatedRoute exact path={pagePaths.TRANSACTION} component={TransactionContainer} />
                         <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
@@ -100,10 +131,10 @@ const App = ({ }) => {
                     </Switch>
                 </Router>
 
-        <AlertBoxContainer />
-      </PersistGate>
-    </Provider>
-  );
+                <AlertBoxContainer />
+            </PersistGate>
+        </Provider>
+    );
 };
 
 export default App;

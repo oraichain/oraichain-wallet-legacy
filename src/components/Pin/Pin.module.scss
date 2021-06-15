@@ -1,8 +1,9 @@
 .pin {
-    width: 100%;
+    // width: 85%;
+    margin: 0 auto;
     padding: 32px;
     border-radius: 10px;
-    background-color: #192B40;
+    background: #192B40;
 
     &-header {
         display: flex;
@@ -11,8 +12,6 @@
         align-items: center;
         margin-bottom: 32px;
     }
-
-    &-body {}
 }
 
 .close-button {
@@ -30,7 +29,7 @@
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
-    font-size: 32px;
+    font-size: 30px;
     line-height: 120%;
     letter-spacing: -0.5px;
     text-align: center;
@@ -48,36 +47,32 @@
 }
 
 .warning {
-    color: #ffc107;
+    color: #f44336;
     font-family: Roboto;
     font-style: normal;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 150%;
     text-align: center;
 }
 
 @keyframes shake {
-
     10%,
     90% {
         transform: translate3d(-1px, 0, 0);
     }
 
     20%,
+    40%,
+    60%,
     80% {
         transform: translate3d(2px, 0, 0);
     }
-
+    
     30%,
     50%,
     70% {
-        transform: translate3d(-4px, 0, 0);
-    }
-
-    40%,
-    60% {
-        transform: translate3d(4px, 0, 0);
+        transform: translate3d(-2px, 0, 0);
     }
 }
 
@@ -116,59 +111,45 @@
 
 .numpad {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 33.3% 33.3% 33.3%;
 
     &-button {
-        color: white;
-        font-family: Roboto;
-        font-style: normal;
-        font-size: 30px;
-        line-height: 130%;
-        text-align: center;
-        letter-spacing: -0.02em;
-        user-select: none;
-        cursor: pointer;
-    }
-}
-
-.charpad {
-    &-row {
-        display: grid;
-        grid-auto-flow: column;
-        grid-gap: 8px;
-
-        margin-bottom: 16px;
-
-        &:nth-child(1) {
-            padding: 0;
-        }
-
-        &:nth-child(2) {
-            padding: 0 8px;
-        }
-
-        &:nth-child(3) {
-            padding: 0 16px;
-        }
-    }
-
-    &-button {
-        border: none;
-        border-radius: 0;
         color: white;
         font-family: Roboto;
         font-style: normal;
         font-weight: normal;
-        font-size: 22px;
         text-align: center;
-        letter-spacing: -0.02em;
+        user-select: none;
+        cursor: pointer;
+        height: 60px;
+        line-height: 3.5em;
+        font-size: 20px;
+
+        svg {
+            font-size: 1.0rem;
+        }
+    }
+}
+
+.charpad {
+    display: grid;
+    grid-template-columns: 14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2%;
+
+    &-button {
+        color: white;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        text-align: center;
         text-transform: uppercase;
         user-select: none;
         cursor: pointer;
+        height: 60px;
+        line-height: 3.5em;
+        font-size: 20px;
 
-        @media (min-width: 576px) {
-            border-radius: 9px;
-            border: 1px solid white;
+        svg {
+            font-size: 1.0rem;
         }
     }
 }

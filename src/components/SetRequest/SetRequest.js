@@ -30,7 +30,6 @@ import PreviewButton from "src/components/PreviewButton";
 import { gasValues } from "src/consts/gasValues";
 import styles from "./SetRequest.module.scss";
 
-// const message = Cosmos.message;
 const cx = cn.bind(styles);
 
 const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
@@ -165,7 +164,7 @@ const SetRequest = ({ user, updateRequestId, showAlertBox }) => {
                             closePin={() => {
                                 setOpenPin(false);
                             }}
-                            encryptedMnemonics={getValues("password")}
+                            encryptedPassword={getValues("password")}
                         />
                     </FormContainer>
                 </AuthLayout>

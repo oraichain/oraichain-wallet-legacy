@@ -1,5 +1,6 @@
 import bech32 from "bech32";
 import * as bip32 from "bip32";
+import * as CryptoJS from 'crypto-js';
 import Message from "@oraichain/cosmosjs";
 import Big from "big.js";
 import { AES, enc } from "crypto-js";
@@ -90,6 +91,37 @@ export const getChildkeyFromDecrypted = (decrypted) => {
     const childKey = bip32.fromPrivateKey(buffer, Buffer.from(new Array(32)));
     return childKey;
 };
+
+export const getChildkeyFromPrivateKey = (privateKey) => {
+    const buffer = Buffer.from(privateKey, "hex");
+    const childKey = bip32.fromPrivateKey(buffer, Buffer.from(new Array(32)));
+    return childKey;
+};
+
+function bech32ify(address, prefix) {
+    const words = bech32.toWords(Buffer.from(address, 'hex'))
+    return bech32.encode(prefix, words)
+}
+
+export function getOraiAddressFromPublicKey(publicKey) {
+    const message = CryptoJS.enc.Hex.parse(publicKey.toString('hex'))
+    const address = CryptoJS.RIPEMD160(CryptoJS.SHA256(message)).toString()
+    const oraiAddress = bech32ify(address, 'orai');
+    return oraiAddress;
+}
+
+export function getOraiAddressFromPrivateKey(privateKey) {
+    const buffer = Buffer.from(privateKey, "hex");
+    const { publicKey } = bip32.fromPrivateKey(buffer, Buffer.from(new Array(32)));
+    const message = CryptoJS.enc.Hex.parse(publicKey.toString('hex'))
+    const address = CryptoJS.RIPEMD160(CryptoJS.SHA256(message)).toString()
+    const oraiAddress = bech32ify(address, 'orai');
+    return oraiAddress;
+}
+
+export function buf2hex(buffer) {
+    return [...new Uint8Array(buffer)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
 
 export const getTxBodySend = (user, to_address, amount, memo) => {
     const cosmos = window.cosmos;

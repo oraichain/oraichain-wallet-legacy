@@ -105,7 +105,7 @@ const SendTokens = ({ user, showAlertBox }) => {
                             closePin={() => {
                                 setOpenPin(false);
                             }}
-                            encryptedMnemonics={getValues("password")}
+                            encryptedPassword={getValues("password")}
                         />
                     </FormContainer>
                 </AuthLayout>

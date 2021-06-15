@@ -2,6 +2,7 @@ import { React, useState } from "react";
 import cn from "classnames/bind";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useForm, FormProvider } from "react-hook-form";
+import { pagePaths } from "src/consts/pagePaths";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
 import FormTitle from "src/components/FormTitle";
@@ -119,7 +120,7 @@ const GenerateMnemonics = ({ history }) => {
                                 size="lg"
                                 onClick={() => {
                                     history.push(
-                                        `/import-wallet${history.location.search}`
+                                        `${pagePaths.IMPORT_WALLET_WITH_MNEMONICS}${history.location.search}`
                                     );
                                 }}
                             >
