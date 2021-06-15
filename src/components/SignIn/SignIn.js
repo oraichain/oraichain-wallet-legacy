@@ -99,7 +99,7 @@ const SignIn = ({ setUser }) => {
                     </Button>
                 </div>
 
-                <div className="d-flex flex-row justify-content-center mb-3">
+                <div className="d-flex flex-row justify-content-center mb-4">
                     <Button
                         variant="secondary"
                         size="lg"
@@ -111,7 +111,7 @@ const SignIn = ({ setUser }) => {
                     </Button>
                 </div>
 
-                <div className="d-flex flex-row justify-content-center mb-3">
+                <div className="d-flex flex-row justify-content-center mb-4">
                     <Button
                         variant="secondary"
                         size="lg"
