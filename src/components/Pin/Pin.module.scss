@@ -1,8 +1,9 @@
 .pin {
-    width: 100%;
+    width: 85%;
+    margin: 0 auto;
     padding: 32px;
     border-radius: 10px;
-    background-color: #192B40;
+    background: #161616;
 
     &-header {
         display: flex;
@@ -30,7 +31,7 @@
     font-family: Roboto;
     font-style: normal;
     font-weight: bold;
-    font-size: 32px;
+    font-size: 30px;
     line-height: 120%;
     letter-spacing: -0.5px;
     text-align: center;
@@ -52,7 +53,7 @@
     font-family: Roboto;
     font-style: normal;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 150%;
     text-align: center;
 }
@@ -116,45 +117,52 @@
 
 .numpad {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: 33.3% 33.3% 33.3%;
 
     &-button {
         color: white;
         font-family: Roboto;
         font-style: normal;
-        font-size: 30px;
-        line-height: 130%;
         text-align: center;
-        letter-spacing: -0.02em;
+        // letter-spacing: -0.02em;
         user-select: none;
         cursor: pointer;
+        height: 60px;
+        line-height: 3.5em;
+        font-size: 20px;
+        svg {
+            font-size: 1.3rem;
+        }
     }
 }
 
 .charpad {
+    display: grid;
+    grid-template-columns: 14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2%;
+
     &-row {
-        display: grid;
-        grid-auto-flow: column;
-        grid-gap: 8px;
+        // display: grid;
+        // grid-auto-flow: column;
+        // grid-gap: 8px;
 
-        margin-bottom: 16px;
+        height: 60px;
+        line-height: 3.5em;
+        font-size: 18px;
 
-        &:nth-child(1) {
-            padding: 0;
-        }
+        // &:nth-child(1) {
+        //     padding: 0;
+        // }
 
-        &:nth-child(2) {
-            padding: 0 8px;
-        }
+        // &:nth-child(2) {
+        //     padding: 0 8px;
+        // }
 
-        &:nth-child(3) {
-            padding: 0 16px;
-        }
+        // &:nth-child(3) {
+        //     padding: 0 16px;
+        // }
     }
 
     &-button {
-        border: none;
-        border-radius: 0;
         color: white;
         font-family: Roboto;
         font-style: normal;
@@ -165,10 +173,5 @@
         text-transform: uppercase;
         user-select: none;
         cursor: pointer;
-
-        @media (min-width: 576px) {
-            border-radius: 9px;
-            border: 1px solid white;
-        }
     }
 }
