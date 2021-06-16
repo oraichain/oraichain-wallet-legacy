@@ -21,7 +21,7 @@ import SetRequestContainer from "src/containers/SetRequestContainer";
 import GetRequestContainer from "src/containers/GetRequestContainer";
 import NotFoundContainer from "src/containers/NotFoundContainer";
 import Home from "src/components/Home";
-import GenerateMnemonics from "src/components/GenerateMnemonics";
+import CreateWallet from "src/components/CreateWallet";
 import ImportWalletWithMnemonics from "src/components/ImportWalletWithMnemonics";
 import ImportWalletWithEncryptedMnemonics from "./components/ImportWalletWithEncryptedMnemonics";
 import ImportWalletWithPrivateKey from "src/components/ImportWalletWithPrivateKey";
@@ -85,7 +85,7 @@ yup.addMethod(yup.string, "isPrivateKey", function (message) {
     });
 });
 
-const App = ({}) => {
+const App = ({ }) => {
     let persistor = persistStore(store);
 
     return (
@@ -95,7 +95,11 @@ const App = ({}) => {
                     <Switch>
                         <Route path={pagePaths.AUTH} component={AuthContainer} />
                         <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
-                        <UnauthenticatedRoute exact path={pagePaths.GENERATE_MNEMONICS} component={GenerateMnemonics} />
+                        <UnauthenticatedRoute
+                            exact
+                            path={pagePaths.CREATE_WALLET}
+                            component={CreateWallet}
+                        />
                         <UnauthenticatedRoute
                             exact
                             path={pagePaths.IMPORT_WALLET_WITH_MNEMONICS}

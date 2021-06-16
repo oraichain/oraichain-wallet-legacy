@@ -1,4 +1,5 @@
 export const pagePaths = {
+    CREATE_WALLET: "/create-wallet",
     SIGNIN: "/signin",
     GENERATE_MNEMONICS: "/generate-mnemonics",
     IMPORT_WALLET_WITH_MNEMONICS: "/import-wallet-with-mnemonics",
