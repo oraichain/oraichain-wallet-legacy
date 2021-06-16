@@ -4,8 +4,8 @@ import PropTypes from "prop-types";
 import styles from "./FormField.module.scss";
 const cx = cn.bind(styles);
 
-const FormField = ({children}) => {
-    return <div className={cx("form-field")}>{children}</div>;
+const FormField = ({children, className = ""}) => {
+    return <div className={cx("form-field", className)}>{children}</div>;
 };
 
 FormField.propTypes = {

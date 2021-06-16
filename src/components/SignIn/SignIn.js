@@ -80,17 +80,16 @@ const SignIn = ({ setUser }) => {
                         render={({ message }) => <ErrorText>{message}</ErrorText>}
                     />
                 </FormField>
-                {invalidMnemonics && (
-                    <FormField>
-                        <TextField type="password" autoComplete="current-password" name="password" className="d-none" />
-                        {invalidMnemonics && (
-                            <ErrorText>
-                                Could not retrieve account stored in Keychain. Press the button below the Import Wallet.
-                            </ErrorText>
-                        )}
-                    </FormField>
-                )}
+                <FormField className={cx("hidden-pw")}>
+                    <TextField type="password" autoComplete="current-password" name="password" />
+                </FormField>
 
+                {invalidMnemonics && (
+                    <ErrorText>
+                        Could not retrieve account stored in Keychain. Press the button below the Import Wallet.
+                    </ErrorText>
+                )}
+            
                 <Suggestion text=" Unavailable in guest mode or incognito mode." />
 
                 <div className="d-flex flex-row justify-content-center mb-4">
@@ -116,10 +115,10 @@ const SignIn = ({ setUser }) => {
                         variant="secondary"
                         size="lg"
                         onClick={() => {
-                            history.push(`${pagePaths.IMPORT_WALLET_WITH_ENCRYPTED_MNEMONICS}${history.location.search}`);
+                            history.push(`${pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}${history.location.search}`);
                         }}
                     >
-                        Import Wallet With Encrypted Mnemonics
+                        Import Wallet With Private Key
                     </Button>
                 </div>
 
@@ -128,10 +127,10 @@ const SignIn = ({ setUser }) => {
                         variant="secondary"
                         size="lg"
                         onClick={() => {
-                            history.push(`${pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}${history.location.search}`);
+                            history.push(`${pagePaths.IMPORT_WALLET_WITH_ENCRYPTED_MNEMONICS}${history.location.search}`);
                         }}
                     >
-                        Import Wallet With Private Key
+                        Import Wallet With Encrypted Mnemonics
                     </Button>
                 </div>
 

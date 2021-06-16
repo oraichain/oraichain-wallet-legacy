@@ -100,7 +100,9 @@ const Pin = ({
                                 account: walletName,
                                 childKey,
                             });
-
+                        
+                        localStorage.setItem(walletName + "-password", encryptedPassword);
+                        
                         if (!_.isNil(window?.opener)) {
                             anotherAppLogin(address, walletName, childKey);
                             return;
