@@ -38,7 +38,7 @@ const SignIn = ({ setUser }) => {
     const methods = useForm({
         resolver: yupResolver(schema),
     });
-    const { handleSubmit, formState, watch } = methods;
+    const { handleSubmit, formState } = methods;
 
     const [step, setStep] = useState(steps.SIGIN_FORM);
     const [pinData, setPinData] = useState({
@@ -136,9 +136,9 @@ const SignIn = ({ setUser }) => {
                 </div>
 
                 <QuestionLink
-                    questionText="Don't have mnemonics?"
-                    linkTo={`${pagePaths.GENERATE_MNEMONICS}${history.location.search}`}
-                    linkText="Generate mnemonics"
+                    questionText="Don't have wallet?"
+                    linkTo={`${pagePaths.CREATE_WALLET}${history.location.search}`}
+                    linkText="Create wallet"
                 />
             </form>
         </FormProvider>

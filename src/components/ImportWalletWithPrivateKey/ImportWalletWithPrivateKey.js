@@ -103,9 +103,9 @@ const ImportWalletWithPrivateKey = ({ }) => {
                 </div>
 
                 <QuestionLink
-                    questionText="Don't have mnemonics?"
-                    linkTo={`${pagePaths.GENERATE_MNEMONICS}${history.location.search}`}
-                    linkText="Generate mnemonics"
+                    questionText="Don't have wallet?"
+                    linkTo={`${pagePaths.CREATE_WALLET}${history.location.search}`}
+                    linkText="Create wallet"
                 />
             </form>
         </FormProvider>

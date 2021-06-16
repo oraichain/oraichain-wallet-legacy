@@ -1,51 +1,69 @@
-import { React, useRef, useState } from "react";
+import { React, useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
 import cn from "classnames/bind";
-import _ from "lodash";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import { useForm, FormProvider } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { ErrorMessage } from "@hookform/error-message";
 import { pagePaths } from "src/consts/pagePaths";
-import { cleanMnemonics, countWords } from "src/utils";
-import ConnectWalletContainer from "src/containers/ConnectWalletContainer";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
 import FormTitle from "src/components/FormTitle";
 import FormField from "src/components/FormField";
 import Label from "src/components/Label";
 import TextField from "src/components/TextField";
-import TextArea from "src/components/TextArea";
-import ErrorText from "src/components/ErrorText";
 import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
-import Pin from "src/components/Pin";
+import styles from "src/components/CreateWallet/CreateWallet.module.scss";
+import copyIcon from "src/assets/icons/copy.svg";
+import { cleanMnemonics, countWords } from "src/utils";
+import ConnectWalletContainer from "src/containers/ConnectWalletContainer";
 import EncryptedMnemonic from "src/components/ImportWalletWithMnemonics/EncryptedMnemonic";
-import QuestionLink from "src/components/QuestionLink";
-import styles from "./ImportWalletWithMnemonics.module.scss";
+import { ErrorMessage } from "@hookform/error-message";
+import ErrorText from "src/components/ErrorText";
+import LoopIcon from '@material-ui/icons/Loop';
+import Pin from "src/components/Pin";
+import TextArea from "src/components/TextArea";
 
 const cx = cn.bind(styles);
 
-const ImportWalletWithMnemonics = ({ }) => {
+const CreateWallet = () => {
     const cosmos = window.cosmos;
     const history = useHistory();
 
     const schema = yup.object().shape({
         walletName: yup.string().required("The Wallet Name is required"),
-        mnemonics: yup.string().required("The Mnemonics is required"),
+        mnemonics: yup.string().required("The Mnemonic is required"),
     });
     const methods = useForm({
         resolver: yupResolver(schema),
     });
-    const { handleSubmit, formState } = methods;
+    const { handleSubmit, setValue, watch, formState } = methods;
 
     const enteredPin = useRef("");
+    const [copied, setCopied] = useState(false);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({});
     const [encryptedMnemonics, setEncryptedMnemonics] = useState("");
     const [invalidMnemonics, setInvalidMnemonics] = useState(false);
     const [invalidMnemonicsChecksum, setInvalidMnemonicsChecksum] = useState(false);
     let address = "";
+
+    const copyToClipboard = () => {
+        setCopied(true);
+        setTimeout(() => {
+            setCopied(false);
+        }, 1000);
+    };
+
+    const generateMnemonic = () => {
+        const mnemonics = cosmos.generateMnemonic(256);
+        setValue("mnemonics", mnemonics);
+    };
+
+    useEffect(() => {
+        generateMnemonic();
+    }, [])
 
     const isMnemonicsValid = (mnemonics, disablechecksum = false) => {
         let validFlag = true;
@@ -83,10 +101,10 @@ const ImportWalletWithMnemonics = ({ }) => {
         }
     };
 
-    const importWalletForm = (
+    const createWalletForm = (
         <FormProvider {...methods}>
             <form onSubmit={handleSubmit(onSubmit)}>
-                <FormTitle>Import Wallet With Mnemonics</FormTitle>
+                <FormTitle>Create wallet</FormTitle>
                 <FormField>
                     <Label>Wallet name</Label>
                     <TextField type="text" name="walletName" />
@@ -98,30 +116,71 @@ const ImportWalletWithMnemonics = ({ }) => {
                 </FormField>
 
                 <FormField>
-                    <Label>Mnemonics</Label>
+                    <div className="d-flex flex-row justify-content-between align-items-center">
+                        <Label>Mnemonic</Label>
+                        <CopyToClipboard
+                            onCopy={copyToClipboard}
+                            text={watch("mnemonics")}
+                        >
+                            <div className={cx("copy-button")}>
+                                <img
+                                    className={cx("copy-button-icon")}
+                                    src={copyIcon}
+                                    alt=""
+                                />
+                                <span
+                                    className={cx("copy-button-text")}
+                                >
+                                    Copy
+                                </span>
+                            </div>
+                        </CopyToClipboard>
+                    </div>
+
                     <TextArea name="mnemonics" />
+
                     <ErrorMessage
                         errors={formState.errors}
                         name="mnemonics"
                         render={({ message }) => <ErrorText>{message}</ErrorText>}
                     />
-                    {!formState?.errors?.mnemonics && (
-                        <>
-                            {invalidMnemonics && <ErrorText>Mnemonics is not valid.</ErrorText>}
-                            {invalidMnemonicsChecksum && <ErrorText>Invalid mnemonics checksum error.</ErrorText>}
-                        </>
+                    {invalidMnemonics && <ErrorText>Mnemonics is not valid.</ErrorText>}
+                    {invalidMnemonicsChecksum && <ErrorText>Invalid mnemonics checksum error.</ErrorText>}
+
+                    {copied && !watch("mnemonics") && (
+                        <div className={cx("copy-message-fail")}>
+                            There is no mnemonic phrase to copy.
+                        </div>
                     )}
+
+                    {copied && watch("mnemonics") && (
+                        <div className={cx("copy-message")}>
+                            Mnemonic phrase is copied.
+                        </div>
+                    )}
+
+                    <div className="mt-2">
+                        <div className={cx("generate-button", "mx-auto")}>
+                            <Button
+                                variant="secondary"
+                                size="lg"
+                                onClick={generateMnemonic}
+                            >
+                                <LoopIcon />Generate Mnemonic
+                            </Button>
+                        </div>
+                    </div>
                 </FormField>
 
-                <Suggestion text="Enter 24 words including spaces. The mnemonic phrase is encrypted and stored in Keychain." />
+                <Suggestion text="Copy and save the mnemonic phrase. The mnemonic phrase is encrypted and stored in Keychain." />
 
-                <div className="d-flex flex-row justify-content-center mb-4">
+                <div className="mb-4">
                     <Button variant="primary" size="lg" type="submit">
                         Next
                     </Button>
                 </div>
 
-                <div className="d-flex flex-row justify-content-center mb-5">
+                <div className="mb-4">
                     <Button
                         variant="secondary"
                         size="lg"
@@ -132,12 +191,6 @@ const ImportWalletWithMnemonics = ({ }) => {
                         Sign In
                     </Button>
                 </div>
-
-                <QuestionLink
-                    questionText="Don't have wallet?"
-                    linkTo={`${pagePaths.CREATE_WALLET}${history.location.search}`}
-                    linkText="Create wallet"
-                />
             </form>
         </FormProvider>
     );
@@ -145,7 +198,7 @@ const ImportWalletWithMnemonics = ({ }) => {
     return (
         <AuthLayout>
             <FormContainer>
-                {step === 1 && importWalletForm}
+                {step === 1 && createWalletForm}
                 {step === 2 && (
                     <Pin
                         title="Please set your PIN"
@@ -189,7 +242,7 @@ const ImportWalletWithMnemonics = ({ }) => {
     );
 };
 
-ImportWalletWithMnemonics.propTypes = {};
-ImportWalletWithMnemonics.defaultProps = {};
+CreateWallet.propTypes = {};
+CreateWallet.defaultProps = {};
 
-export default ImportWalletWithMnemonics;
+export default CreateWallet;

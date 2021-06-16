@@ -21,6 +21,7 @@ import Pin from "src/components/Pin";
 import styles from "./ImportWalletWithEncryptedMnemonics.module.scss";
 import SaveAccount from "./SaveAccount/SaveAccount";
 import TextArea from "../TextArea";
+import QuestionLink from "../QuestionLink";
 
 const cx = cn.bind(styles);
 
@@ -90,6 +91,12 @@ const ImportWalletWithEncryptedMnemonics = ({ }) => {
                         Sign In
                     </Button>
                 </div>
+
+                <QuestionLink
+                    questionText="Don't have wallet?"
+                    linkTo={`${pagePaths.CREATE_WALLET}${history.location.search}`}
+                    linkText="Create wallet"
+                />
             </form>
         </FormProvider>
     );
