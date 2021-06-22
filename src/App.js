@@ -5,6 +5,7 @@ import _ from "lodash";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { Provider } from "react-redux";
+import { ToastProvider } from 'react-toast-notifications';
 import * as yup from "yup";
 import store from "src/store";
 import Cosmos from "@oraichain/cosmosjs";
@@ -19,12 +20,14 @@ import AlertBoxContainer from "src/containers/AlertBoxContainer";
 import TransactionContainer from "src/containers/TransactionContainer";
 import SetRequestContainer from "src/containers/SetRequestContainer";
 import GetRequestContainer from "src/containers/GetRequestContainer";
+import SecurityContainer from "src/containers/SecurityContainer";
 import NotFoundContainer from "src/containers/NotFoundContainer";
 import Home from "src/components/Home";
 import CreateWallet from "src/components/CreateWallet";
 import ImportWalletWithMnemonics from "src/components/ImportWalletWithMnemonics";
 import ImportWalletWithEncryptedMnemonics from "./components/ImportWalletWithEncryptedMnemonics";
 import ImportWalletWithPrivateKey from "src/components/ImportWalletWithPrivateKey";
+import "./App.css";
 
 const url = new window.URL(window.location.href);
 const network =
@@ -90,53 +93,57 @@ const App = ({ }) => {
 
     return (
         <Provider store={store}>
-            <PersistGate loading={null} persistor={persistor}>
-                <Router>
-                    <Switch>
-                        <Route path={pagePaths.AUTH} component={AuthContainer} />
-                        <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
-                        <UnauthenticatedRoute
-                            exact
-                            path={pagePaths.CREATE_WALLET}
-                            component={CreateWallet}
-                        />
-                        <UnauthenticatedRoute
-                            exact
-                            path={pagePaths.IMPORT_WALLET_WITH_MNEMONICS}
-                            component={ImportWalletWithMnemonics}
-                        />
-                        <UnauthenticatedRoute
-                            exact
-                            path={pagePaths.IMPORT_WALLET_WITH_ENCRYPTED_MNEMONICS}
-                            component={ImportWalletWithEncryptedMnemonics}
-                        />
-                        <UnauthenticatedRoute
-                            exact
-                            path={pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}
-                            component={ImportWalletWithPrivateKey}
-                        />
-                        <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
-                        <AuthenticatedRoute exact path={pagePaths.TRANSACTION} component={TransactionContainer} />
-                        <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
-                            <SendTokensContainer />
-                        </AuthenticatedRoute>
-                        <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_SET}>
-                            <SetRequestContainer />
-                        </AuthenticatedRoute>
-                        <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_GET}>
-                            <GetRequestContainer />
-                        </AuthenticatedRoute>
-                        <AuthenticatedRoute exact path={pagePaths.HOME}>
-                            <Home />
-                        </AuthenticatedRoute>
-                        <Route path="*">
-                            <NotFoundContainer />
-                        </Route>
-                    </Switch>
-                </Router>
-
-                <AlertBoxContainer />
-            </PersistGate>
+            <ToastProvider>
+                <PersistGate loading={null} persistor={persistor}>
+                    <Router>
+                        <Switch>
+                            <Route path={pagePaths.AUTH} component={AuthContainer} />
+                            <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
+                            <UnauthenticatedRoute
+                                exact
+                                path={pagePaths.CREATE_WALLET}
+                                component={CreateWallet}
+                            />
+                            <UnauthenticatedRoute
+                                exact
+                                path={pagePaths.IMPORT_WALLET_WITH_MNEMONICS}
+                                component={ImportWalletWithMnemonics}
+                            />
+                            <UnauthenticatedRoute
+                                exact
+                                path={pagePaths.IMPORT_WALLET_WITH_ENCRYPTED_MNEMONICS}
+                                component={ImportWalletWithEncryptedMnemonics}
+                            />
+                            <UnauthenticatedRoute
+                                exact
+                                path={pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}
+                                component={ImportWalletWithPrivateKey}
+                            />
+                            <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
+                            <AuthenticatedRoute exact path={pagePaths.TRANSACTION} component={TransactionContainer} />
+                            <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
+                                <SendTokensContainer />
+                            </AuthenticatedRoute>
+                            <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_SET}>
+                                <SetRequestContainer />
+                            </AuthenticatedRoute>
+                            <AuthenticatedRoute exact path={pagePaths.AI_REQUEST_GET}>
+                                <GetRequestContainer />
+                            </AuthenticatedRoute>
+                            <AuthenticatedRoute exact path={pagePaths.SECURITY}>
+                                <SecurityContainer />
+                            </AuthenticatedRoute>
+                            <AuthenticatedRoute exact path={pagePaths.HOME}>
+                                <Home />
+                            </AuthenticatedRoute>
+                            <Route path="*">
+                                <NotFoundContainer />
+                            </Route>
+                        </Switch>
+                    </Router>
+                    <AlertBoxContainer />
+                </PersistGate>
+            </ToastProvider>
         </Provider>
     );
 };

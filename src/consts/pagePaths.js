@@ -12,4 +12,5 @@ export const pagePaths = {
     AI_REQUEST_GET: "/ai_request/get",
     HOME: "/",
     AUTH: "/auth",
+    SECURITY: "/security",
 }

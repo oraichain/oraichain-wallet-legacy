@@ -11,8 +11,9 @@ import ActiveSettingIcon from "src/components/icons/ActiveSettingIcon";
 export const menuItemIds = {
     INTERACT_WASM_CONTRACT: 1,
     SEND_TOKENS: 2,
-    INTERACT_WITH_PROVIDER_SCRIPTS: 3,
-    INTERACT_WITH_AI_REQUEST: 4,
+    SECURITY: 3,
+    INTERACT_WITH_PROVIDER_SCRIPTS: 4,
+    INTERACT_WITH_AI_REQUEST: 5,
 };
 
 export const subMenuItemIds = {
@@ -23,6 +24,7 @@ export const subMenuItemIds = {
     EDIT_PROVIDER_SCRIPTS: 5,
     SET_REQUEST: 6,
     GET_REQUEST: 7,
+    SECURITY: 8,
 }
 
 export const menuSlice = createSlice({
@@ -44,6 +46,13 @@ export const menuSlice = createSlice({
                     activeIcon: <ActiveGraphIcon />,
                     text: "Send Tokens",
                     url: "/send-tokens",
+                },
+                [menuItemIds.SECURITY]: {
+                    id: menuItemIds.SECURITY,
+                    icon: <GraphIcon />,
+                    activeIcon: <ActiveGraphIcon />,
+                    text: "Security",
+                    url: "/security",
                 },
                 // [menuItemIds.INTERACT_WITH_PROVIDER_SCRIPTS]: {
                 //     id: menuItemIds.INTERACT_WITH_PROVIDER_SCRIPTS,

@@ -46,6 +46,7 @@
     "react-router-redux": "^4.0.8",
     "react-scripts": "4.0.3",
     "react-select": "^4.2.1",
+    "react-toast-notifications": "^2.4.4",
     "redux": "^4.0.5",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",

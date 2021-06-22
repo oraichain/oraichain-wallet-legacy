@@ -28,6 +28,7 @@ const Pin = ({
     closePin,
     setUser,
     setFormData,
+    className
 }) => {
     const cosmos = window.cosmos;
 
@@ -210,8 +211,8 @@ const Pin = ({
     };
 
     return (
-        <div className={cx("pin")}>
-            <div className={cx("pin-header")}>
+        <div className={cx("pin", className)}>
+            <div className={cx("pin-header", "header")}>
                 <div
                     className={cx("close-button")}
                     onClick={() => {
@@ -224,9 +225,9 @@ const Pin = ({
             </div>
 
             <div className={cx("pin-body")}>
-                <div className={cx("title")}>{title}</div>
-                <div className={cx("description")}>PIN is required for every transaction.</div>
-                <div className={cx("warning")}>If lost, you cannot reset or recover your PIN.</div>
+                <div className={cx("title", "pin-body-title")}>{title}</div>
+                <div className={cx("description", "pin-body-desc")}>PIN is required for every transaction.</div>
+                <div className={cx("warning", "pin-body-warning")}>If lost, you cannot reset or recover your PIN.</div>
 
                 <div className={cx("confirmation-status")}>
                     <svg>
