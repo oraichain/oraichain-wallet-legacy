@@ -82,7 +82,7 @@ const ImportWalletWithPrivateKey = ({ }) => {
                     />
                 </FormField>
 
-                <Suggestion text="Enter private key.Private key is encrypted and stored in Keychain." />
+                <Suggestion text="Enter private key. Private key is encrypted and stored in Keychain." />
 
                 <div className="d-flex flex-row justify-content-center mb-4">
                     <Button variant="primary" size="lg" type="submit">

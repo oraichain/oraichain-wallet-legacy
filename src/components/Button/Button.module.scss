@@ -14,22 +14,22 @@
 
     &-primary {
         color: #FFFFFF;
-        background: #1A87FF;
-        border: 1px solid #1A87FF;
+        background: #00A3FF;
+        border: 1px solid #00A3FF;
 
         &:hover {
-            background-color: lighten(#1A87FF, 5%);
+            background-color: lighten(#00A3FF, 5%);
         }
     }
 
     &-outline-primary {
-        color: #1A87FF;
+        color: #00A3FF;
         background: #FFFFFF;
-        border: 1px solid #1A87FF;
+        border: 1px solid #00A3FF;
 
         &:hover {
             color: #FFFFFF;
-            background: #1A87FF;
+            background: #00A3FF;
         }
     }
 
