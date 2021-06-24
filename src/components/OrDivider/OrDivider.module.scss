@@ -1,21 +1,22 @@
 .or-divider {
     position: relative;
+    width: 100%;
     margin-top: 30px;
     margin-bottom: 30px;
 
     &-line {
-        width: 100%;
         height: 1px;
         background-color: #D7D7D7;
     }
 
     &-text {
         position: absolute;
+        width: fit-content;
         top: 50%;
         left: 50%;
         margin: 0;
         transform: translate(-50%, -50%);
-        padding: 8px 16px;
+        padding: 0 16px;
         font-family: Roboto;
         font-style: normal;
         font-weight: 500;
