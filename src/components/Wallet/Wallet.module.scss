@@ -1,5 +1,9 @@
 .wallet {
     padding: 16px;
+    
+    @media (min-width: 992px) {
+        width: 300px;
+    }
 
     &-info {
         margin-bottom: 16px;

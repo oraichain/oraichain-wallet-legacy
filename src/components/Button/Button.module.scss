@@ -75,8 +75,7 @@
 
     &-lg {
         display: flex;
-        padding-top: 13px;
-        padding-bottom: 13px;
+        padding: 13px 10px;
         border-radius: 24px;
         font-family: Roboto;
         font-style: normal;
@@ -87,13 +86,13 @@
 
     &-sm {
         display: inline-flex;
-        padding: 8px 24px;
+        padding: 8px 10px;
+        border-radius: 8px;
         font-family: Roboto;
         font-style: normal;
         font-weight: 600;
-        font-size: 14px;
+        font-size: 16px;
         line-height: 150%;
-        border-radius: 4px;
     }
 
     &-fit-content {

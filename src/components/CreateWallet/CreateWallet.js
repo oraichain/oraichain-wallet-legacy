@@ -24,12 +24,14 @@ import ErrorText from "src/components/ErrorText";
 import LoopIcon from '@material-ui/icons/Loop';
 import Pin from "src/components/Pin";
 import TextArea from "src/components/TextArea";
+import { useToasts } from "react-toast-notifications";
 
 const cx = cn.bind(styles);
 
 const CreateWallet = () => {
     const cosmos = window.cosmos;
     const history = useHistory();
+    const { addToast } = useToasts();
 
     const schema = yup.object().shape({
         walletName: yup.string().required("The Wallet Name is required"),
@@ -41,7 +43,6 @@ const CreateWallet = () => {
     const { handleSubmit, setValue, watch, formState } = methods;
 
     const enteredPin = useRef("");
-    const [copied, setCopied] = useState(false);
     const [step, setStep] = useState(1);
     const [formData, setFormData] = useState({});
     const [encryptedMnemonics, setEncryptedMnemonics] = useState("");
@@ -50,10 +51,17 @@ const CreateWallet = () => {
     let address = "";
 
     const copyToClipboard = () => {
-        setCopied(true);
-        setTimeout(() => {
-            setCopied(false);
-        }, 1000);
+        if (watch("mnemonics")) {
+            addToast("Mnemonic phrase is copied!", {
+                appearance: 'success',
+                autoDismiss: true,
+            });
+        } else {
+            addToast("There is no mnemonic phrase to copy.", {
+                appearance: 'error',
+                autoDismiss: true,
+            });
+        }
     };
 
     const generateMnemonic = () => {
@@ -146,18 +154,6 @@ const CreateWallet = () => {
                     />
                     {invalidMnemonics && <ErrorText>Mnemonics is not valid.</ErrorText>}
                     {invalidMnemonicsChecksum && <ErrorText>Invalid mnemonics checksum error.</ErrorText>}
-
-                    {copied && !watch("mnemonics") && (
-                        <div className={cx("copy-message-fail")}>
-                            There is no mnemonic phrase to copy.
-                        </div>
-                    )}
-
-                    {copied && watch("mnemonics") && (
-                        <div className={cx("copy-message")}>
-                            Mnemonic phrase is copied.
-                        </div>
-                    )}
 
                     <div className="mt-2">
                         <div className={cx("generate-button", "mx-auto")}>

@@ -1,43 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro &display=swap');
 
-.mnemonic-wrap {
+.recovery-wrap {
     .title {
         margin-top: 30px;
         margin-bottom: 10px;
     }
 
     .content {
-        font-size: 1rem;
-        line-height: 140%;
-        resize: none;
-        background: #fafafa;
+        background: #FFFFFF;
         text-align: center;
         color: black;
         padding: 20px;
         border-radius: 4px;
-        font-family: 'Source Code Pro', monospace;
-        letter-spacing: -0.4px;
-        font-weight: 500;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 140%;
+        word-break: break-all;
     }
 
     .btn-group {
         display: flex;
         align-items: center;
+
         .btn {
             color: #fff;
             width: 50%;
             padding: 10px;
             text-align: center;
-            background-color: #007bff;
-            border-color: #007bff;
+            background-color: #00A3FF;
+            border-color: #00A3FF;
             line-height: 1.5;
-            border-radius: .25rem;
-            transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+            border-radius: 0.25rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
             cursor: pointer;
             margin-top: 5px;
             display: flex;
             align-items: center;
             justify-content: center;
+
             &:last-child {
                 margin-left: 3px;
             }

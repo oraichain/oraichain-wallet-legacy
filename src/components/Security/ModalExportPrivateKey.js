@@ -5,40 +5,39 @@ import _ from "lodash";
 import { Modal } from "react-bootstrap";
 import { useSelector } from 'react-redux';
 import WarningIcon from '@material-ui/icons/Warning';
-import SmsFailedIcon from '@material-ui/icons/SmsFailed';
 import Button from "src/components/Button";
 import Pin from "src/components/Pin";
 import RecoveryPharse from "src/components/Security/RecoveryPharse";
-import { isMnemonicsValid } from "src/utils";
 import styles from "./ModalExportRecoveryPharse.module.scss";
-
 const cx = cn.bind(styles);
 
-const ModalExportMnemonic = (props) => {
+const ModalExportPrivateKey = (props) => {
     const [encryptedPassword, setEncryptedPassword] = useState();
-    const [decryptedMnemonics, setDecryptedMnemonics] = useState();
+    const [privateKey, setPrivateKey] = useState();
     const user = useSelector((state) => state.user);
     const [showPin, setShowPin] = useState(true);
 
-    const decryptPwToMnemonic = (mnemonics) => {
-        setDecryptedMnemonics(mnemonics);
+    const exportPrivateKey = () => {
+        const { __D } = user.childKey;
+        const privateKeyStr = Buffer.from(__D).toString("hex");
+        setPrivateKey(privateKeyStr);
         setShowPin(false);
     }
 
     useEffect(() => {
-        const getMnemonicFromStorage = () => {
+        const getPasswordFromStorage = () => {
             const storageKey = user.account + "-password";
             if (storageKey !== "") {
                 setEncryptedPassword(localStorage.getItem(storageKey));
             }
         }
-        getMnemonicFromStorage();
+        getPasswordFromStorage();
     }, [])
 
     return (
         <Modal {...props} centered size="md" aria-labelledby="contained-modal-title-vcenter" className={cx("mnemonic-modal")}>
             <Modal.Header className={cx("modal-header")} closeButton>
-                <Modal.Title> Reveal Mnemonic Phrase </Modal.Title>
+                <Modal.Title> Reveal Private Key </Modal.Title>
             </Modal.Header>
             <Modal.Body className={cx("modal-body")}>
                 <div className={cx("recovery")}>
@@ -59,20 +58,13 @@ const ModalExportMnemonic = (props) => {
                                 className={cx("pin-custom")}
                                 title="Enter your PIN"
                                 pinType="export-recovery-pharse"
-                                closePin={decryptPwToMnemonic}
+                                closePin={exportPrivateKey}
                                 encryptedPassword={encryptedPassword}
                             />
                         </div>
                     </>
                 }
-                {decryptedMnemonics && (isMnemonicsValid(decryptedMnemonics) ? (
-                    <RecoveryPharse recoveryPharse={decryptedMnemonics} isMnemonic={true} />
-                ) : (
-                    <div className={cx("invalid-mnemonic")}>
-                        <SmsFailedIcon />
-                        <span>Unable to decrypt to a suitable mnemonic</span>
-                    </div>
-                ))}
+                {privateKey && <RecoveryPharse recoveryPharse={privateKey} />}
             </Modal.Body>
             <Modal.Footer className={cx("modal-footer")}>
                 <Button variant="secondary" fitContent={true} size="sm" onClick={props.onHide}>
@@ -83,10 +75,10 @@ const ModalExportMnemonic = (props) => {
     );
 };
 
-ModalExportMnemonic.propTypes = {
+ModalExportPrivateKey.propTypes = {
     user: PropTypes.any,
     showAlertBox: PropTypes.func,
 };
-ModalExportMnemonic.defaultProps = {};
+ModalExportPrivateKey.defaultProps = {};
 
-export default ModalExportMnemonic;
+export default ModalExportPrivateKey;

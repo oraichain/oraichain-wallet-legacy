@@ -1,7 +1,22 @@
 .show-secret-key {
-    color: #fff;
+    color: #FFFFFF;
     padding: 30px;
+    
     .title {
         margin-bottom: 10px;
+    }
+
+    .button-group {
+        width: fit-content;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: center;
+    
+        @media (min-width: 375px) {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
     }
 }

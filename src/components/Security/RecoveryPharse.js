@@ -1,19 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import cn from "classnames/bind";
 import PropTypes from "prop-types";
 import { useToasts } from "react-toast-notifications";
 import SaveAltIcon from '@material-ui/icons/SaveAlt';
 import FileCopyIcon from '@material-ui/icons/FileCopy';
-import styles from "./MnemonicArea.module.scss";
+import styles from "./RecoveryPharse.module.scss";
 
-// const message = Cosmos.message;
 const cx = cn.bind(styles);
 
-const MnemonicArea = ({ mnemonic }) => {
+const RecoveryPharse = ({ recoveryPharse, isMnemonic }) => {
     const { addToast } = useToasts();
 
     const handleCopy = () => {
-        window.navigator.clipboard.writeText(mnemonic);
+        window.navigator.clipboard.writeText(recoveryPharse);
         addToast("Copied!", {
             appearance: 'success',
             autoDismiss: true,
@@ -22,17 +21,17 @@ const MnemonicArea = ({ mnemonic }) => {
 
     const handleDownloadText = () => {
         const element = document.createElement("a");
-        const file = new Blob([mnemonic], {type: 'text/plain'});
+        const file = new Blob([recoveryPharse], {type: 'text/plain'});
         element.href = URL.createObjectURL(file);
-        element.download = "mnemonic.txt";
+        element.download = isMnemonic ? "mnemonic.txt" : "private-key.txt";
         document.body.appendChild(element);
         element.click();
     }
 
     return (
-       <div className={cx("mnemonic-wrap")}>
+       <div className={cx("recovery-wrap")}>
            <div className={cx("title")}> Your private Secret Recovery Phrase </div>
-           <div className={cx("content")}> { mnemonic } </div>
+           <div className={cx("content")}> { recoveryPharse } </div>
            <div className={cx("btn-group")}>
                <div className={cx("btn")} onClick={handleCopy}>
                     <FileCopyIcon /> <span> Copy to clipboard </span>
@@ -45,10 +44,10 @@ const MnemonicArea = ({ mnemonic }) => {
     );
 };
 
-MnemonicArea.propTypes = {
+RecoveryPharse.propTypes = {
     user: PropTypes.any,
     showAlertBox: PropTypes.func,
 };
-MnemonicArea.defaultProps = {};
+RecoveryPharse.defaultProps = {};
 
-export default MnemonicArea;
+export default RecoveryPharse;

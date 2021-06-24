@@ -72,7 +72,7 @@ const Pin = ({
         const decryptedPassword = decryptAES(encryptedPassword, enteredPin);
 
         if (decryptedPassword !== "") {
-            if (pinType === "decrypt-mnemonics") { 
+            if (pinType === "export-recovery-pharse") { 
                 closePin && closePin(decryptedPassword);
                 return;
             }
