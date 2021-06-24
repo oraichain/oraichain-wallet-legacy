@@ -4,16 +4,13 @@
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 50px;
-    padding-left: 100px;
-    padding-right: 100px;
+    height: 48px;
     cursor: pointer;
     white-space: nowrap;
 
     &:focus {
         outline: none;
     }
-
 
     &-primary {
         color: #FFFFFF;
@@ -38,26 +35,32 @@
 
     &-secondary {
         color: #FFFFFF;
-        background: #2B5072;
-        border: 1px solid #2B5072;
+        background: #123F75;
+        border: 1px solid #123F75;
 
         &:hover {
-            background-color: lighten(#2B5072, 5%);
+            background-color: lighten(#123F75, 5%);
         }
     }
 
     &-outline-secondary {
-        color: #2B5072;
+        color: #123F75;
         background: #FFFFFF;
-        border: 1px solid #2B5072;
+        border: 1px solid #123F75;
 
         &:hover {
             color: #FFFFFF;
-            background-color: #2B5072;
+            background-color: #123F75;
         }
     }
 
+    &-group-item {
+        margin: 0 0 24px 0;
 
+        @media (min-width: 375px) {
+            margin: 0 12px 0 0;
+        }
+    }
 
     &-outline-success {
         color: #181818;

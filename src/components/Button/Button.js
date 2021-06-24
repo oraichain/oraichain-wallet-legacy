@@ -4,11 +4,11 @@ import PropTypes from "prop-types";
 import styles from "./Button.module.scss";
 const cx = cn.bind(styles);
 
-const Button = ({ type, variant, size, fitContent, children, onClick }) => {
+const Button = ({ type, group, variant, size, fitContent, children, onClick }) => {
     return (
         <button
             type={type}
-            className={cx("button", "button-" + variant, "button-" + size, { "button-fit-content": fitContent })}
+            className={cx("button", "button-" + variant, group && "button-group-item", "button-" + size, { "button-fit-content": fitContent })}
             onClick={() => {
                 onClick && onClick();
             }}
@@ -20,6 +20,7 @@ const Button = ({ type, variant, size, fitContent, children, onClick }) => {
 
 Button.propTypes = {
     type: PropTypes.string,
+    group: PropTypes.bool,
     variant: PropTypes.string,
     size: PropTypes.string,
     children: PropTypes.any,
@@ -27,6 +28,7 @@ Button.propTypes = {
 };
 Button.defaultProps = {
     type: "button",
+    group: false,
     variant: "primary",
     size: "lg",
     fitContent: false,

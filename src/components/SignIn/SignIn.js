@@ -20,6 +20,7 @@ import Suggestion from "src/components/Suggestion";
 import Button from "src/components/Button";
 import QuestionLink from "src/components/QuestionLink";
 import styles from "./SignIn.module.scss";
+import OrDivider from "../OrDivider";
 
 const cx = cn.bind(styles);
 
@@ -80,7 +81,7 @@ const SignIn = ({ setUser }) => {
                         render={({ message }) => <ErrorText>{message}</ErrorText>}
                     />
                 </FormField>
-                <FormField className={cx("hidden-pw")}>
+                <FormField className="d-none">
                     <TextField type="password" autoComplete="current-password" name="password" />
                 </FormField>
 
@@ -89,7 +90,7 @@ const SignIn = ({ setUser }) => {
                         Could not retrieve account stored in Keychain. Press the button below the Import Wallet.
                     </ErrorText>
                 )}
-            
+
                 <Suggestion text=" Unavailable in guest mode or incognito mode." />
 
                 <div className="d-flex flex-row justify-content-center mb-4">
@@ -98,7 +99,33 @@ const SignIn = ({ setUser }) => {
                     </Button>
                 </div>
 
-                <div className="d-flex flex-row justify-content-center mb-4">
+                <OrDivider text={"Or import with"} />
+
+                <div className="mb-4">
+                    <div className={cx("button-group")}>
+                        <Button
+                            group={true}
+                            variant="secondary"
+                            size="lg"
+                            onClick={() => {
+                                history.push(`${pagePaths.IMPORT_WALLET_WITH_ENCRYPTED_MNEMONICS}${history.location.search}`);
+                            }}
+                        >
+                            Encrypted Mnemonics
+                        </Button>
+                        <Button
+                            variant="secondary"
+                            size="lg"
+                            onClick={() => {
+                                history.push(`${pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}${history.location.search}`);
+                            }}
+                        >
+                            Private Key
+                        </Button>
+                    </div>
+                </div>
+
+                <div className="d-flex flex-row justify-content-center mb-4 mb-5">
                     <Button
                         variant="secondary"
                         size="lg"
@@ -106,31 +133,7 @@ const SignIn = ({ setUser }) => {
                             history.push(`${pagePaths.IMPORT_WALLET_WITH_MNEMONICS}${history.location.search}`);
                         }}
                     >
-                        Import Wallet With Mnemonics
-                    </Button>
-                </div>
-
-                <div className="d-flex flex-row justify-content-center mb-4">
-                    <Button
-                        variant="secondary"
-                        size="lg"
-                        onClick={() => {
-                            history.push(`${pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}${history.location.search}`);
-                        }}
-                    >
-                        Import Wallet With Private Key
-                    </Button>
-                </div>
-
-                <div className="d-flex flex-row justify-content-center mt-4 mb-5">
-                    <Button
-                        variant="secondary"
-                        size="lg"
-                        onClick={() => {
-                            history.push(`${pagePaths.IMPORT_WALLET_WITH_ENCRYPTED_MNEMONICS}${history.location.search}`);
-                        }}
-                    >
-                        Import Wallet With Encrypted Mnemonics
+                        Mnemonics
                     </Button>
                 </div>
 
