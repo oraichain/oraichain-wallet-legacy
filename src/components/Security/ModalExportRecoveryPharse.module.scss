@@ -1,6 +1,6 @@
 .mnemonic-modal {
     .modal-header {
-        padding: 20px 30px;    
+        padding: 20px 30px;
     }
     
     .modal-body {
@@ -13,6 +13,10 @@
 
     :global(.modal-header) {
         border-bottom-width: 0;
+    }
+
+    :global(.close) {
+        display: none;
     }
 
     :global(.modal-footer) {
