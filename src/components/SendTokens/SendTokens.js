@@ -157,19 +157,19 @@ const SendTokens = ({ user, showAlertBox }) => {
                                         />
 
                                         <div className="row">
-                                            <div className="col-12 col-lg-4 text-left text-lg-right">
+                                            <div className="col-12 col-lg-2 text-left">
                                                 <Label>From:</Label>
                                             </div>
-                                            <div className="col-12 col-lg-8 text-left">
+                                            <div className="col-12 col-lg-10 text-left">
                                                 <StaticText>{user.address}</StaticText>
                                             </div>
                                         </div>
 
                                         <div className="row">
-                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <div className="col-12 col-lg-2 d-flex flex-row justify-content-start align-items-center">
                                                 <Label htmlFor="to">To:</Label>
                                             </div>
-                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <div className="col-12 col-lg-10 d-flex flex-row justify-content-start align-items-center">
                                                 <TextField variant="primary" type="text" name="to" id="to" />
                                                 <ErrorMessage
                                                     errors={formState.errors}
@@ -182,10 +182,10 @@ const SendTokens = ({ user, showAlertBox }) => {
                                         </div>
 
                                         <div className="row">
-                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <div className="col-12 col-lg-2 d-flex flex-row justify-content-start align-items-center">
                                                 <Label htmlFor="amount">Amount (orai):</Label>
                                             </div>
-                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <div className="col-12 col-lg-10 d-flex flex-row justify-content-start align-items-center">
                                                 <TextField variant="primary" type="text" name="amount" id="amount" />
                                                 <ErrorMessage
                                                     errors={formState.errors}
@@ -198,10 +198,10 @@ const SendTokens = ({ user, showAlertBox }) => {
                                         </div>
 
                                         <div className="row">
-                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <div className="col-12 col-lg-2 d-flex flex-row justify-content-start align-items-center">
                                                 <Label htmlFor="gas">Gas:</Label>
                                             </div>
-                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <div className="col-12 col-lg-10 d-flex flex-row justify-content-start align-items-center">
                                                 <SliderInput name="gas" id="gas" />
                                                 <ErrorMessage
                                                     errors={formState.errors}
@@ -214,10 +214,10 @@ const SendTokens = ({ user, showAlertBox }) => {
                                         </div>
 
                                         <div className="row">
-                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <div className="col-12 col-lg-2 d-flex flex-row justify-content-start align-items-center">
                                                 <Label htmlFor="fee">Tx Fee (orai):</Label>
                                             </div>
-                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <div className="col-12 col-lg-10 d-flex flex-row justify-content-start align-items-center">
                                                 <TextField variant="primary" type="text" name="fee" id="fee" />
                                                 <ErrorMessage
                                                     errors={formState.errors}
@@ -230,17 +230,17 @@ const SendTokens = ({ user, showAlertBox }) => {
                                         </div>
 
                                         <div className="row">
-                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center">
+                                            <div className="col-12 col-lg-2 d-flex flex-row justify-content-start align-items-center">
                                                 <Label htmlFor="memo">Memo:</Label>
                                             </div>
-                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            <div className="col-12 col-lg-10 d-flex flex-row justify-content-start align-items-center">
                                                 <TextField variant="primary" type="text" name="memo" id="memo" />
                                             </div>
                                         </div>
 
                                         <div className="row">
-                                            <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  justify-content-lg-end align-items-center"></div>
-                                            <div className="col-12 col-lg-8 d-flex flex-row justify-content-start align-items-center">
+                                            {/* <div className="col-12 col-lg-4 d-flex flex-row justify-content-start  align-items-center"></div> */}
+                                            <div className="col-12 d-flex flex-row justify-content-center align-items-center">
                                                 <ArrowButton type="submit">Send</ArrowButton>
                                             </div>
                                         </div>
