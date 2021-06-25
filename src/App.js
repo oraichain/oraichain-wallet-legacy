@@ -18,6 +18,7 @@ import AuthContainer from "src/containers/AuthContainer";
 import SendTokensContainer from "src/containers/SendTokensContainer";
 import AlertBoxContainer from "src/containers/AlertBoxContainer";
 import TransactionContainer from "src/containers/TransactionContainer";
+import ConfirmTransactionContainer from "./containers/ConfirmTransactionContainer";
 import SetRequestContainer from "src/containers/SetRequestContainer";
 import GetRequestContainer from "src/containers/GetRequestContainer";
 import SecurityContainer from "src/containers/SecurityContainer";
@@ -98,7 +99,10 @@ const App = ({ }) => {
                     <Router>
                         <Switch>
                             <Route path={pagePaths.AUTH} component={AuthContainer} />
-                            <UnauthenticatedRoute exact path={pagePaths.SIGNIN} component={SignInContainer} />
+                            <UnauthenticatedRoute
+                                exact
+                                path={pagePaths.SIGNIN}
+                                component={SignInContainer} />
                             <UnauthenticatedRoute
                                 exact
                                 path={pagePaths.CREATE_WALLET}
@@ -119,8 +123,18 @@ const App = ({ }) => {
                                 path={pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}
                                 component={ImportWalletWithPrivateKey}
                             />
-                            <AuthenticatedRoute exact path={pagePaths.TX} component={TransactionContainer} />
-                            <AuthenticatedRoute exact path={pagePaths.TRANSACTION} component={TransactionContainer} />
+                            <AuthenticatedRoute
+                                exact
+                                path={pagePaths.TX}
+                                component={TransactionContainer} />
+                            <AuthenticatedRoute
+                                exact
+                                path={pagePaths.TRANSACTION}
+                                component={TransactionContainer} />
+                            <AuthenticatedRoute
+                                exact
+                                path={pagePaths.CONFIRM_TX}
+                                component={ConfirmTransactionContainer} />
                             <AuthenticatedRoute exact path={pagePaths.SEND_TOKENS}>
                                 <SendTokensContainer />
                             </AuthenticatedRoute>
