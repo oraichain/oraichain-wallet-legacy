@@ -147,6 +147,15 @@ const Transaction = ({ user, showAlertBox }) => {
         }
     };
 
+    const getEncryptedPassword = () => {
+        const pw = getValues("password");
+        if (!!pw) {
+            return pw;
+        }
+        const storageKey = user.account + "-password";
+        return localStorage.getItem(storageKey);
+    }
+
     return (
         <AuthLayout>
             {showResult ? (
@@ -185,7 +194,7 @@ const Transaction = ({ user, showAlertBox }) => {
                                 closePin={() => {
                                     setOpenPin(false);
                                 }}
-                                encryptedPassword={getValues("password")}
+                                encryptedPassword={getEncryptedPassword()}
                             />
                         </FormContainer>
                     ) : (
