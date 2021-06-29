@@ -100,15 +100,13 @@ const Transaction = ({ user, showAlertBox }) => {
                 txBody = getTxBodyUndelegate(user, validator_address, amount, memo);
             } else if (type.includes("MsgCreateValidator")) {
                 txBody = getTxCreateValidator(_.get(payload, "value.msg.0.value"));
-            } else if (type.includes("MsgWithdrawDelegationReward")) {
+            } else if (type.includes("MsgWithdrawDelegatorReward")) {
                 txBody = getTxBodyMsgWithdrawDelegatorReward(
                     user,
                     _.get(payload, "value.msg.0.value.validator_address")
                 );
             } else if (type.includes("MsgWithdrawValidatorCommission")) {
-                txBody = getTxBodyMsgWithdrawValidatorCommission(
-                    _.get(payload, "value.msg.0.value.validator_address")
-                );
+                txBody = getTxBodyMsgWithdrawValidatorCommission(_.get(payload, "value.msg.0.value.validator_address"));
             } else {
                 const msgs = _.get(payload, "value.msg");
                 if (msgs.length > 1) {
@@ -146,6 +144,15 @@ const Transaction = ({ user, showAlertBox }) => {
             // setBlocking(false);
         }
     };
+
+    const getEncryptedPassword = () => {
+        const pw = getValues("password");
+        if (!!pw) {
+            return pw;
+        }
+        const storageKey = user.account + "-password";
+        return localStorage.getItem(storageKey);
+    }
 
     return (
         <AuthLayout>
@@ -185,7 +192,7 @@ const Transaction = ({ user, showAlertBox }) => {
                                 closePin={() => {
                                     setOpenPin(false);
                                 }}
-                                encryptedPassword={getValues("password")}
+                                encryptedPassword={getEncryptedPassword()}
                             />
                         </FormContainer>
                     ) : (

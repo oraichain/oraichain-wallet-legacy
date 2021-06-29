@@ -28,9 +28,7 @@ const ModalExportMnemonic = (props) => {
     useEffect(() => {
         const getMnemonicFromStorage = () => {
             const storageKey = user.account + "-password";
-            if (storageKey !== "") {
-                setEncryptedPassword(localStorage.getItem(storageKey));
-            }
+            setEncryptedPassword(localStorage.getItem(storageKey));
         }
         getMnemonicFromStorage();
     }, [])
