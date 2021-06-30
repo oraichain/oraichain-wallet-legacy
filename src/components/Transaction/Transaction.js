@@ -7,6 +7,8 @@ import queryString from "query-string";
 import _ from "lodash";
 import Big from "big.js";
 import ReactJson from "react-json-view";
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import {
     getTxBodySend,
     getTxBodyMultiSend,
@@ -34,7 +36,9 @@ const Transaction = ({ user, showAlertBox }) => {
     const [openPin, setOpenPin] = useState(false);
     const [showResult, setShowResult] = useState(false);
     const [loading, setLoading] = useState(false);
+    const [isViewingJSON, setIsViewingJSON] = useState(false);
     const [jsonSrc, setJsonSrc] = useState(null);
+    console.log(jsonSrc)
     const methods = useForm({
         defaultValue: {
             account: user.name,
@@ -58,15 +62,15 @@ const Transaction = ({ user, showAlertBox }) => {
         } else if (payload && !_.isNil(payload.value)) {
             const cloneObj = JSON.parse(JSON.stringify(payload));
             if (_.get(cloneObj, "value.fee.amount") && cloneObj.value.fee.amount[0]) {
-                cloneObj.value.fee.amount[0] = new Big(cloneObj.value.fee.amount[0]).times(0.000001);
+                cloneObj.value.fee.amount[0] = (new Big(cloneObj.value.fee.amount[0]).times(0.000001)).toString();
             }
             if (_.get(cloneObj, "value.msg.0.value.amount.0.amount")) {
                 const amountString = _.get(cloneObj, "value.msg.0.value.amount.0.amount");
-                _.set(cloneObj, "value.msg.0.value.amount.0.amount", new Big(amountString).times(0.000001));
+                _.set(cloneObj, "value.msg.0.value.amount.0.amount", (new Big(amountString).times(0.000001)).toString());
             }
             if (_.get(cloneObj, "value.msg.0.value.amount.amount")) {
                 const amountString = _.get(cloneObj, "value.msg.0.value.amount.amount");
-                _.set(cloneObj, "value.msg.0.value.amount.amount", new Big(amountString).times(0.000001));
+                _.set(cloneObj, "value.msg.0.value.amount.amount", (new Big(amountString).times(0.000001)).toString());
             }
             setJsonSrc(cloneObj.value);
         }
@@ -154,6 +158,10 @@ const Transaction = ({ user, showAlertBox }) => {
         return localStorage.getItem(storageKey);
     }
 
+    const toogleViewJSON = () => {
+        setIsViewingJSON(!isViewingJSON);
+    }
+
     return (
         <AuthLayout>
             {showResult ? (
@@ -219,11 +227,20 @@ const Transaction = ({ user, showAlertBox }) => {
 
                                 {jsonSrc && (
                                     <div className="w-100 overflow-auto">
-                                        <ReactJson
-                                            theme="monokai"
-                                            style={{ backgroundColor: "inherit", wordBreak: "break-all" }}
-                                            src={jsonSrc}
-                                        />
+                                        <div className={cx("view-raw-tx")} onClick={toogleViewJSON}>
+                                            View raw transaction{ isViewingJSON ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+                                        </div>
+                                        {isViewingJSON && 
+                                            <ReactJson
+                                                theme="monokai"
+                                                style={{ backgroundColor: "inherit", wordBreak: "break-all" }}
+                                                src={jsonSrc}
+                                                name={false}
+                                                displayObjectSize={false}
+                                                displayDataTypes={false}
+                                            />
+                                        }
+                                        
                                     </div>
                                 )}
                             </form>
