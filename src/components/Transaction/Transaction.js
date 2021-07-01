@@ -128,15 +128,18 @@ const Transaction = ({ user, showAlertBox }) => {
                 variant: "success",
                 message: "Sent successfully",
                 onHide: () => {
-                    if (!_.isNil(window.opener)) {
-                        window.opener.postMessage(res.tx_response, "*");
-                        window.close();
-                    } else {
-                        setJsonSrc(res.tx_response);
-                        setShowResult(true);
-                    }
+                    
                 },
             });
+
+            if (!_.isNil(window.opener)) {
+                window.opener.postMessage(res.tx_response, "*");
+                window.close();
+            } else {
+                setJsonSrc(res.tx_response);
+                setShowResult(true);
+            }
+
             setLoading(false);
         } catch (ex) {
             showAlertBox({
