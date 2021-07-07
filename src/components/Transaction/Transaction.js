@@ -133,7 +133,7 @@ const Transaction = ({ user, showAlertBox }) => {
             });
 
             if (!_.isNil(window.opener)) {
-                window.opener.postMessage(res.tx_response, "*");
+                window.opener.postMessage({ source: jsonSrc, res: res.tx_response }, "*");
                 window.close();
             } else {
                 setJsonSrc(res.tx_response);
