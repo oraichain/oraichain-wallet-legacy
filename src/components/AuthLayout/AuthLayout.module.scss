@@ -4,14 +4,13 @@
   background-color: #142437;
 
   &-header {
-    display: flex;
-    height: 50px;
-    background-color: #192b40;
+	height: 50px;
+	background-color: #192b40;
   }
 
   &-body {
-    padding: 32px 0;
-    background-color: #142437;
+	padding: 32px 0;
+	background-color: #142437;
   }
 }
 
@@ -23,19 +22,61 @@
   user-select: none;
 
   &-icon {
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    margin-right: 8px;
+	display: inline-block;
+	width: 32px;
+	height: 32px;
+	margin-right: 8px;
   }
 
   &-text {
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
-    line-height: 150%;
-    color: #ffffff;
-    cursor: pointer;
+	font-family: Roboto;
+	font-style: normal;
+	font-weight: 500;
+	font-size: 18px;
+	line-height: 150%;
+	color: #ffffff;
+	cursor: pointer;
   }
+}
+
+.header-wallet {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 15px;
+
+  .logo-wrap {
+		margin-left: 50px;
+		font-family: Roboto;
+		font-style: normal;
+		font-weight: 500;
+		font-size: 18px;
+		line-height: 150%;
+		color: #ffffff;
+		cursor: pointer;
+		span {
+			padding-left: 5px;
+		}
+  }
+
+  :global(.dropdown-toggle::after) {
+	  display: none;
+  }
+}
+
+.user-icon {
+    display: inline-block;
+    margin-right: 8px;
+    path {
+        fill: #fff;
+    }
+}
+
+.arrow-icon {
+    display: inline-block;
+    width: 12px;
+    height: auto;
+    path {
+        fill: #fff;
+    }
 }
