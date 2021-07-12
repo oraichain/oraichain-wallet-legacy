@@ -25,6 +25,15 @@ const Auth = ({ user, removeUser }) => {
     const { register, watch } = methods;
     const isLoggedIn = !_.isNil(user);
 
+    const getEncryptedPassword = () => {
+        const pw = watch("password");
+        if (!!pw) {
+            return pw;
+        }
+        const storageKey = user.account + "-password";
+        return localStorage.getItem(storageKey);
+    }
+
     if (!isLoggedIn) {
         history.push(pagePaths.SIGNIN);
         return null;
@@ -42,19 +51,14 @@ const Auth = ({ user, removeUser }) => {
                 <Pin
                     pinType="confirm"
                     walletName={user.account}
-                    encryptedPassword={watch("password")}
-                    closePin={() => {
-                        window.close();
-                    }}
+                    encryptedPassword={getEncryptedPassword()}
+                    closePin={window.close}
                 />
                 <div className="d-flex flex-row justify-content-center mt-4 mb-2">
                     <Button
                         variant="secondary"
                         size="lg"
-                        onClick={() => {
-                            removeUser();
-                        }}
-                    >
+                        onClick={removeUser}>
                         Logout
                     </Button>
                 </div>

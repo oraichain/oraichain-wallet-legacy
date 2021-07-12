@@ -90,7 +90,7 @@ class Keystation {
       '&signInFromScan=true';
     // create new one if closed
 
-    return PopupCenter(url, '', '400', '705');
+    return PopupCenter(url, '', '400', '745');
   }
 
   postMessage(popup, data, type) {
@@ -113,7 +113,7 @@ class Keystation {
       encodeURIComponent(this.lcd) +
       '&childKeyOnly=true&signInFromScan=true';
     // create new one if closed
-    const popup = PopupCenter(url, '', '400', '705');
+    const popup = PopupCenter(url, '', '400', '745');
     return new Promise((resolve) => {
       const handler = (e) => {
         // kind of childKey
