@@ -1,6 +1,6 @@
 import bech32 from "bech32";
 import * as bip32 from "bip32";
-import * as CryptoJS from 'crypto-js';
+import * as CryptoJS from "crypto-js";
 import Message from "@oraichain/cosmosjs";
 import Big from "big.js";
 import { AES, enc } from "crypto-js";
@@ -99,28 +99,28 @@ export const getChildkeyFromPrivateKey = (privateKey) => {
 };
 
 function bech32ify(address, prefix) {
-    const words = bech32.toWords(Buffer.from(address, 'hex'))
-    return bech32.encode(prefix, words)
+    const words = bech32.toWords(Buffer.from(address, "hex"));
+    return bech32.encode(prefix, words);
 }
 
 export function getOraiAddressFromPublicKey(publicKey) {
-    const message = CryptoJS.enc.Hex.parse(publicKey.toString('hex'))
-    const address = CryptoJS.RIPEMD160(CryptoJS.SHA256(message)).toString()
-    const oraiAddress = bech32ify(address, 'orai');
+    const message = CryptoJS.enc.Hex.parse(publicKey.toString("hex"));
+    const address = CryptoJS.RIPEMD160(CryptoJS.SHA256(message)).toString();
+    const oraiAddress = bech32ify(address, "orai");
     return oraiAddress;
 }
 
 export function getOraiAddressFromPrivateKey(privateKey) {
     const buffer = Buffer.from(privateKey, "hex");
     const { publicKey } = bip32.fromPrivateKey(buffer, Buffer.from(new Array(32)));
-    const message = CryptoJS.enc.Hex.parse(publicKey.toString('hex'))
-    const address = CryptoJS.RIPEMD160(CryptoJS.SHA256(message)).toString()
-    const oraiAddress = bech32ify(address, 'orai');
+    const message = CryptoJS.enc.Hex.parse(publicKey.toString("hex"));
+    const address = CryptoJS.RIPEMD160(CryptoJS.SHA256(message)).toString();
+    const oraiAddress = bech32ify(address, "orai");
     return oraiAddress;
 }
 
 export function buf2hex(buffer) {
-    return [...new Uint8Array(buffer)].map(x => x.toString(16).padStart(2, '0')).join('');
+    return [...new Uint8Array(buffer)].map((x) => x.toString(16).padStart(2, "0")).join("");
 }
 
 export const getTxBodySend = (user, to_address, amount, memo) => {
@@ -232,7 +232,7 @@ export const getTxBodyMsgWithdrawDelegatorReward = (user, validator_address) => 
 };
 
 export const getTxBodyMsgWithdrawValidatorCommission = (validator_address) => {
-    const msgSend = new message.cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission({validator_address});
+    const msgSend = new message.cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission({ validator_address });
 
     const msgSendAny = new message.google.protobuf.Any({
         type_url: "/cosmos.distribution.v1beta1.MsgWithdrawValidatorCommission",
@@ -291,6 +291,32 @@ export const getTxCreateValidator = (msg) => {
     });
 };
 
+export const getTxBodyParameterChangeProposal = (value, childKey) => {
+    const cosmos = window.cosmos;
+    const {amount, ...rest} = value;
+    const msgSend = new message.cosmos.params.v1beta1.ParameterChangeProposal(rest);
+
+    const msgSendAny = new message.google.protobuf.Any({
+        type_url: "/cosmos.params.v1beta1.ParameterChangeProposal",
+        value: message.cosmos.params.v1beta1.ParameterChangeProposal.encode(msgSend).finish(),
+    });
+
+    const msgGov = new message.cosmos.gov.v1beta1.MsgSubmitProposal({
+        content: msgSendAny,
+        proposer: cosmos.getAddress(childKey),
+        initial_deposit: [{ denom: cosmos.bech32MainPrefix, amount: amount }],
+    });
+
+    const msgGovAny = new message.google.protobuf.Any({
+        type_url: "/cosmos.gov.v1beta1.MsgSubmitProposal",
+        value: message.cosmos.gov.v1beta1.MsgSubmitProposal.encode(msgGov).finish(),
+    });
+
+    return new message.cosmos.tx.v1beta1.TxBody({
+        messages: [msgGovAny],
+    });
+};
+
 /*
  * Encrypt a derived hd private key with a given pin and return it in Base64 form
  */
@@ -318,27 +344,26 @@ export const decryptAES = (encryptedBase64, key) => {
 
 export const anotherAppLogin = (address, account, childKey) => {
     if (!_.isNil(address) && !_.isNil(account)) {
-        window.opener.postMessage({ address, account}, "*");
+        window.opener.postMessage({ address, account }, "*");
     }
 
     if (!_.isNil(childKey)) {
         const { privateKey, chainCode, network } = childKey;
-        window.opener.postMessage({ privateKey, chainCode, network }, '*');
+        window.opener.postMessage({ privateKey, chainCode, network }, "*");
     }
 
     window.close();
-}
+};
 
 export const formatFloat = (value, numberOfDigitsAfterDecimalPoint = 2) => {
-	return numeral(parseFloat(value)).format("0,0." + "0".repeat(numberOfDigitsAfterDecimalPoint));
+    return numeral(parseFloat(value)).format("0,0." + "0".repeat(numberOfDigitsAfterDecimalPoint));
 };
 
 export const formatInteger = (value) => {
-	return numeral(parseFloat(value)).format("0,0");
+    return numeral(parseFloat(value)).format("0,0");
 };
 
-
-export const formatDateTime = inputString => {
-	const m = moment(inputString);
-	return m.format("YYYY-MM-DD HH:mm:ss");
+export const formatDateTime = (inputString) => {
+    const m = moment(inputString);
+    return m.format("YYYY-MM-DD HH:mm:ss");
 };

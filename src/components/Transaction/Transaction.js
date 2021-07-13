@@ -17,6 +17,7 @@ import {
     getTxBodyUndelegate,
     getTxBodyMsgWithdrawDelegatorReward,
     getTxBodyMsgWithdrawValidatorCommission,
+    getTxBodyParameterChangeProposal,
 } from "src/utils";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -111,6 +112,8 @@ const Transaction = ({ user, showAlertBox }) => {
                 );
             } else if (type.includes("MsgWithdrawValidatorCommission")) {
                 txBody = getTxBodyMsgWithdrawValidatorCommission(_.get(payload, "value.msg.0.value.validator_address"));
+            } else if (type.includes("ParameterChangeProposal")) {
+                txBody = getTxBodyParameterChangeProposal(_.get(payload, "value.msg.0.value"), childKey);
             } else {
                 const msgs = _.get(payload, "value.msg");
                 if (msgs.length > 1) {
@@ -128,7 +131,7 @@ const Transaction = ({ user, showAlertBox }) => {
                 variant: "success",
                 message: "Sent successfully",
                 onHide: () => {
-                    
+
                 },
             });
 
@@ -233,7 +236,7 @@ const Transaction = ({ user, showAlertBox }) => {
                                         <div className={cx("view-raw-tx")} onClick={toogleViewJSON}>
                                             View raw transaction{ isViewingJSON ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
                                         </div>
-                                        {isViewingJSON && 
+                                        {isViewingJSON &&
                                             <ReactJson
                                                 theme="monokai"
                                                 style={{ backgroundColor: "inherit", wordBreak: "break-all" }}
@@ -243,7 +246,7 @@ const Transaction = ({ user, showAlertBox }) => {
                                                 displayDataTypes={false}
                                             />
                                         }
-                                        
+
                                     </div>
                                 )}
                             </form>
