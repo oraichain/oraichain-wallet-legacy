@@ -1,0 +1,22 @@
+.suggestion {
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 30px;
+
+    &-icon {
+        // display: inline-block;
+        width: 18px;
+        height: auto;
+        margin-right: 7px;
+    }
+
+    &-text {
+        // display: inline-block;
+        color: #F6F7FB;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 150%;
+    }
+}

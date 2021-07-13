@@ -1,0 +1,45 @@
+.tutorial {
+    margin-bottom: 8px;
+    color: white;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+}
+
+.copy-button {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    margin-left: 32px;
+    cursor: pointer;
+    user-select: none;
+
+    &-icon {
+        display: inline-block;
+        margin-right: 8px;
+    }
+
+    &-text {
+        display: block;
+        color: white;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 150%;
+    }
+}
+
+.copy-message {
+    position: absolute;
+    color: #28a745;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+}

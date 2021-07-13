@@ -1,0 +1,22 @@
+.text-field {
+    width: 100%;
+    padding: 15px 20px;
+    border: none;
+    border-radius: 5px;
+    color: #F6F7FB;
+    background-color: #1E344D;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &-primary {
+        border: 1px solid #2B5072;
+        background: #213B58;
+    }
+}

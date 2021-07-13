@@ -1,0 +1,20 @@
+.button-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 32px 0;
+
+    @media (min-width: 992px) {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+    }
+}
+
+.view-raw-tx {
+    color: #fff;
+    font-size: 18px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}

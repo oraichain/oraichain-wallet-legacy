@@ -1,0 +1,50 @@
+.wallet {
+    padding: 16px;
+    
+    @media (min-width: 992px) {
+        width: 300px;
+    }
+
+    &-info {
+        margin-bottom: 16px;
+
+        &-title {
+            margin-bottom: 4px;
+            color: #142437;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 150%;
+        }
+
+        &-value {
+            color: #142437;
+            font-family: Roboto;
+            font-style: normal;
+            font-weight: normal;
+            font-size: 16px;
+            line-height: 150%;
+            word-break: break-all;
+        }
+    }
+}
+
+.balance {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    max-width: 100%;
+
+    &-amount {
+        display: inline-block;
+        word-break: break-all;
+        margin-right: 8px;
+    }
+
+    &-denom {
+        display: inline-block;
+        text-transform: uppercase;
+    }
+}

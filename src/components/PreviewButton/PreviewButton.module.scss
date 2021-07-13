@@ -1,0 +1,27 @@
+.preview-button {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    padding: 8px 20px;
+    background: #2B5072;
+    border-radius: 4px;
+    border: none;
+
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &-text {
+        display: inline-block;
+        color: #F6F7FB;
+    }
+
+    &-icon {
+        display: inline-block;
+        margin-right: 8px;
+        color: #F6F7FB;
+    }
+}

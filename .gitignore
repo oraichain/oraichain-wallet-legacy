@@ -105,7 +105,7 @@ dist
 
 .env
 
-*.lock
+# *.lock
 
 build/
 

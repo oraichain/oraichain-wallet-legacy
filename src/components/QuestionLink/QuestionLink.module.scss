@@ -1,0 +1,31 @@
+.question {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    &-text {
+        display: inline-block;
+        margin-right: 8px;
+        color: #F6F7FB;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 150%;
+    }
+
+    &-link {
+        display: inline-block;
+        color: #1A87FF;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 150%;
+
+        &:hover {
+            color: #1A87FF;
+        }
+    }
+}

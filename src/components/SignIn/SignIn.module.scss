@@ -1,0 +1,13 @@
+.button-group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+
+    @media (min-width: 375px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+}

@@ -1,0 +1,52 @@
+.input-text {
+    border: 1px solid #2b5072;
+    box-sizing: border-box;
+    border-radius: 8px;
+    &::before {
+        border: 0 !important;
+    }
+    &::after {
+        border: 0 !important;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    input {
+        font-size: 14px;
+        padding: 12px;
+        padding-left: 15px;
+        &::before {
+            border: 0;
+        }
+        &::after {
+            border: 0;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    textarea {
+        font-size: 14px;
+        padding: 12px;
+        padding-left: 15px;
+        &::before {
+            border: 0;
+        }
+        &::after {
+            border: 0;
+        }
+
+        &:focus {
+            outline: none;
+        }
+    }
+}
+
+.required-label {
+    color: #f44336;
+    border: 0;
+}

@@ -1,0 +1,23 @@
+.refresh-button {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+    background: transparent;
+    border-radius: 4px;
+    border: none;
+
+    &:hover {
+        background: transparent;
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &-icon {
+        display: inline-block;
+        color: #1A87FF;
+    }
+}

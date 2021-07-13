@@ -1,0 +1,155 @@
+.pin {
+    // width: 85%;
+    margin: 0 auto;
+    padding: 32px;
+    border-radius: 10px;
+    background: #192B40;
+
+    &-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        margin-bottom: 32px;
+    }
+}
+
+.close-button {
+    cursor: pointer;
+    user-select: none;
+
+    &-icon {
+        color: white;
+    }
+}
+
+.title {
+    margin-bottom: 16px;
+    color: white;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 30px;
+    line-height: 120%;
+    letter-spacing: -0.5px;
+    text-align: center;
+}
+
+.description {
+    margin-bottom: 8px;
+    color: white;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+}
+
+.warning {
+    color: #f44336;
+    font-family: Roboto;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 150%;
+    text-align: center;
+}
+
+@keyframes shake {
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    40%,
+    60%,
+    80% {
+        transform: translate3d(2px, 0, 0);
+    }
+    
+    30%,
+    50%,
+    70% {
+        transform: translate3d(-2px, 0, 0);
+    }
+}
+
+.confirmation-status {
+    margin: 35px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+        width: 139px;
+        height: 24px;
+        max-height: 24px;
+    }
+}
+
+.circle {
+    transition: all 100ms ease-out;
+    fill: white;
+
+    &.entered {
+        fill: #007bff;
+    }
+
+    &.success {
+        fill: #28a745;
+    }
+
+    &.error {
+        animation-name: shake;
+        animation-duration: 200ms;
+        fill: #dc3545;
+    }
+}
+
+.numpad {
+    display: grid;
+    grid-template-columns: 33.3% 33.3% 33.3%;
+
+    &-button {
+        color: white;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        text-align: center;
+        user-select: none;
+        cursor: pointer;
+        height: 60px;
+        line-height: 3.5em;
+        font-size: 20px;
+
+        svg {
+            font-size: 1.0rem;
+        }
+    }
+}
+
+.charpad {
+    display: grid;
+    grid-template-columns: 14.2% 14.2% 14.2% 14.2% 14.2% 14.2% 14.2%;
+
+    &-button {
+        color: white;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: normal;
+        text-align: center;
+        text-transform: uppercase;
+        user-select: none;
+        cursor: pointer;
+        height: 60px;
+        line-height: 3.5em;
+        font-size: 20px;
+
+        svg {
+            font-size: 1.0rem;
+        }
+    }
+}

@@ -1,0 +1,13 @@
+.send-tokens {
+    :global(.row) {
+        margin-bottom: 46px;
+
+        &:nth-child(1) {
+            margin-bottom: 24px;
+        }
+    }
+}
+
+.error-text {
+    bottom: -30px;
+}
