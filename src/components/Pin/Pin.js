@@ -72,7 +72,7 @@ const Pin = ({
         const decryptedPassword = decryptAES(encryptedPassword, enteredPin);
 
         if (decryptedPassword !== "") {
-            if (pinType === "export-recovery-pharse") { 
+            if (pinType === "export-recovery-pharse") {
                 closePin && closePin(decryptedPassword);
                 return;
             }
@@ -101,9 +101,9 @@ const Pin = ({
                                 account: walletName,
                                 childKey,
                             });
-                        
+
                         localStorage.setItem(walletName + "-password", encryptedPassword);
-                        
+
                         if (!_.isNil(window?.opener)) {
                             anotherAppLogin(address, walletName, childKey);
                             return;
@@ -192,7 +192,7 @@ const Pin = ({
                 </div>
             );
             if (i === 20) {
-                
+
             }
         }
         rows.push(
@@ -205,7 +205,7 @@ const Pin = ({
                 <Close />
             </div>
         );
-        
+
 
         return <div className={cx("charpad")}> {rows} </div>;
     };
@@ -266,7 +266,7 @@ const Pin = ({
                     </svg>
                 </div>
 
-                {pinArray.length < 4 ? <NumPad /> : <CharPad />}
+                {pinArray.length < 4 ? NumPad() : CharPad()}
             </div>
         </div>
     );
