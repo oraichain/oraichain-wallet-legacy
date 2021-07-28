@@ -13,6 +13,9 @@ import { formatFloat } from "src/utils";
 const cx = cn.bind(styles);
 
 const Wallet = ({ user, removeUser }) => {
+
+    const pubKey = user.childKey.privateKey ? Buffer.from(window.cosmos.getPubKey(user.childKey.privateKey)).toString('base64') : "";
+
     const { data, loading, error, refetch } = useGet({
         path: `${process.env.REACT_APP_LCD}${lcdApiPaths.BALANCES}/${user.address}`,
     });
@@ -57,6 +60,13 @@ const Wallet = ({ user, removeUser }) => {
                     />
                 </div>
                 <div className={cx("wallet-info-value")}>{balanceElement}</div>
+            </div>
+
+            <div className={cx("wallet-info")}>
+                <div className={cx("wallet-info-title")}>
+                    Public key <CopyButton text={pubKey} />
+                </div>
+                <div className={cx("wallet-info-value")}>{pubKey}</div>
             </div>
 
             <div className="d-flex flex-row justify-content-center mt-4">

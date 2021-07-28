@@ -293,7 +293,7 @@ export const getTxCreateValidator = (msg) => {
 
 export const getTxBodyParameterChangeProposal = (value, childKey) => {
     const cosmos = window.cosmos;
-    const {amount, ...rest} = value;
+    const { amount, ...rest } = value;
     const msgSend = new message.cosmos.params.v1beta1.ParameterChangeProposal(rest);
 
     const msgSendAny = new message.google.protobuf.Any({
