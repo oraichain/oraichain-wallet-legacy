@@ -99,7 +99,8 @@ const Pin = ({
                             setUser({
                                 address: address,
                                 account: walletName,
-                                childKey,
+                                childKey: childKey,
+                                privateKey: childKey.privateKey,
                             });
 
                         localStorage.setItem(walletName + "-password", encryptedPassword);
