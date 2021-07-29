@@ -13,7 +13,7 @@ const cx = cn.bind(styles);
 const Security = ({ user, showAlertBox }) => {
     const [showMnemonic, setShowMnemonic] = useState(false);
     const [showPrivateKey, setShowPrivateKey] = useState(false);
-    
+
     const handleHideMnemonicModal = () => {
         setShowMnemonic(false);
     }
@@ -29,7 +29,7 @@ const Security = ({ user, showAlertBox }) => {
     const showPrivateKeyModal = () => {
         setShowPrivateKey(true);
     }
-    
+
     return (
         <MainLayout pageTitle="Security & Privacy">
             <div className={cx("show-secret-key")}>
@@ -40,7 +40,7 @@ const Security = ({ user, showAlertBox }) => {
                     <Button variant="primary" fitContent={true} onClick={showPrivateKeyModal}> Reveal Private Key </Button>
                 </div>
 
-                { showMnemonic && <ModalExportMnemonic show={showMnemonic} onHide={handleHideMnemonicModal} /> }
+                {showMnemonic && <ModalExportMnemonic show={showMnemonic} onHide={handleHideMnemonicModal} />}
 
                 {showPrivateKey && <ModalExportPrivateKey show={showPrivateKey} onHide={handleHidePrivateKeyModal} />}
             </div>
