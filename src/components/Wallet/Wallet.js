@@ -13,8 +13,8 @@ import { formatFloat } from "src/utils";
 const cx = cn.bind(styles);
 
 const Wallet = ({ user, removeUser }) => {
-  const pubKey = user?.privateKey
-    ? Buffer.from(window.cosmos.getPubKey(Buffer.from(user?.privateKey))).toString("base64")
+  const pubKey = user?.childKey?.privateKey
+    ? Buffer.from(window.cosmos.getPubKey(Buffer.from(user?.childKey?.privateKey))).toString("base64")
     : "";
 
   const { data, loading, error, refetch } = useGet({
