@@ -177,8 +177,7 @@ const Transaction = ({ user, showAlertBox }) => {
                         <PreviewButton
                             onClick={() => {
                                 window.open(
-                                    `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${
-                                        jsonSrc?.txhash ?? ""
+                                    `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${jsonSrc?.txhash ?? ""
                                     }`
                                 );
                             }}
@@ -234,7 +233,7 @@ const Transaction = ({ user, showAlertBox }) => {
                                 {jsonSrc && (
                                     <div className="w-100 overflow-auto">
                                         <div className={cx("view-raw-tx")} onClick={toogleViewJSON}>
-                                            View raw transaction{ isViewingJSON ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+                                            View raw transaction{isViewingJSON ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
                                         </div>
                                         {isViewingJSON &&
                                             <ReactJson
@@ -253,7 +252,7 @@ const Transaction = ({ user, showAlertBox }) => {
                         </FormProvider>
                     )}
 
-                    {loading && <Loading message="Signing..." />}
+                    {loading && <Loading message="Submitting..." />}
                 </>
             )}
         </AuthLayout>
