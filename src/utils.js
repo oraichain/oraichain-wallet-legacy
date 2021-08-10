@@ -329,6 +329,21 @@ export const getTxBodyParameterChangeProposal = (value, childKey) => {
   });
 };
 
+export const getTxBodyDepositProposal = (value) => {
+  const { ...rest } = value;
+
+  const msgDeposit = new message.cosmos.gov.v1beta1.MsgDeposit(rest)
+
+  const msgDepositAny = new message.google.protobuf.Any({
+    type_url: '/cosmos.gov.v1beta1.MsgDeposit',
+    value: message.cosmos.gov.v1beta1.MsgDeposit.encode(msgDeposit).finish()
+  });
+
+  return new message.cosmos.tx.v1beta1.TxBody({
+    messages: [msgDepositAny]
+  });
+};
+
 /*
  * Encrypt a derived hd private key with a given pin and return it in Base64 form
  */

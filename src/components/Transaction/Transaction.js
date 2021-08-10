@@ -18,6 +18,7 @@ import {
     getTxBodyMsgWithdrawDelegatorReward,
     getTxBodyMsgWithdrawValidatorCommission,
     getTxBodyParameterChangeProposal,
+    getTxBodyDepositProposal,
 } from "src/utils";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -92,6 +93,7 @@ const Transaction = ({ user, showAlertBox }) => {
         try {
             setLoading(true);
             // will allow return childKey from Pin
+            console.log("payload: ", payload);
             const type = _.get(payload, "type");
             let txBody;
             const memo = _.get(payload, "value.memo") || "";
@@ -114,6 +116,8 @@ const Transaction = ({ user, showAlertBox }) => {
                 txBody = getTxBodyMsgWithdrawValidatorCommission(_.get(payload, "value.msg.0.value.validator_address"));
             } else if (type.includes("ParameterChangeProposal")) {
                 txBody = getTxBodyParameterChangeProposal(_.get(payload, "value.msg.0.value"), childKey);
+            } else if (type.includes("MsgDeposit")) {
+                txBody = getTxBodyDepositProposal(_.get(payload, "value.msg.value"));
             } else {
                 const msgs = _.get(payload, "value.msg");
                 if (msgs.length > 1) {
