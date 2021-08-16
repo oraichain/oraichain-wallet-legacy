@@ -64,15 +64,15 @@ const Transaction = ({ user, showAlertBox }) => {
         } else if (payload && !_.isNil(payload.value)) {
             const cloneObj = JSON.parse(JSON.stringify(payload));
             if (_.get(cloneObj, "value.fee.amount") && cloneObj.value.fee.amount[0]) {
-                cloneObj.value.fee.amount[0] = (new Big(cloneObj.value.fee.amount[0]).times(0.000001)).toString();
+                cloneObj.value.fee.amount[0] = (new Big(cloneObj.value.fee.amount[0])).toString();
             }
             if (_.get(cloneObj, "value.msg.0.value.amount.0.amount")) {
                 const amountString = _.get(cloneObj, "value.msg.0.value.amount.0.amount");
-                _.set(cloneObj, "value.msg.0.value.amount.0.amount", (new Big(amountString).times(0.000001)).toString());
+                _.set(cloneObj, "value.msg.0.value.amount.0.amount", (new Big(amountString)).toString());
             }
             if (_.get(cloneObj, "value.msg.0.value.amount.amount")) {
                 const amountString = _.get(cloneObj, "value.msg.0.value.amount.amount");
-                _.set(cloneObj, "value.msg.0.value.amount.amount", (new Big(amountString).times(0.000001)).toString());
+                _.set(cloneObj, "value.msg.0.value.amount.amount", (new Big(amountString)).toString());
             }
             setJsonSrc(cloneObj.value);
         }
@@ -128,9 +128,12 @@ const Transaction = ({ user, showAlertBox }) => {
                     txBody = getTxBodySend(user, to, amount, memo);
                 }
             }
+            const { amount, gas } = _.get(payload, "value.fee");
+            console.log("fees: ", { amount, gas });
+            console.log("amount: ", amount[0])
 
             // higher gas limit
-            const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
+            const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK", isNaN(parseInt(amount[0])) ? 0 : amount[0], gas)) || {};
             showAlertBox({
                 variant: "success",
                 message: "Sent successfully",
