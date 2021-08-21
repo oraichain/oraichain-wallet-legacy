@@ -377,7 +377,7 @@ export const anotherAppLogin = (address, account, childKey) => {
 
   if (!_.isNil(childKey)) {
     const { privateKey, chainCode, network } = childKey;
-    for (let domain in list) {
+    for (let domain of list) {
       window.opener.postMessage({ privateKey, chainCode, network }, domain);
     }
   }
