@@ -28,7 +28,7 @@ const ConfirmTransaction = ({ user, showAlertBox }) => {
 
     useEffect(() => {
         console.log(user.childKey);
-        
+
         const cloneObj = JSON.parse(JSON.stringify(payload));
         setJsonSrc(cloneObj);
     }, []);
@@ -42,9 +42,14 @@ const ConfirmTransaction = ({ user, showAlertBox }) => {
 
     const allow = () => {
         if (!_.isNil(window?.opener)) {
-            window.opener.postMessage({
-                childKey: user.childKey
-            }, "*");
+
+            // restrict domains that can receive child key
+            const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io"];
+            for (let domain of list) {
+                window.opener.postMessage({
+                    childKey: user.childKey
+                }, domain);
+            }
             window.close();
         }
     };
