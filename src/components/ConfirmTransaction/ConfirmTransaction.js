@@ -44,7 +44,7 @@ const ConfirmTransaction = ({ user, showAlertBox }) => {
         if (!_.isNil(window?.opener)) {
 
             // restrict domains that can receive child key
-            const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io"];
+            const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io", "https://sso.orai.io", "https://staging.sso.orai.io"];
             for (let domain of list) {
                 window.opener.postMessage({
                     childKey: user.childKey
