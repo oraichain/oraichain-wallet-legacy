@@ -369,8 +369,8 @@ export const decryptAES = (encryptedBase64, key) => {
   return "";
 };
 
-export const anotherAppLogin = (address, account) => {
-  const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io"];
+export const anotherAppLogin = (address, account, childKey) => {
+  const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io", "https://sso.orai.io", "https://staging.sso.orai.io"];
   if (!_.isNil(address) && !_.isNil(account)) {
     window.opener.postMessage({ address, account }, "*");
   }
