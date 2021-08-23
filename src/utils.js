@@ -369,18 +369,18 @@ export const decryptAES = (encryptedBase64, key) => {
   return "";
 };
 
-export const anotherAppLogin = (address, account, childKey) => {
+export const anotherAppLogin = (address, account) => {
   const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io"];
   if (!_.isNil(address) && !_.isNil(account)) {
     window.opener.postMessage({ address, account }, "*");
   }
 
-  if (!_.isNil(childKey)) {
-    const { privateKey, chainCode, network } = childKey;
-    for (let domain of list) {
-      window.opener.postMessage({ privateKey, chainCode, network }, domain);
-    }
-  }
+  // if (!_.isNil(childKey)) {
+  //   const { privateKey, chainCode, network } = childKey;
+  //   for (let domain of list) {
+  //     window.opener.postMessage({ privateKey, chainCode, network }, domain);
+  //   }
+  // }
 
   window.close();
 };
