@@ -90,7 +90,7 @@ const Pin = ({
                 setTimeout(() => {
                     if (pinType === "confirm") {
                         if (!_.isNil(window?.opener) && _.isNil(setStep)) {
-                            anotherAppLogin(address, walletName);
+                            anotherAppLogin(address, walletName, childKey);
                             return;
                         }
 
@@ -106,7 +106,7 @@ const Pin = ({
                         localStorage.setItem(walletName + "-password", encryptedPassword);
 
                         if (!_.isNil(window?.opener)) {
-                            anotherAppLogin(address, walletName);
+                            anotherAppLogin(address, walletName, childKey);
                             return;
                         }
                     } else if (pinType === "tx") {

@@ -370,17 +370,23 @@ export const decryptAES = (encryptedBase64, key) => {
 };
 
 export const anotherAppLogin = (address, account, childKey) => {
-  const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io", "https://sso.orai.io", "https://staging.sso.orai.io"];
   if (!_.isNil(address) && !_.isNil(account)) {
     window.opener.postMessage({ address, account }, "*");
   }
 
-  // if (!_.isNil(childKey)) {
-  //   const { privateKey, chainCode, network } = childKey;
-  //   for (let domain of list) {
-  //     window.opener.postMessage({ privateKey, chainCode, network }, domain);
-  //   }
-  // }
+  if (!_.isNil(childKey)) {
+    const { privateKey, chainCode, network } = childKey;
+    // check in the case of testnet
+    if (process.env.REACT_APP_NETWORK === "Oraichain-testnet" && process.env.REACT_APP_LCD === "https://testnet-lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://testnet.scan.orai.io") {
+      window.opener.postMessage({ privateKey, chainCode, network }, "*");
+      // if env is for mainnet
+    } else if (process.env.REACT_APP_NETWORK === "Oraichain" && process.env.REACT_APP_LCD === "https://lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io") {
+      const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io", "https://sso.orai.io", "https://staging.sso.orai.io"];
+      for (let domain of list) {
+        window.opener.postMessage({ privateKey, chainCode, network }, domain);
+      }
+    }
+  }
 
   window.close();
 };
