@@ -329,6 +329,58 @@ export const getTxBodyParameterChangeProposal = (value, childKey) => {
   });
 };
 
+export const getTxBodyDepositProposal = (value) => {
+  const { ...rest } = value;
+
+  const msgDeposit = new message.cosmos.gov.v1beta1.MsgDeposit(rest)
+
+  const msgDepositAny = new message.google.protobuf.Any({
+    type_url: '/cosmos.gov.v1beta1.MsgDeposit',
+    value: message.cosmos.gov.v1beta1.MsgDeposit.encode(msgDeposit).finish()
+  });
+
+  return new message.cosmos.tx.v1beta1.TxBody({
+    messages: [msgDepositAny]
+  });
+};
+
+export const getTxBodyVoteProposal = (value) => {
+  const { ...rest } = value;
+  console.log("rest in vote: ", rest);
+
+  const checkVoteOption = (option) => {
+    switch (option) {
+      case "Yes":
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_YES
+      case "Abstain":
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_ABSTAIN
+      case "No":
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_NO
+      case "No with veto":
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_NO_WITH_VETO
+      default:
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_YES
+    }
+  }
+
+  const msgVote = new message.cosmos.gov.v1beta1.MsgVote({
+    proposal_id: rest.proposal_id,
+    voter: rest.voter,
+    option: checkVoteOption(rest.option)
+  })
+
+  console.log("msg vote: ", msgVote);
+
+  const msgVoteAny = new message.google.protobuf.Any({
+    type_url: '/cosmos.gov.v1beta1.MsgVote',
+    value: message.cosmos.gov.v1beta1.MsgVote.encode(msgVote).finish()
+  });
+
+  return new message.cosmos.tx.v1beta1.TxBody({
+    messages: [msgVoteAny]
+  });
+};
+
 /*
  * Encrypt a derived hd private key with a given pin and return it in Base64 form
  */
@@ -361,7 +413,16 @@ export const anotherAppLogin = (address, account, childKey) => {
 
   if (!_.isNil(childKey)) {
     const { privateKey, chainCode, network } = childKey;
-    window.opener.postMessage({ privateKey, chainCode, network }, "*");
+    // check in the case of testnet
+    if (window.network === "Oraichain-testnet" && window.lcd === "https://testnet-lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://testnet.scan.orai.io") {
+      window.opener.postMessage({ privateKey, chainCode, network }, "*");
+      // if env is for mainnet
+    } else if (window.network === "Oraichain" && window.lcd === "https://lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io") {
+      const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io", "https://sso.orai.io", "https://staging.sso.orai.io"];
+      for (let domain of list) {
+        window.opener.postMessage({ privateKey, chainCode, network }, domain);
+      }
+    }
   }
 
   window.close();

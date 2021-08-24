@@ -78,7 +78,7 @@ const Pin = ({
             }
 
             const childKey = getChildKey(decryptedPassword);
-            console.log(childKey,'@@@@@@@@@@@@@@@@@@@@@@')
+            console.log(childKey, '@@@@@@@@@@@@@@@@@@@@@@')
 
             if (childKey !== "") {
                 const address = cosmos.getAddress(childKey);

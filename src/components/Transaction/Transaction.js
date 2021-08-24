@@ -18,6 +18,8 @@ import {
     getTxBodyMsgWithdrawDelegatorReward,
     getTxBodyMsgWithdrawValidatorCommission,
     getTxBodyParameterChangeProposal,
+    getTxBodyDepositProposal,
+    getTxBodyVoteProposal,
 } from "src/utils";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -63,15 +65,15 @@ const Transaction = ({ user, showAlertBox }) => {
         } else if (payload && !_.isNil(payload.value)) {
             const cloneObj = JSON.parse(JSON.stringify(payload));
             if (_.get(cloneObj, "value.fee.amount") && cloneObj.value.fee.amount[0]) {
-                cloneObj.value.fee.amount[0] = (new Big(cloneObj.value.fee.amount[0]).times(0.000001)).toString();
+                cloneObj.value.fee.amount[0] = (new Big(cloneObj.value.fee.amount[0])).toString();
             }
             if (_.get(cloneObj, "value.msg.0.value.amount.0.amount")) {
                 const amountString = _.get(cloneObj, "value.msg.0.value.amount.0.amount");
-                _.set(cloneObj, "value.msg.0.value.amount.0.amount", (new Big(amountString).times(0.000001)).toString());
+                _.set(cloneObj, "value.msg.0.value.amount.0.amount", (new Big(amountString)).toString());
             }
             if (_.get(cloneObj, "value.msg.0.value.amount.amount")) {
                 const amountString = _.get(cloneObj, "value.msg.0.value.amount.amount");
-                _.set(cloneObj, "value.msg.0.value.amount.amount", (new Big(amountString).times(0.000001)).toString());
+                _.set(cloneObj, "value.msg.0.value.amount.amount", (new Big(amountString)).toString());
             }
             setJsonSrc(cloneObj.value);
         }
@@ -92,6 +94,7 @@ const Transaction = ({ user, showAlertBox }) => {
         try {
             setLoading(true);
             // will allow return childKey from Pin
+            console.log("payload: ", payload);
             const type = _.get(payload, "type");
             let txBody;
             const memo = _.get(payload, "value.memo") || "";
@@ -114,6 +117,10 @@ const Transaction = ({ user, showAlertBox }) => {
                 txBody = getTxBodyMsgWithdrawValidatorCommission(_.get(payload, "value.msg.0.value.validator_address"));
             } else if (type.includes("ParameterChangeProposal")) {
                 txBody = getTxBodyParameterChangeProposal(_.get(payload, "value.msg.0.value"), childKey);
+            } else if (type.includes("MsgDeposit")) {
+                txBody = getTxBodyDepositProposal(_.get(payload, "value.msg.value"));
+            } else if (type.includes("MsgVote")) {
+                txBody = getTxBodyVoteProposal(_.get(payload, "value.msg.value"));
             } else {
                 const msgs = _.get(payload, "value.msg");
                 if (msgs.length > 1) {
@@ -124,9 +131,12 @@ const Transaction = ({ user, showAlertBox }) => {
                     txBody = getTxBodySend(user, to, amount, memo);
                 }
             }
+            const { amount, gas } = _.get(payload, "value.fee");
+            console.log("fees: ", { amount, gas });
+            console.log("amount: ", amount[0])
 
             // higher gas limit
-            const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK")) || {};
+            const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK", isNaN(parseInt(amount[0])) ? 0 : amount[0], gas)) || {};
             showAlertBox({
                 variant: "success",
                 message: "Sent successfully",
@@ -177,8 +187,7 @@ const Transaction = ({ user, showAlertBox }) => {
                         <PreviewButton
                             onClick={() => {
                                 window.open(
-                                    `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${
-                                        jsonSrc?.txhash ?? ""
+                                    `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"}/txs/${jsonSrc?.txhash ?? ""
                                     }`
                                 );
                             }}
@@ -234,7 +243,7 @@ const Transaction = ({ user, showAlertBox }) => {
                                 {jsonSrc && (
                                     <div className="w-100 overflow-auto">
                                         <div className={cx("view-raw-tx")} onClick={toogleViewJSON}>
-                                            View raw transaction{ isViewingJSON ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
+                                            View raw transaction{isViewingJSON ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
                                         </div>
                                         {isViewingJSON &&
                                             <ReactJson
@@ -253,7 +262,7 @@ const Transaction = ({ user, showAlertBox }) => {
                         </FormProvider>
                     )}
 
-                    {loading && <Loading message="Signing..." />}
+                    {loading && <Loading message="Submitting..." />}
                 </>
             )}
         </AuthLayout>
