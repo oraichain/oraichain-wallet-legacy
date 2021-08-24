@@ -78,6 +78,7 @@ const Pin = ({
             }
 
             const childKey = getChildKey(decryptedPassword);
+            console.log(childKey, '@@@@@@@@@@@@@@@@@@@@@@')
 
             if (childKey !== "") {
                 const address = cosmos.getAddress(childKey);
@@ -99,7 +100,7 @@ const Pin = ({
                             setUser({
                                 address: address,
                                 account: walletName,
-                                childKey,
+                                childKey: childKey,
                             });
 
                         localStorage.setItem(walletName + "-password", encryptedPassword);

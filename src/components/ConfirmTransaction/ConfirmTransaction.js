@@ -28,63 +28,71 @@ const ConfirmTransaction = ({ user, showAlertBox }) => {
 
     useEffect(() => {
         console.log(user.childKey);
-        
+
         const cloneObj = JSON.parse(JSON.stringify(payload));
         setJsonSrc(cloneObj);
     }, []);
 
-    const deny = () => {
-        if (!_.isNil(window?.opener)) {
-            window.opener.postMessage("deny", "*");
-            window.close();
-        }
-    };
+    // const deny = () => {
+    //     if (!_.isNil(window?.opener)) {
+    //         window.opener.postMessage("deny", "*");
+    //         // window.close();
+    //     }
+    // };
 
-    const allow = () => {
-        if (!_.isNil(window?.opener)) {
-            window.opener.postMessage({
-                childKey: user.childKey
-            }, "*");
-            window.close();
-        }
-    };
+    // const allow = () => {
+    //     if (!_.isNil(window?.opener)) {
+
+    //         // restrict domains that can receive child key
+    //         const list = ["https://staging.airight.io", "https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io"];
+    //         for (let domain of list) {
+    //             window.opener.postMessage({
+    //                 childKey: user.childKey
+    //             }, domain);
+    //         }
+    //         // window.close();
+    //     }
+    // };
 
     return (
-        <AuthLayout>
-            <FormContainer>
-                <FormProvider {...methods}>
-                    <form>
-                        <FormTitle>Confirm Transaction</FormTitle>
-                        {/* <TextField type="text" name="account" className="d-none" />
-                        <TextField
-                            type="password"
-                            name="password"
-                            className="d-none"
-                            autoComplete="current-password"
-                        /> */}
-                        <div className={cx("tx-json")}>
-                            <ReactJson
-                                theme="monokai"
-                                style={{ backgroundColor: "inherit" }}
-                                src={jsonSrc}
-                            />
-                        </div>
+        // <AuthLayout>
+        //     <FormContainer>
+        //         <FormProvider {...methods}>
+        //             <form>
+        //                 <FormTitle>Confirm Transaction</FormTitle>
+        //                 {/* <TextField type="text" name="account" className="d-none" />
+        //                 <TextField
+        //                     type="password"
+        //                     name="password"
+        //                     className="d-none"
+        //                     autoComplete="current-password"
+        //                 /> */}
+        //                 <div className={cx("tx-json")}>
+        //                     <ReactJson
+        //                         theme="monokai"
+        //                         style={{ backgroundColor: "inherit" }}
+        //                         src={jsonSrc}
+        //                     />
+        //                 </div>
 
-                        <div className="d-flex flex-row justify-content-center my-4">
-                            <Button variant="primary" size="lg" onClick={allow}>
-                                ALLOW
-                            </Button>
-                        </div>
+        //                 <div className="d-flex flex-row justify-content-center my-4">
+        //                     <Button variant="primary" size="lg" onClick={allow}>
+        //                         ALLOW
+        //                     </Button>
+        //                 </div>
 
-                        <div className="d-flex flex-row justify-content-center mb-5">
-                            <Button variant="secondary" size="lg" onClick={deny}>
-                                DENY
-                            </Button>
-                        </div>
-                    </form>
-                </FormProvider>
-            </FormContainer>
-        </AuthLayout>
+        //                 <div className="d-flex flex-row justify-content-center mb-5">
+        //                     <Button variant="secondary" size="lg" onClick={deny}>
+        //                         DENY
+        //                     </Button>
+        //                 </div>
+        //             </form>
+        //         </FormProvider>
+        //     </FormContainer>
+        // </AuthLayout>
+        <div>
+
+        </div>
     );
 };
 

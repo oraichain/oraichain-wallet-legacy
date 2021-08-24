@@ -13,70 +13,81 @@ import { formatFloat } from "src/utils";
 const cx = cn.bind(styles);
 
 const Wallet = ({ user, removeUser }) => {
-    const { data, loading, error, refetch } = useGet({
-        path: `${process.env.REACT_APP_LCD}${lcdApiPaths.BALANCES}/${user.address}`,
-    });
+  const pubKey = user?.childKey?.privateKey
+    ? Buffer.from(window.cosmos.getPubKey(Buffer.from(user?.childKey?.privateKey))).toString("base64")
+    : "";
 
-    let balanceElement;
+  const { data, loading, error, refetch } = useGet({
+    path: `${process.env.REACT_APP_LCD}${lcdApiPaths.BALANCES}/${user.address}`,
+  });
 
-    if (loading) {
-        balanceElement = <Skeleton width={50} />;
+  let balanceElement;
+
+  if (loading) {
+    balanceElement = <Skeleton width={50} />;
+  } else {
+    if (error) {
+      balanceElement = "-";
     } else {
-        if (error) {
-            balanceElement = "-";
-        } else {
-            balanceElement = (
-                <div className={cx("balance")}>
-                    <div className={cx("balance-amount")}>
-                        {_.isNil(data?.balances?.[0]?.amount) ? "-" : formatFloat(data.balances[0].amount / Math.pow(10, 6), 6)}
-                    </div>
-                    <div className={cx("balance-denom")}>
-                        {_.isNil(data?.balances?.[0]?.denom) ? "-" : data.balances[0].denom}
-                    </div>
-                </div>
-            );
-        }
-    }
-
-    return (
-        <div className={cx("wallet")}>
-            <div className={cx("wallet-info")}>
-                <div className={cx("wallet-info-title")}>
-                    Address <CopyButton text={user.address} />
-                </div>
-                <div className={cx("wallet-info-value")}>{user.address}</div>
-            </div>
-
-            <div className={cx("wallet-info")}>
-                <div className={cx("wallet-info-title")}>
-                    Balance{" "}
-                    <RefreshButton
-                        onClick={() => {
-                            refetch();
-                        }}
-                    />
-                </div>
-                <div className={cx("wallet-info-value")}>{balanceElement}</div>
-            </div>
-
-            <div className="d-flex flex-row justify-content-center mt-4">
-                <Button
-                    variant="outline-primary"
-                    fitContent
-                    onClick={() => {
-                        removeUser();
-                    }}
-                >
-                    Logout
-                </Button>
-            </div>
+      balanceElement = (
+        <div className={cx("balance")}>
+          <div className={cx("balance-amount")}>
+            {_.isNil(data?.balances?.[0]?.amount) ? "-" : formatFloat(data.balances[0].amount / Math.pow(10, 6), 6)}
+          </div>
+          <div className={cx("balance-denom")}>
+            {_.isNil(data?.balances?.[0]?.denom) ? "-" : data.balances[0].denom}
+          </div>
         </div>
-    );
+      );
+    }
+  }
+
+  return (
+    <div className={cx("wallet")}>
+      <div className={cx("wallet-info")}>
+        <div className={cx("wallet-info-title")}>
+          Address <CopyButton text={user.address} />
+        </div>
+        <div className={cx("wallet-info-value")}>{user.address}</div>
+      </div>
+
+      <div className={cx("wallet-info")}>
+        <div className={cx("wallet-info-title")}>
+          Balance{" "}
+          <RefreshButton
+            onClick={() => {
+              refetch();
+            }}
+          />
+        </div>
+        <div className={cx("wallet-info-value")}>{balanceElement}</div>
+      </div>
+
+      <div className={cx("wallet-info")}>
+        <div className={cx("wallet-info-title")}>
+          Public key <CopyButton text={pubKey} />
+        </div>
+        <div className={cx("wallet-info-value")}>{pubKey}</div>
+      </div>
+
+      <div className="d-flex flex-row justify-content-center mt-4">
+        <Button
+          variant="outline-primary"
+          fitContent
+          onClick={() => {
+            removeUser();
+          }}
+        >
+          Logout
+        </Button>
+      </div>
+    </div>
+  );
 };
 
 Wallet.propTypes = {
-    user: PropTypes.any,
-    removeUser: PropTypes.any,
+  user: PropTypes.any,
+  removeUser: PropTypes.any,
 };
 Wallet.defaultProps = {};
 
