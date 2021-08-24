@@ -344,6 +344,43 @@ export const getTxBodyDepositProposal = (value) => {
   });
 };
 
+export const getTxBodyVoteProposal = (value) => {
+  const { ...rest } = value;
+  console.log("rest in vote: ", rest);
+
+  const checkVoteOption = (option) => {
+    switch (option) {
+      case "Yes":
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_YES
+      case "Abstain":
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_ABSTAIN
+      case "No":
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_NO
+      case "No with veto":
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_NO_WITH_VETO
+      default:
+        return message.cosmos.gov.v1beta1.VoteOption.VOTE_OPTION_YES
+    }
+  }
+
+  const msgVote = new message.cosmos.gov.v1beta1.MsgVote({
+    proposal_id: rest.proposal_id,
+    voter: rest.voter,
+    option: checkVoteOption(rest.option)
+  })
+
+  console.log("msg vote: ", msgVote);
+
+  const msgVoteAny = new message.google.protobuf.Any({
+    type_url: '/cosmos.gov.v1beta1.MsgVote',
+    value: message.cosmos.gov.v1beta1.MsgVote.encode(msgVote).finish()
+  });
+
+  return new message.cosmos.tx.v1beta1.TxBody({
+    messages: [msgVoteAny]
+  });
+};
+
 /*
  * Encrypt a derived hd private key with a given pin and return it in Base64 form
  */

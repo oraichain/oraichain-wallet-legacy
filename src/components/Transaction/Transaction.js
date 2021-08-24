@@ -19,6 +19,7 @@ import {
     getTxBodyMsgWithdrawValidatorCommission,
     getTxBodyParameterChangeProposal,
     getTxBodyDepositProposal,
+    getTxBodyVoteProposal,
 } from "src/utils";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -118,6 +119,8 @@ const Transaction = ({ user, showAlertBox }) => {
                 txBody = getTxBodyParameterChangeProposal(_.get(payload, "value.msg.0.value"), childKey);
             } else if (type.includes("MsgDeposit")) {
                 txBody = getTxBodyDepositProposal(_.get(payload, "value.msg.value"));
+            } else if (type.includes("MsgVote")) {
+                txBody = getTxBodyVoteProposal(_.get(payload, "value.msg.value"));
             } else {
                 const msgs = _.get(payload, "value.msg");
                 if (msgs.length > 1) {
