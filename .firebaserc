@@ -1,3 +1,4 @@
+
 {
   "projects": {
     "default": "oraichain-mainnet"
@@ -5,8 +6,8 @@
   "targets": {
     "oraichain-mainnet": {
       "hosting": {
-        "mainnet-oraiwallet": [
-          "mainnet-oraiwallet"
+        "testnet-wallet": [
+          "testnet-wallet"
         ]
       }
     }
