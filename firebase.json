@@ -1,7 +1,7 @@
 {
   "hosting": [
     {
-      "target": "testnet-wallet",
+      "target": "mainnet-oraiwallet",
       "public": "build",
       "ignore": [
         "firebase.json",
