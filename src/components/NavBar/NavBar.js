@@ -4,7 +4,7 @@ import cn from "classnames/bind";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import BarsIcon from "src/components/icons/BarsIcon";
-import logoUrl from "src/images/logo.png";
+import logoUrl from "src/images/orai_wallet_logo.png";
 import { Nav, Navbar, NavDropdown } from "react-bootstrap";
 import { pagePaths } from "src/consts/pagePaths";
 import UserIcon from "src/components/icons/UserIcon";
@@ -30,10 +30,10 @@ const NavBar = ({ user, removeUser }) => {
             <div className={cx("logo-wrap")} onClick={() => history.push("/")}>
                 <img src={logoUrl} className={cx("logo")} alt="" /> <span> Oraichain Wallet </span>
             </div>
-            {!_.isNil(user) && 
+            {!_.isNil(user) &&
                 <div>
                     <NavDropdown title={navDropdownTitle} id="navbarScrollingDropdown" alignRight>
-                        <Wallet user={user} removeUser={removeUser}/>
+                        <Wallet user={user} removeUser={removeUser} />
                     </NavDropdown>
                 </div>
             }
