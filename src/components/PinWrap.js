@@ -2,7 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import CryptoJS from 'crypto-js';
 import _ from 'lodash';
-import { cleanMnemonics, getPassword, getChildkeyFromDecrypted } from '../utils';
+import {
+  cleanMnemonics,
+  getPassword,
+  getChildkeyFromDecrypted
+} from '../utils';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import * as actions from '../actions';
@@ -163,21 +167,12 @@ const PinWrap = ({ pinType, updateUser, onChildKey, closePopup }) => {
               if (window.stdSignMsgByPayload) {
                 history.push(`/${i18n.language}/transaction`);
               } else if (closePopup) {
-                window.opener.postMessage({ address, account}, "*");
+                window.opener.postMessage({ address, account }, '*');
                 window.close();
               } else {
                 history.push(`/${i18n.language}/`);
               }
             } else if (pinType === 'tx') {
-              let password = getPassword();
-
-              if (password.trim() === '') {
-                alert('Could not retrieve account stored in Keychain.');
-                return;
-              }
-
-              let decrypted = CryptoJS.AES.decrypt(password.trim(), input);
-              let decryptedMnemonics = decrypted.toString(CryptoJS.enc.Utf8);
               const childKey = getChildkeyFromDecrypted(decryptedMnemonics);
 
               // hide UI
@@ -238,7 +233,9 @@ const PinWrap = ({ pinType, updateUser, onChildKey, closePopup }) => {
         </div>
       );
       if (i === 8) {
-        shuffledNumCode.push(<div key={key++} className="grid-number" onClick={numberClick}></div>);
+        shuffledNumCode.push(
+          <div key={key++} className="grid-number" onClick={numberClick}></div>
+        );
       } else if (i === 9) {
         shuffledNumCode.push(
           <div key={key++} className="finger grid-number" onClick={numberClick}>
@@ -251,7 +248,34 @@ const PinWrap = ({ pinType, updateUser, onChildKey, closePopup }) => {
   };
 
   const ShuffledAlphabetCode = () => {
-    const alphabetSlice = _.shuffle(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']);
+    const alphabetSlice = _.shuffle([
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+      'G',
+      'H',
+      'I',
+      'J',
+      'K',
+      'L',
+      'M',
+      'N',
+      'O',
+      'P',
+      'Q',
+      'R',
+      'S',
+      'T',
+      'U',
+      'V',
+      'W',
+      'X',
+      'Y',
+      'Z'
+    ]);
 
     // Make these codes
     //<div class="finger grid-number">A</div>
@@ -270,7 +294,9 @@ const PinWrap = ({ pinType, updateUser, onChildKey, closePopup }) => {
         </div>
       );
       if (i === 25) {
-        shuffledAlphabetCode.push(<div key={key++} className="grid-number" onClick={numberClick}></div>);
+        shuffledAlphabetCode.push(
+          <div key={key++} className="grid-number" onClick={numberClick}></div>
+        );
         shuffledAlphabetCode.push(
           <div key={key++} className="finger grid-number" onClick={numberClick}>
             ←
