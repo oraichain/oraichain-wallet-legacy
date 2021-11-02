@@ -226,19 +226,23 @@ export const getTxBodyUndelegate = (user, validator_address, amount, memo) => {
   });
 };
 
-export const getTxBodyMsgWithdrawDelegatorReward = (user, validator_address) => {
-  const msgSend = new message.cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward({
-    delegator_address: user.address,
-    validator_address,
-  });
+export const getTxBodyMsgWithdrawDelegatorReward = (user, msgs) => {
+  let messages = [];
+  for (let msg of msgs) {
+    const msgSend = new message.cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward({
+      delegator_address: user.address,
+      validator_address: msg.value.validator_address,
+    });
 
-  const msgSendAny = new message.google.protobuf.Any({
-    type_url: "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward",
-    value: message.cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward.encode(msgSend).finish(),
-  });
+    const msgSendAny = new message.google.protobuf.Any({
+      type_url: "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward",
+      value: message.cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward.encode(msgSend).finish(),
+    });
+    messages.push(msgSendAny);
+  }
 
   return new message.cosmos.tx.v1beta1.TxBody({
-    messages: [msgSendAny],
+    messages,
     memo: "",
   });
 };

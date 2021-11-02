@@ -111,7 +111,8 @@ const Transaction = ({ user, showAlertBox }) => {
             } else if (type.includes("MsgWithdrawDelegatorReward")) {
                 txBody = getTxBodyMsgWithdrawDelegatorReward(
                     user,
-                    _.get(payload, "value.msg.0.value.validator_address")
+                    // _.get(payload, "value.msg.0.value.validator_address")
+                    _.get(payload, "value.msg")
                 );
             } else if (type.includes("MsgWithdrawValidatorCommission")) {
                 txBody = getTxBodyMsgWithdrawValidatorCommission(_.get(payload, "value.msg.0.value.validator_address"));
