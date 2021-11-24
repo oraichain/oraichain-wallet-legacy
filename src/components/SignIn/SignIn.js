@@ -101,7 +101,7 @@ const SignIn = ({ setUser }) => {
 
                 <OrDivider text={"Or import with"} />
 
-                <div className="mb-4">
+                <div>
                     <div className={cx("button-group")}>
                         <Button
                             group={true}
@@ -125,7 +125,7 @@ const SignIn = ({ setUser }) => {
                     </div>
                 </div>
 
-                <div className="d-flex flex-row justify-content-center mb-4 mb-5">
+                <div className="d-flex flex-row justify-content-center">
                     <Button
                         variant="secondary"
                         size="lg"
