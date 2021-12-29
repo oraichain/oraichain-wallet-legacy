@@ -10,7 +10,7 @@ import { selectUser, removeUser } from "src/store/slices/userSlice";
 import Wallet from "src/components/Wallet";
 import UserIcon from "src/components/icons/UserIcon";
 import DownAngleIcon from "src/components/icons/DownAngleIcon";
-import logoUrl from "src/images/logo.png";
+import logoUrl from "src/images/orai_wallet_logo.png";
 
 import styles from "./AuthLayout.module.scss";
 
@@ -38,10 +38,10 @@ const AuthLayout = ({ children }) => {
                         <img className={cx("brand-icon")} src={logoUrl} alt="" />
                         <span className={cx("brand-text")} onClick={() => history.push("/")}>Oraichain Wallet</span>
                     </div>
-                    {!_.isNil(user) && 
+                    {!_.isNil(user) &&
                         <div>
                             <NavDropdown title={navDropdownTitle} id="navbarScrollingDropdown" alignRight>
-                                <Wallet user={user} removeUser={handleRemoveUser}/>
+                                <Wallet user={user} removeUser={handleRemoveUser} />
                             </NavDropdown>
                         </div>
                     }

@@ -37,7 +37,7 @@ const network =
     window.localStorage.getItem("wallet.network") ||
     "Oraichain";
 const path = url.searchParams.get("path");
-const lcd = url.searchParams.get("lcd") || process.env.REACT_APP_LCD ||  (networks[network]?.lcd ?? "http://localhost:1317");
+const lcd = url.searchParams.get("lcd") || process.env.REACT_APP_LCD || (networks[network]?.lcd ?? "http://localhost:1317");
 // init cosmos version
 const cosmos = new Cosmos(lcd, network);
 const symbol = networks[network]?.denom ?? "orai";
@@ -48,6 +48,8 @@ cosmos.setBech32MainPrefix(symbol);
 
 // global params
 window.cosmos = cosmos;
+window.network = network;
+window.lcd = lcd;
 window.localStorage.setItem("wallet.network", network);
 
 yup.addMethod(yup.string, "isNumeric", function (message) {
