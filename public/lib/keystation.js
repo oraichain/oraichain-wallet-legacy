@@ -115,15 +115,23 @@ class Keystation {
     // create new one if closed
     const popup = PopupCenter(url, '', '400', '745');
     return new Promise((resolve) => {
+      let popupDisplayCheckInterval = null;
+      popupDisplayCheckInterval = setInterval(() => {
+          if (!popup || popup.closed) {
+              reject("popup-closed");
+              clearInterval(popupDisplayCheckInterval);
+          }
+      }, 1000);
       const handler = (e) => {
-        // kind of childKey
-        if (e.data.network) {
-          window.removeEventListener('message', handler);
-          resolve(e.data);
-        }
+          // kind of childKey
+          if (e.data.network) {
+              window.removeEventListener("message", handler);
+              clearInterval(popupDisplayCheckInterval);
+              resolve(e.data);
+          }
       };
-      window.addEventListener('message', handler);
-    })
+      window.addEventListener("message", handler);
+    });
 
   }
 
