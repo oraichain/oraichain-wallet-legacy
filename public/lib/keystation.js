@@ -90,10 +90,7 @@ class Keystation {
         return new Promise((resolve, reject) => {
             let popupDisplayCheckInterval = null;
             popupDisplayCheckInterval = setInterval(() => {
-                if (!popup) {
-                    reject("popup-blocked");
-                    clearInterval(popupDisplayCheckInterval);
-                } else if (popup.closed) {
+                if (!popup || popup.closed) {
                     reject("popup-closed");
                     clearInterval(popupDisplayCheckInterval);
                 }
