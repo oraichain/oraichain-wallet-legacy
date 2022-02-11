@@ -20,6 +20,7 @@ import {
     getTxBodyParameterChangeProposal,
     getTxBodyDepositProposal,
     getTxBodyVoteProposal,
+    getTxBodyMsgExecuteContract,
 } from "src/utils";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -116,6 +117,8 @@ const Transaction = ({ user, showAlertBox }) => {
                 );
             } else if (type.includes("MsgWithdrawValidatorCommission")) {
                 txBody = getTxBodyMsgWithdrawValidatorCommission(_.get(payload, "value.msg.0.value.validator_address"));
+            } else if (type.includes("MsgExecuteContract")) {
+                txBody = getTxBodyMsgExecuteContract(_.get(payload, "value.msg.0.value"));
             } else if (type.includes("ParameterChangeProposal")) {
                 txBody = getTxBodyParameterChangeProposal(_.get(payload, "value.msg.0.value"), childKey);
             } else if (type.includes("MsgDeposit")) {
