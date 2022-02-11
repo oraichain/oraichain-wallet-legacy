@@ -261,6 +261,25 @@ export const getTxBodyMsgWithdrawValidatorCommission = (validator_address) => {
   });
 };
 
+export const getTxBodyMsgExecuteContract = ({ contract, msg, sender, sent_funds, memo }) => {
+  const msgSend = new message.cosmwasm.wasm.v1beta1.MsgExecuteContract({
+    contract,
+    msg: Buffer.from(msg), // has to use buffer here because the browser shall not send buffer as string through object json
+    sender,
+    sent_funds,
+  });
+
+  const msgSendAny = new message.google.protobuf.Any({
+    type_url: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
+    value: message.cosmwasm.wasm.v1beta1.MsgExecuteContract.encode(msgSend).finish(),
+  });
+
+  return new message.cosmos.tx.v1beta1.TxBody({
+    messages: [msgSendAny],
+    memo,
+  });
+};
+
 export const getTxCreateValidator = (msg) => {
   const msgSend = new message.cosmos.staking.v1beta1.MsgCreateValidator({
     ...msg,
