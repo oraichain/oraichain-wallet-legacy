@@ -29,13 +29,14 @@ const Wallet = ({ user, removeUser }) => {
     if (error) {
       balanceElement = "-";
     } else {
+      const balance = data?.balances?.find(balance => balance.denom === 'orai');
       balanceElement = (
         <div className={cx("balance")}>
           <div className={cx("balance-amount")}>
-            {_.isNil(data?.balances?.[0]?.amount) ? "-" : formatFloat(data.balances[0].amount / Math.pow(10, 6), 6)}
+            {_.isNil(balance?.amount) ? "-" : formatFloat(balance?.amount / Math.pow(10, 6), 6)}
           </div>
           <div className={cx("balance-denom")}>
-            {_.isNil(data?.balances?.[0]?.denom) ? "-" : data.balances[0].denom}
+            {_.isNil(balance?.denom) ? "-" : balance?.denom}
           </div>
         </div>
       );
