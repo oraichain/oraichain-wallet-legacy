@@ -9,6 +9,7 @@
     "@material-ui/icons": "^4.11.2",
     "@monaco-editor/react": "^4.0.11",
     "@oraichain/cosmosjs": "^0.0.70",
+    "@oraichain/oraiwasm-js": "^0.0.4",
     "@reduxjs/toolkit": "^1.5.1",
     "@rjsf/core": "^2.5.0",
     "antd": "^4.15.3",

@@ -58,6 +58,7 @@ const Transaction = ({ user, showAlertBox }) => {
     }
 
     const cosmos = window.cosmos;
+    const oraiwasm = window.oraiwasm;
 
     if (!showResult && !openPin && _.isNil(jsonSrc)) {
         if (window.stdSignMsgByPayload) {
@@ -95,7 +96,7 @@ const Transaction = ({ user, showAlertBox }) => {
         try {
             setLoading(true);
             // will allow return childKey from Pin
-            console.log("payload: ", payload);
+            let gasUsed = 0;
             const type = _.get(payload, "type");
             let txBody;
             const memo = _.get(payload, "value.memo") || "";
@@ -118,6 +119,22 @@ const Transaction = ({ user, showAlertBox }) => {
             } else if (type.includes("MsgWithdrawValidatorCommission")) {
                 txBody = getTxBodyMsgWithdrawValidatorCommission(_.get(payload, "value.msg.0.value.validator_address"));
             } else if (type.includes("MsgExecuteContract")) {
+                const gasType = _.get(payload, "gasType");
+
+                // handle auto gas
+                if (gasType === 'auto') {
+                    let value = _.get(payload, "value.msg.0.value");
+                    let simulateMsgs = [];
+                    simulateMsgs.push(oraiwasm.getHandleMessageSimulate(value.contract, Buffer.from(value.msg), value.sender, null));
+                    try {
+                        const response = await oraiwasm.simulate(childKey.publicKey, oraiwasm.getTxBody(simulateMsgs, undefined, undefined));
+                        console.log("simulate response: ", response);
+                        if (response && response.gas_info && response.gas_info.gas_used) gasUsed = response.gas_info.gas_used;
+                    } catch (ex) {
+                        // if cannot simulate => ignore, use default gas
+                        console.log("error simulating response: ", ex);
+                    }
+                }
                 txBody = getTxBodyMsgExecuteContract(_.get(payload, "value.msg.0.value"));
             } else if (type.includes("ParameterChangeProposal")) {
                 txBody = getTxBodyParameterChangeProposal(_.get(payload, "value.msg.0.value"), childKey);
@@ -135,9 +152,10 @@ const Transaction = ({ user, showAlertBox }) => {
                     txBody = getTxBodySend(user, to, amount, memo);
                 }
             }
-            const { amount, gas } = _.get(payload, "value.fee");
+            let { amount, gas } = _.get(payload, "value.fee");
             console.log("fees: ", { amount, gas });
             console.log("amount: ", amount[0])
+            if (gasUsed !== 0) gas = gasUsed;
 
             // higher gas limit
             const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK", isNaN(parseInt(amount[0])) ? 0 : amount[0], gas)) || {};
