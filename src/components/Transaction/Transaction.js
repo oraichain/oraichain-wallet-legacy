@@ -21,6 +21,8 @@ import {
     getTxBodyDepositProposal,
     getTxBodyVoteProposal,
     getTxBodyMsgExecuteContract,
+    getMessageExecuteContract,
+    getTxBody,
 } from "src/utils";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -99,6 +101,7 @@ const Transaction = ({ user, showAlertBox }) => {
             let gasUsed = 0;
             const type = _.get(payload, "type");
             let txBody;
+            let message;
             const memo = _.get(payload, "value.memo") || "";
             if (type.includes("MsgDelegate")) {
                 const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
@@ -120,22 +123,28 @@ const Transaction = ({ user, showAlertBox }) => {
                 txBody = getTxBodyMsgWithdrawValidatorCommission(_.get(payload, "value.msg.0.value.validator_address"));
             } else if (type.includes("MsgExecuteContract")) {
                 const gasType = _.get(payload, "gasType");
+                let msgs = _.get(payload, "value.msg");
+                let messages = [];
+                for (let msg of msgs) {
+                    messages.push(getMessageExecuteContract(msg.value));
+                }
 
                 // handle auto gas
                 if (gasType === 'auto') {
-                    let value = _.get(payload, "value.msg.0.value");
                     let simulateMsgs = [];
-                    simulateMsgs.push(oraiwasm.getHandleMessageSimulate(value.contract, Buffer.from(value.msg), value.sender, null));
+                    for (let msg of msgs) {
+                        simulateMsgs.push(oraiwasm.getHandleMessageSimulate(msg.value.contract, Buffer.from(msg.value.msg), msg.value.sender, null));
+                    }
                     try {
                         const response = await oraiwasm.simulate(childKey.publicKey, oraiwasm.getTxBody(simulateMsgs, undefined, undefined));
                         console.log("simulate response: ", response);
-                        if (response && response.gas_info && response.gas_info.gas_used) gasUsed = response.gas_info.gas_used;
+                        if (response && response.gas_info && response.gas_info.gas_used) gasUsed = Math.round(parseInt(response.gas_info.gas_used) * 1.2);
                     } catch (ex) {
                         // if cannot simulate => ignore, use default gas
                         console.log("error simulating response: ", ex);
                     }
                 }
-                txBody = getTxBodyMsgExecuteContract(_.get(payload, "value.msg.0.value"));
+                txBody = getTxBody({ messages });
             } else if (type.includes("ParameterChangeProposal")) {
                 txBody = getTxBodyParameterChangeProposal(_.get(payload, "value.msg.0.value"), childKey);
             } else if (type.includes("MsgDeposit")) {

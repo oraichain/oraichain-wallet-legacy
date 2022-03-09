@@ -261,7 +261,7 @@ export const getTxBodyMsgWithdrawValidatorCommission = (validator_address) => {
   });
 };
 
-export const getTxBodyMsgExecuteContract = ({ contract, msg, sender, sent_funds, memo }) => {
+export const getMessageExecuteContract = ({ contract, msg, sender, sent_funds, memo }) => {
   const msgSend = new message.cosmwasm.wasm.v1beta1.MsgExecuteContract({
     contract,
     msg: Buffer.from(msg), // has to use buffer here because the browser shall not send buffer as string through object json
@@ -274,8 +274,12 @@ export const getTxBodyMsgExecuteContract = ({ contract, msg, sender, sent_funds,
     value: message.cosmwasm.wasm.v1beta1.MsgExecuteContract.encode(msgSend).finish(),
   });
 
+  return msgSendAny;
+};
+
+export const getTxBody = ({ messages, memo }) => {
   return new message.cosmos.tx.v1beta1.TxBody({
-    messages: [msgSendAny],
+    messages,
     memo,
   });
 };
