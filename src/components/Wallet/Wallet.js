@@ -54,7 +54,7 @@ const Wallet = ({ user, removeUser }) => {
 
       <div className={cx("wallet-info")}>
         <div className={cx("wallet-info-title")}>
-          Balance{" "}
+          ORAI Balance{" "}
           <RefreshButton
             onClick={() => {
               refetch();
