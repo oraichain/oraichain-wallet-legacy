@@ -207,6 +207,26 @@ export const getTxBodyDelegate = (user, validator_address, amount, memo) => {
   });
 };
 
+export const getTxBodyReDelegate = (user, validator_src_address, validator_dst_address, amount, memo) => {
+  const cosmos = window.cosmos;
+  const msgSend = new message.cosmos.staking.v1beta1.MsgBeginRedelegate({
+    delegator_address: user.address,
+    validator_src_address,
+    validator_dst_address,
+    amount: { denom: cosmos.bech32MainPrefix, amount }, // 10
+  });
+
+  const msgSendAny = new message.google.protobuf.Any({
+    type_url: "/cosmos.staking.v1beta1.MsgBeginRedelegate",
+    value: message.cosmos.staking.v1beta1.MsgBeginRedelegate.encode(msgSend).finish(),
+  });
+
+  return new message.cosmos.tx.v1beta1.TxBody({
+    messages: [msgSendAny],
+    memo,
+  });
+};
+
 export const getTxBodyUndelegate = (user, validator_address, amount, memo) => {
   const cosmos = window.cosmos;
   const msgSend = new message.cosmos.staking.v1beta1.MsgUndelegate({

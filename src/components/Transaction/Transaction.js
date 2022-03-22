@@ -23,6 +23,7 @@ import {
     getTxBodyMsgExecuteContract,
     getMessageExecuteContract,
     getTxBody,
+    getTxBodyReDelegate,
 } from "src/utils";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -111,6 +112,11 @@ const Transaction = ({ user, showAlertBox }) => {
                 const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
                 const validator_address = _.get(payload, "value.msg.0.value.validator_address");
                 txBody = getTxBodyUndelegate(user, validator_address, amount, memo);
+            } else if (type.includes("MsgBeginRedelegate")) {
+                const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
+                const validator_src_address = _.get(payload, "value.msg.0.value.validator_src_address");
+                const validator_dst_address = _.get(payload, "value.msg.0.value.validator_dst_address");
+                txBody = getTxBodyReDelegate(user, validator_src_address, validator_dst_address, amount, memo);
             } else if (type.includes("MsgCreateValidator")) {
                 txBody = getTxCreateValidator(_.get(payload, "value.msg.0.value"));
             } else if (type.includes("MsgWithdrawDelegatorReward")) {
