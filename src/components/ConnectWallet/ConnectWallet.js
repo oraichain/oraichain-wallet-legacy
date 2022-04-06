@@ -30,7 +30,7 @@ const ConnectWallet = ({ account, address, encryptedMnemonics, enteredPin, setUs
         if (_.isNil(window?.opener)) {
             history.push(pagePaths.HOME);
         } else {
-            anotherAppLogin(address, account, null);
+            anotherAppLogin(address, account, childKey);
         }
     };
 
