@@ -24,13 +24,13 @@ const ConnectWallet = ({ account, address, encryptedMnemonics, enteredPin, setUs
             const decryptedMnemonics = decryptAES(encryptedMnemonics, enteredPin);
             childKey = getChildkeyFromDecrypted(decryptedMnemonics);
         }
-        
+
         setUser({ address, account, childKey });
 
         if (_.isNil(window?.opener)) {
             history.push(pagePaths.HOME);
         } else {
-            anotherAppLogin(address, account, childKey);
+            anotherAppLogin(address, account, null);
         }
     };
 

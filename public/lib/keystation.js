@@ -82,7 +82,7 @@ class Keystation {
 
     getChildKey(path) {
         // The account parameter is required for users having multiple keychain accounts.
-        const apiUrl = this.getApiUrl("transaction");
+        // const apiUrl = this.getApiUrl("transaction");
 
         const url = this.keystationUrl + `/auth` + "?path=" + encodeURIComponent(path) + "&client=" + encodeURIComponent(this.client) + "&lcd=" + encodeURIComponent(this.lcd) + "&childKeyOnly=true&signInFromScan=true";
         // create new one if closed
@@ -119,19 +119,19 @@ class Keystation {
         return popup;
     }
 
-    deploy(file) {
-        const data = { file: file, client: this.client };
+    // deploy(file) {
+    //     const data = { file: file, client: this.client };
 
-        const popup = this.openWindow("deploy");
-        const handler = (e) => {
-            if (e.data === "ready") {
-                this.postMessage(popup, data);
-                window.removeEventListener("message", handler);
-            }
-        };
-        window.addEventListener("message", handler);
-        return popup;
-    }
+    //     const popup = this.openWindow("deploy");
+    //     const handler = (e) => {
+    //         if (e.data === "ready") {
+    //             this.postMessage(popup, data);
+    //             window.removeEventListener("message", handler);
+    //         }
+    //     };
+    //     window.addEventListener("message", handler);
+    //     return popup;
+    // }
 }
 
 if (typeof module === "object" && module.exports) {

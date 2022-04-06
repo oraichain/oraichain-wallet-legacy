@@ -78,11 +78,9 @@ const Pin = ({
             }
 
             const childKey = getChildKey(decryptedPassword);
-            console.log(childKey, '@@@@@@@@@@@@@@@@@@@@@@')
 
             if (childKey !== "") {
                 const address = cosmos.getAddress(childKey);
-                console.log("pinData", { childKey, address });
                 // const { privateKey } = childKey;
                 // console.log('PRIVATE KEY', Buffer.from(privateKey).toString('hex'));
 
@@ -106,7 +104,7 @@ const Pin = ({
                         localStorage.setItem(walletName + "-password", encryptedPassword);
 
                         if (!_.isNil(window?.opener)) {
-                            anotherAppLogin(address, walletName, childKey);
+                            anotherAppLogin(address, walletName, null);
                             return;
                         }
                     } else if (pinType === "tx") {

@@ -101,6 +101,7 @@ const Transaction = ({ user, showAlertBox }) => {
             // will allow return childKey from Pin
             let gasUsed = 0;
             const type = _.get(payload, "type");
+            console.log("type: ", type)
             let txBody;
             let message;
             const memo = _.get(payload, "value.memo") || "";
@@ -157,19 +158,18 @@ const Transaction = ({ user, showAlertBox }) => {
                 txBody = getTxBodyDepositProposal(_.get(payload, "value.msg.value"));
             } else if (type.includes("MsgVote")) {
                 txBody = getTxBodyVoteProposal(_.get(payload, "value.msg.value"));
-            } else {
+            } else if (type.includes("MsgMultiSend")) {
                 const msgs = _.get(payload, "value.msg");
-                if (msgs.length > 1) {
-                    txBody = getTxBodyMultiSend(user, msgs, memo);
-                } else {
-                    const amount = new Big(_.get(payload, "value.msg.0.value.amount.0.amount") || 0).toString();
-                    const to = _.get(payload, "value.msg.0.value.to_address");
-                    txBody = getTxBodySend(user, to, amount, memo);
-                }
+                txBody = getTxBodyMultiSend(user, msgs, memo);
+            } else if (type.includes("MsgSend")) {
+                const amount = new Big(_.get(payload, "value.msg.0.value.amount.0.amount") || 0).toString();
+                const to = _.get(payload, "value.msg.0.value.to_address");
+                txBody = getTxBodySend(user, to, amount, memo);
             }
             let { amount, gas } = _.get(payload, "value.fee");
             console.log("fees: ", { amount, gas });
             console.log("amount: ", amount[0])
+            console.log("tx body: ", txBody)
             if (gasUsed !== 0) gas = gasUsed;
 
             // higher gas limit
@@ -183,6 +183,7 @@ const Transaction = ({ user, showAlertBox }) => {
             });
 
             if (!_.isNil(window.opener)) {
+                alert("ready to post message");
                 window.opener.postMessage({ source: jsonSrc, res: res.tx_response }, "*");
                 window.close();
             } else {
