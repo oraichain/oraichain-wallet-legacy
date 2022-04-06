@@ -465,7 +465,7 @@ export const anotherAppLogin = (address, account, childKey) => {
       window.opener.postMessage({ privateKey, chainCode, network }, "*");
       // if env is for mainnet
     } else if (window.network === "Oraichain" && window.lcd === "https://lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io") {
-      const list = ["https://datahub.orai.io", "https://airight.io", "https://staging.mainnet.airight.io"];
+      const list = ["https://datahub.orai.io", "https://sso.orai.io", "https://airight.io", "https://staging.mainnet.airight.io"];
       for (let domain of list) {
         window.opener.postMessage({ privateKey, chainCode, network }, domain);
       }
