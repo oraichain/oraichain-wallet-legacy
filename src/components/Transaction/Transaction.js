@@ -183,7 +183,6 @@ const Transaction = ({ user, showAlertBox }) => {
             });
 
             if (!_.isNil(window.opener)) {
-                alert("ready to post message");
                 window.opener.postMessage({ source: jsonSrc, res: res.tx_response }, "*");
                 window.close();
             } else {
