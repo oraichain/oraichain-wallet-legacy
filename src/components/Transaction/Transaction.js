@@ -66,8 +66,25 @@ const Transaction = ({ user, showAlertBox }) => {
 
   const eventHandler = (event) => {
     const obj = event.data;
-    const checkOrigin = domainMessage.find((dom) => dom === event.origin);
-    if (!checkOrigin) return;
+    let flagCheck = false;
+    if (!_.isNil(obj)) {
+      if (
+        obj.network === "Oraichain-testnet" &&
+        (obj.lcd === "https://testnet-lcd.orai.io" ||
+          obj.lcd === "https://lcd.testnet.orai.io") &&
+        process.env.REACT_APP_ORAI_SCAN === "https://testnet.scan.orai.io"
+      ) {
+        flagCheck = true;
+      } else if (
+        obj.network === "Oraichain" &&
+        obj.lcd === "https://lcd.orai.io" &&
+        process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io"
+      ) {
+        const checkOrigin = domainMessage.find((dom) => dom === event.origin);
+        flagCheck = checkOrigin ? true : false;
+      }
+    }
+    if (!flagCheck) return;
     const queryStringParse = {
       payload: "{}",
       raw_message: "{}",
