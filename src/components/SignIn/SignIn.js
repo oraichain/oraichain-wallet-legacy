@@ -104,7 +104,6 @@ const SignIn = ({ setUser }) => {
                 <div>
                     <div className={cx("button-group")}>
                         <Button
-                            group={true}
                             variant="secondary"
                             size="lg"
                             onClick={() => {
@@ -125,7 +124,7 @@ const SignIn = ({ setUser }) => {
                     </div>
                 </div>
 
-                <div className="d-flex flex-row justify-content-center">
+                <div className="d-flex flex-row justify-content-center mb-1">
                     <Button
                         variant="secondary"
                         size="lg"
