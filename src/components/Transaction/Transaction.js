@@ -67,6 +67,9 @@ const Transaction = ({ user, showAlertBox }) => {
   const eventHandler = (event) => {
     const obj = event.data;
     // only check origin if network is mainnet
+
+    console.log("window network event handler: ", window.network, window.lcd)
+
     if (window.network === "Oraichain" && window.lcd === "https://lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io") {
       const checkOrigin = domainMessage.find((dom) => dom === event.origin);
       if (!checkOrigin) return;
