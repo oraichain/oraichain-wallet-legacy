@@ -7,6 +7,9 @@
       "hosting": {
         "mainnet-oraiwallet": [
           "mainnet-oraiwallet"
+        ],
+        "testnet-wallet": [
+          "testnet-wallet"
         ]
       }
     }
