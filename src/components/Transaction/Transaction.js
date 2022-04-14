@@ -20,6 +20,10 @@ import {
     getTxBodyParameterChangeProposal,
     getTxBodyDepositProposal,
     getTxBodyVoteProposal,
+    getTxBodyMsgExecuteContract,
+    getMessageExecuteContract,
+    getTxBody,
+    getTxBodyReDelegate,
 } from "src/utils";
 import AuthLayout from "src/components/AuthLayout";
 import FormContainer from "src/components/FormContainer";
@@ -57,6 +61,7 @@ const Transaction = ({ user, showAlertBox }) => {
     }
 
     const cosmos = window.cosmos;
+    const oraiwasm = window.oraiwasm;
 
     if (!showResult && !openPin && _.isNil(jsonSrc)) {
         if (window.stdSignMsgByPayload) {
@@ -94,9 +99,11 @@ const Transaction = ({ user, showAlertBox }) => {
         try {
             setLoading(true);
             // will allow return childKey from Pin
-            console.log("payload: ", payload);
+            let gasUsed = 0;
             const type = _.get(payload, "type");
+            console.log("type: ", type)
             let txBody;
+            let message;
             const memo = _.get(payload, "value.memo") || "";
             if (type.includes("MsgDelegate")) {
                 const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
@@ -106,6 +113,11 @@ const Transaction = ({ user, showAlertBox }) => {
                 const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
                 const validator_address = _.get(payload, "value.msg.0.value.validator_address");
                 txBody = getTxBodyUndelegate(user, validator_address, amount, memo);
+            } else if (type.includes("MsgBeginRedelegate")) {
+                const amount = new Big(_.get(payload, "value.msg.0.value.amount.amount") || 0).toString();
+                const validator_src_address = _.get(payload, "value.msg.0.value.validator_src_address");
+                const validator_dst_address = _.get(payload, "value.msg.0.value.validator_dst_address");
+                txBody = getTxBodyReDelegate(user, validator_src_address, validator_dst_address, amount, memo);
             } else if (type.includes("MsgCreateValidator")) {
                 txBody = getTxCreateValidator(_.get(payload, "value.msg.0.value"));
             } else if (type.includes("MsgWithdrawDelegatorReward")) {
@@ -116,25 +128,49 @@ const Transaction = ({ user, showAlertBox }) => {
                 );
             } else if (type.includes("MsgWithdrawValidatorCommission")) {
                 txBody = getTxBodyMsgWithdrawValidatorCommission(_.get(payload, "value.msg.0.value.validator_address"));
+            } else if (type.includes("MsgExecuteContract")) {
+                const gasType = _.get(payload, "gasType");
+                let msgs = _.get(payload, "value.msg");
+                let messages = [];
+                for (let msg of msgs) {
+                    messages.push(getMessageExecuteContract(msg.value));
+                }
+
+                // handle auto gas
+                if (gasType === 'auto') {
+                    let simulateMsgs = [];
+                    for (let msg of msgs) {
+                        simulateMsgs.push(oraiwasm.getHandleMessageSimulate(msg.value.contract, Buffer.from(msg.value.msg), msg.value.sender, null));
+                    }
+                    try {
+                        const response = await oraiwasm.simulate(childKey.publicKey, oraiwasm.getTxBody(simulateMsgs, undefined, undefined));
+                        console.log("simulate response: ", response);
+                        if (response && response.gas_info && response.gas_info.gas_used) gasUsed = Math.round(parseInt(response.gas_info.gas_used) * 1.2);
+                    } catch (ex) {
+                        // if cannot simulate => ignore, use default gas
+                        console.log("error simulating response: ", ex);
+                    }
+                }
+                txBody = getTxBody({ messages });
             } else if (type.includes("ParameterChangeProposal")) {
                 txBody = getTxBodyParameterChangeProposal(_.get(payload, "value.msg.0.value"), childKey);
             } else if (type.includes("MsgDeposit")) {
                 txBody = getTxBodyDepositProposal(_.get(payload, "value.msg.value"));
             } else if (type.includes("MsgVote")) {
                 txBody = getTxBodyVoteProposal(_.get(payload, "value.msg.value"));
-            } else {
+            } else if (type.includes("MsgMultiSend")) {
                 const msgs = _.get(payload, "value.msg");
-                if (msgs.length > 1) {
-                    txBody = getTxBodyMultiSend(user, msgs, memo);
-                } else {
-                    const amount = new Big(_.get(payload, "value.msg.0.value.amount.0.amount") || 0).toString();
-                    const to = _.get(payload, "value.msg.0.value.to_address");
-                    txBody = getTxBodySend(user, to, amount, memo);
-                }
+                txBody = getTxBodyMultiSend(user, msgs, memo);
+            } else if (type.includes("MsgSend")) {
+                const amount = new Big(_.get(payload, "value.msg.0.value.amount.0.amount") || 0).toString();
+                const to = _.get(payload, "value.msg.0.value.to_address");
+                txBody = getTxBodySend(user, to, amount, memo);
             }
-            const { amount, gas } = _.get(payload, "value.fee");
+            let { amount, gas } = _.get(payload, "value.fee");
             console.log("fees: ", { amount, gas });
             console.log("amount: ", amount[0])
+            console.log("tx body: ", txBody)
+            if (gasUsed !== 0) gas = gasUsed;
 
             // higher gas limit
             const res = (await cosmos.submit(childKey, txBody, "BROADCAST_MODE_BLOCK", isNaN(parseInt(amount[0])) ? 0 : amount[0], gas)) || {};

@@ -207,6 +207,26 @@ export const getTxBodyDelegate = (user, validator_address, amount, memo) => {
   });
 };
 
+export const getTxBodyReDelegate = (user, validator_src_address, validator_dst_address, amount, memo) => {
+  const cosmos = window.cosmos;
+  const msgSend = new message.cosmos.staking.v1beta1.MsgBeginRedelegate({
+    delegator_address: user.address,
+    validator_src_address,
+    validator_dst_address,
+    amount: { denom: cosmos.bech32MainPrefix, amount }, // 10
+  });
+
+  const msgSendAny = new message.google.protobuf.Any({
+    type_url: "/cosmos.staking.v1beta1.MsgBeginRedelegate",
+    value: message.cosmos.staking.v1beta1.MsgBeginRedelegate.encode(msgSend).finish(),
+  });
+
+  return new message.cosmos.tx.v1beta1.TxBody({
+    messages: [msgSendAny],
+    memo,
+  });
+};
+
 export const getTxBodyUndelegate = (user, validator_address, amount, memo) => {
   const cosmos = window.cosmos;
   const msgSend = new message.cosmos.staking.v1beta1.MsgUndelegate({
@@ -258,6 +278,29 @@ export const getTxBodyMsgWithdrawValidatorCommission = (validator_address) => {
   return new message.cosmos.tx.v1beta1.TxBody({
     messages: [msgSendAny],
     memo: "",
+  });
+};
+
+export const getMessageExecuteContract = ({ contract, msg, sender, sent_funds, memo }) => {
+  const msgSend = new message.cosmwasm.wasm.v1beta1.MsgExecuteContract({
+    contract,
+    msg: Buffer.from(msg), // has to use buffer here because the browser shall not send buffer as string through object json
+    sender,
+    sent_funds,
+  });
+
+  const msgSendAny = new message.google.protobuf.Any({
+    type_url: '/cosmwasm.wasm.v1beta1.MsgExecuteContract',
+    value: message.cosmwasm.wasm.v1beta1.MsgExecuteContract.encode(msgSend).finish(),
+  });
+
+  return msgSendAny;
+};
+
+export const getTxBody = ({ messages, memo }) => {
+  return new message.cosmos.tx.v1beta1.TxBody({
+    messages,
+    memo,
   });
 };
 
@@ -422,7 +465,7 @@ export const anotherAppLogin = (address, account, childKey) => {
       window.opener.postMessage({ privateKey, chainCode, network }, "*");
       // if env is for mainnet
     } else if (window.network === "Oraichain" && window.lcd === "https://lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io") {
-      const list = ["https://datahub.orai.io","https://airight.io", "https://scan.orai.io", "https://studio.orai.dev", "https://bridge.orai.io", "https://sso.orai.io", "https://staging.mainnet.airight.io"];
+      const list = ["https://scan.orai.io", "https://datahub.orai.io", "https://sso.orai.io", "https://airight.io", "https://staging.mainnet.airight.io"];
       for (let domain of list) {
         window.opener.postMessage({ privateKey, chainCode, network }, domain);
       }

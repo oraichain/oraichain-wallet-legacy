@@ -29,6 +29,7 @@ import ImportWalletWithMnemonics from "src/components/ImportWalletWithMnemonics"
 import ImportWalletWithEncryptedMnemonics from "./components/ImportWalletWithEncryptedMnemonics";
 import ImportWalletWithPrivateKey from "src/components/ImportWalletWithPrivateKey";
 import "./App.css";
+import OraiwasmJs from '@oraichain/oraiwasm-js';
 
 const url = new window.URL(window.location.href);
 const network =
@@ -40,14 +41,17 @@ const path = url.searchParams.get("path");
 const lcd = url.searchParams.get("lcd") || process.env.REACT_APP_LCD || (networks[network]?.lcd ?? "http://localhost:1317");
 // init cosmos version
 const cosmos = new Cosmos(lcd, network);
+const oraiwasm = new OraiwasmJs(lcd, network);
 const symbol = networks[network]?.denom ?? "orai";
 cosmos.setBech32MainPrefix(symbol);
+oraiwasm.setBech32MainPrefix(symbol);
 // if (path && path !== 'undefined') {
 //   cosmos.setPath(path);
 // }
 
 // global params
 window.cosmos = cosmos;
+window.oraiwasm = oraiwasm;
 window.network = network;
 window.lcd = lcd;
 window.localStorage.setItem("wallet.network", network);
