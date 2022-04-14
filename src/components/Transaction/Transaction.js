@@ -70,7 +70,7 @@ const Transaction = ({ user, showAlertBox }) => {
 
     console.log("window network event handler: ", window.network, window.lcd)
 
-    if (window.network === "Oraichain" && window.lcd === "https://lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io") {
+    if (window.network === "Oraichain" && window.lcd === "https://lcd.orai.io") {
       const checkOrigin = domainMessage.find((dom) => dom === event.origin);
       if (!checkOrigin) return;
     }
