@@ -67,17 +67,17 @@ const Transaction = ({ user, showAlertBox }) => {
   const eventHandler = (event) => {
     const obj = event.data;
     let flagCheck = false;
-    if (!_.isNil(obj)) {
+    if (!_.isNil(window)) {
       if (
-        obj.network === "Oraichain-testnet" &&
-        (obj.lcd === "https://testnet-lcd.orai.io" ||
-          obj.lcd === "https://lcd.testnet.orai.io") &&
+        window.network === "Oraichain-testnet" &&
+        (window.lcd === "https://testnet-lcd.orai.io" ||
+          window.lcd === "https://lcd.testnet.orai.io") &&
         process.env.REACT_APP_ORAI_SCAN === "https://testnet.scan.orai.io"
       ) {
         flagCheck = true;
       } else if (
-        obj.network === "Oraichain" &&
-        obj.lcd === "https://lcd.orai.io" &&
+        window.network === "Oraichain" &&
+        window.lcd === "https://lcd.orai.io" &&
         process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io"
       ) {
         const checkOrigin = domainMessage.find((dom) => dom === event.origin);
