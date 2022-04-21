@@ -66,11 +66,16 @@ const Transaction = ({ user, showAlertBox }) => {
 
   const eventHandler = (event) => {
     const obj = event.data;
+    if (!jsonSrc) {
+      window.opener.postMessage({ data: "ready" }, "*");
+    }
     // only check origin if network is mainnet
+    console.log("window network event handler: ", window.network, window.lcd);
 
-    console.log("window network event handler: ", window.network, window.lcd)
-
-    if (window.network === "Oraichain" && window.lcd === "https://lcd.orai.io") {
+    if (
+      window.network === "Oraichain" &&
+      window.lcd === "https://lcd.orai.io"
+    ) {
       const checkOrigin = domainMessage.find((dom) => dom === event.origin);
       if (!checkOrigin) return;
     }
@@ -274,7 +279,7 @@ const Transaction = ({ user, showAlertBox }) => {
       showAlertBox({
         variant: "success",
         message: "Sent successfully",
-        onHide: () => { },
+        onHide: () => {},
       });
 
       if (!_.isNil(window.opener)) {
@@ -322,7 +327,8 @@ const Transaction = ({ user, showAlertBox }) => {
             <PreviewButton
               onClick={() => {
                 window.open(
-                  `${process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"
+                  `${
+                    process.env.REACT_APP_ORAI_SCAN || "https://scan.orai.io"
                   }/txs/${jsonSrc?.txhash ?? ""}`
                 );
               }}
