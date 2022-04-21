@@ -66,8 +66,16 @@ const Transaction = ({ user, showAlertBox }) => {
 
   const eventHandler = (event) => {
     const obj = event.data;
+    if (!jsonSrc) {
+      window.opener.postMessage({ data: "ready" }, "*");
+    }
     // only check origin if network is mainnet
-    if (window && window.network === "Oraichain" && window.lcd === "https://lcd.orai.io") {
+    console.log("window network event handler: ", window.network, window.lcd);
+
+    if (
+      window.network === "Oraichain" &&
+      window.lcd === "https://lcd.orai.io"
+    ) {
       const checkOrigin = domainMessage.find((dom) => dom === event.origin);
       if (!checkOrigin) return;
     }
