@@ -8,7 +8,7 @@ import _ from "lodash";
 import numeral from "numeral";
 import moment from "moment";
 
-import {domainMessage} from '../src/constants';
+import { domainMessage } from '../src/constants';
 
 const { message } = Message;
 
@@ -456,20 +456,20 @@ export const decryptAES = (encryptedBase64, key) => {
 };
 
 export const anotherAppLogin = (address, account, childKey) => {
-  if (!_.isNil(address) && !_.isNil(account)) {
-    window.opener.postMessage({ address, account }, "*");
-  }
-
   if (!_.isNil(childKey)) {
-    const { privateKey, chainCode, network } = childKey;
+    // const { privateKey, chainCode, network } = childKey;
     // check in the case of testnet
     if (window.network === "Oraichain-testnet" && (window.lcd === "https://testnet-lcd.orai.io" || window.lcd === "https://lcd.testnet.orai.io") && process.env.REACT_APP_ORAI_SCAN === "https://testnet.scan.orai.io") {
-      window.opener.postMessage({ privateKey, chainCode, network }, "*");
+      window.opener.postMessage({ address, account, ...childKey }, "*");
       // if env is for mainnet
     } else if (window.network === "Oraichain" && window.lcd === "https://lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io") {
       for (let domain of domainMessage) {
-        window.opener.postMessage({ privateKey, chainCode, network }, domain);
+        window.opener.postMessage({ address, account, ...childKey }, domain);
       }
+    }
+  } else {
+    if (!_.isNil(address) && !_.isNil(account)) {
+      window.opener.postMessage({ address, account }, "*");
     }
   }
 

@@ -167,7 +167,6 @@ const PinWrap = ({ pinType, updateUser, onChildKey, closePopup }) => {
               if (window.stdSignMsgByPayload) {
                 history.push(`/${i18n.language}/transaction`);
               } else if (closePopup) {
-                window.opener.postMessage({ address, account,childKey }, 'http://localhost:3005');
                 window.opener.postMessage({ address, account }, '*');
                 window.close();
               } else {

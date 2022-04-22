@@ -104,7 +104,7 @@ const Pin = ({
                         localStorage.setItem(walletName + "-password", encryptedPassword);
 
                         if (!_.isNil(window?.opener)) {
-                            anotherAppLogin(address, walletName, null);
+                            anotherAppLogin(address, walletName, childKey);
                             return;
                         }
                     } else if (pinType === "tx") {
