@@ -109,11 +109,11 @@ const Transaction = ({ user, showAlertBox }) => {
       setJsonSrc(txBody);
     } else if (payload && !_.isNil(payload.value)) {
       const cloneObj = JSON.parse(JSON.stringify(payload));
-      if (_.get(cloneObj, "value.fee.amount") && cloneObj.value.fee.amount[0]) {
-        cloneObj.value.fee.amount[0] = new Big(
-          cloneObj.value.fee.amount[0]
-        ).toString();
-      }
+      // if (_.get(cloneObj, "value.fee.amount") && cloneObj.value.fee.amount[0]) {
+      //   cloneObj.value.fee.amount[0] = new Big(
+      //     cloneObj.value.fee.amount[0]
+      //   ).toString();
+      // }
       if (_.get(cloneObj, "value.msg.0.value.amount.0.amount")) {
         const amountString = _.get(
           cloneObj,
