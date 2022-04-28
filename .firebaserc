@@ -10,6 +10,9 @@
         ],
         "testnet-wallet": [
           "testnet-wallet"
+        ],
+        "oraiwallet-prerelease": [
+          "oraiwallet-prerelease"
         ]
       }
     }
