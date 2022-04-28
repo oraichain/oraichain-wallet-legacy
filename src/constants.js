@@ -11,7 +11,7 @@ export const domainMessage = [
   "https://airight.io",
   "https://staging.mainnet.airight.io",
   "https://staging.prerelease.airight.io",
-  "https://prerelease.scan.orai.io"
+  "https://prerelease.scan.orai.io",
 ];
 
 export default {
