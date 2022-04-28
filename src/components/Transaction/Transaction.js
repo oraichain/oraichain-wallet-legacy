@@ -74,7 +74,8 @@ const Transaction = ({ user, showAlertBox }) => {
 
     if (
       window.network === "Oraichain" &&
-      window.lcd === "https://lcd.orai.io"
+      window.lcd === "https://lcd.orai.io" &&
+      process.env.REACT_APP_ORAI_SCAN_WALLET === "https://api.wallet.orai.io"
     ) {
       const checkOrigin = domainMessage.find((dom) => dom === event.origin);
       if (!checkOrigin) return;

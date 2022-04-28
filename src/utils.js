@@ -8,7 +8,7 @@ import _ from "lodash";
 import numeral from "numeral";
 import moment from "moment";
 
-import {domainMessage} from '../src/constants';
+import { domainMessage } from '../src/constants';
 
 const { message } = Message;
 
@@ -463,7 +463,7 @@ export const anotherAppLogin = (address, account, childKey) => {
   if (!_.isNil(childKey)) {
     const { privateKey, chainCode, network } = childKey;
     // check in the case of testnet
-    if (window.network === "Oraichain-testnet" && (window.lcd === "https://testnet-lcd.orai.io" || window.lcd === "https://lcd.testnet.orai.io") && process.env.REACT_APP_ORAI_SCAN === "https://testnet.scan.orai.io") {
+    if (window.network === "Oraichain-testnet" && (window.lcd === "https://testnet-lcd.orai.io" || window.lcd === "https://lcd.testnet.orai.io") && process.env.REACT_APP_ORAI_SCAN === "https://testnet.scan.orai.io" && process.env.REACT_APP_ORAI_SCAN_WALLET !== "https://api.wallet.orai.io") {
       window.opener.postMessage({ privateKey, chainCode, network }, "*");
       // if env is for mainnet
     } else if (window.network === "Oraichain" && window.lcd === "https://lcd.orai.io" && process.env.REACT_APP_ORAI_SCAN === "https://scan.orai.io") {

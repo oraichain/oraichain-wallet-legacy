@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Testnet
+name: Pre-release
 
 # Controls when the action will run. 
 on:
@@ -46,12 +46,12 @@ jobs:
       if: steps.yarn-cache.outputs.cache-hit != 'true'
       run: yarn install
     - name: COPY ENV
-      run: cp env.example .env
+      run: cp env.prerelease .env
     - name: Build Production
       run: yarn build
       env:
         CI: false   
     - name: Deploy to firebase
       run: |
-           yarn firebase target:apply hosting testnet-wallet testnet-wallet --token ${{ secrets.FIREBASE_TOKEN_DEVELOP }}
-           yarn firebase deploy --only hosting:testnet-wallet --token ${{ secrets.FIREBASE_TOKEN_DEVELOP }}
+           yarn firebase target:apply hosting oraiwallet-prerelease oraiwallet-prerelease --token ${{ secrets.FIREBASE_TOKEN_DEVELOP }}
+           yarn firebase deploy --only hosting:oraiwallet-prerelease --token ${{ secrets.FIREBASE_TOKEN_DEVELOP }}
