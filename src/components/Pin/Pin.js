@@ -70,7 +70,6 @@ const Pin = ({
     const evaluatePin = () => {
         const enteredPin = pinArray.join("");
         const decryptedPassword = decryptAES(encryptedPassword, enteredPin);
-
         if (decryptedPassword !== "") {
             if (pinType === "export-recovery-pharse") {
                 closePin && closePin(decryptedPassword);
@@ -78,7 +77,6 @@ const Pin = ({
             }
 
             const childKey = getChildKey(decryptedPassword);
-
             if (childKey !== "") {
                 const address = cosmos.getAddress(childKey);
                 // const { privateKey } = childKey;
@@ -102,9 +100,8 @@ const Pin = ({
                             });
 
                         localStorage.setItem(walletName + "-password", encryptedPassword);
-
                         if (!_.isNil(window?.opener)) {
-                            anotherAppLogin(address, walletName, null);
+                            anotherAppLogin(address, walletName, childKey);
                             return;
                         }
                     } else if (pinType === "tx") {
