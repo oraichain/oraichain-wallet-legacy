@@ -108,11 +108,11 @@ const App = ({ }) => {
                                 exact
                                 path={pagePaths.SIGNIN}
                                 component={SignInContainer} />
-                            <UnauthenticatedRoute
+                            {/* <UnauthenticatedRoute
                                 exact
                                 path={pagePaths.CREATE_WALLET}
                                 component={CreateWallet}
-                            />
+                            /> */}
                             <UnauthenticatedRoute
                                 exact
                                 path={pagePaths.IMPORT_WALLET_WITH_MNEMONICS}
