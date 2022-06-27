@@ -113,7 +113,7 @@ const App = ({ }) => {
                                 path={pagePaths.CREATE_WALLET}
                                 component={CreateWallet}
                             /> */}
-                            <UnauthenticatedRoute
+                            {/* <UnauthenticatedRoute
                                 exact
                                 path={pagePaths.IMPORT_WALLET_WITH_MNEMONICS}
                                 component={ImportWalletWithMnemonics}
@@ -127,7 +127,7 @@ const App = ({ }) => {
                                 exact
                                 path={pagePaths.IMPORT_WALLET_WITH_PRIVATE_KEY}
                                 component={ImportWalletWithPrivateKey}
-                            />
+                            /> */}
                             <AuthenticatedRoute
                                 exact
                                 path={pagePaths.TX}
