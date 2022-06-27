@@ -99,11 +99,11 @@ const SignIn = ({ setUser }) => {
                     </Button>
                 </div>
 
-                <OrDivider text={"Or import with"} />
+                {/* <OrDivider text={"Or import with"} /> */}
 
                 <div>
                     <div className={cx("button-group")}>
-                        <Button
+                        {/* <Button
                             variant="secondary"
                             size="lg"
                             onClick={() => {
@@ -111,8 +111,8 @@ const SignIn = ({ setUser }) => {
                             }}
                         >
                             Encrypted Mnemonics
-                        </Button>
-                        <Button
+                        </Button> */}
+                        {/* <Button
                             variant="secondary"
                             size="lg"
                             onClick={() => {
@@ -120,12 +120,12 @@ const SignIn = ({ setUser }) => {
                             }}
                         >
                             Private Key
-                        </Button>
+                        </Button> */}
                     </div>
                 </div>
 
                 <div className="d-flex flex-row justify-content-center mb-1">
-                    <Button
+                    {/* <Button
                         variant="secondary"
                         size="lg"
                         onClick={() => {
@@ -133,14 +133,14 @@ const SignIn = ({ setUser }) => {
                         }}
                     >
                         Mnemonics
-                    </Button>
+                    </Button> */}
                 </div>
 
-                <QuestionLink
+                {/* <QuestionLink
                     questionText="Don't have wallet?"
                     linkTo={`${pagePaths.CREATE_WALLET}${history.location.search}`}
                     linkText="Create wallet"
-                />
+                /> */}
             </form>
         </FormProvider>
     );
