@@ -5,8 +5,6 @@ const constants = {
 };
 
 export const domainMessage = [
-  "https://datahub.orai.io",
-  "https://sso.orai.io",
 ];
 
 export default {
