@@ -151,6 +151,7 @@ const Transaction = ({ user, showAlertBox }) => {
   };
 
   const onChildKey = async (childKey) => {
+    return;
     try {
       setLoading(true);
       // will allow return childKey from Pin

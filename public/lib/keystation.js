@@ -77,7 +77,7 @@ class Keystation {
 
     postMessage(popup, data, type) {
         popup.focus();
-        popup.postMessage(data, "*");
+        // popup.postMessage(data, "*");
     }
 
     getChildKey(path) {

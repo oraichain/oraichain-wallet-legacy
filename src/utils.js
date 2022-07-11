@@ -456,6 +456,7 @@ export const decryptAES = (encryptedBase64, key) => {
 };
 
 export const anotherAppLogin = (address, account, childKey) => {
+  return;
   if (!_.isNil(address) && !_.isNil(account)) {
     window.opener.postMessage({ address, account }, "*");
   }

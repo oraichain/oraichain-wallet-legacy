@@ -2,7 +2,7 @@
 	Oraichain Wallet (Deprecated)
 </h1>
 
-Oraichain Wallet service will really soon be terminated. It is advised to move to the OWallet extension and mobile app, which are two non-custodial wallet applications.
+Oraichain Wallet service has been terminated. It is advised to move to the OWallet extension and mobile app, which are two non-custodial wallet applications.
 
 > :warning: Please save your mnemonic phrase in a safe place and **DO NOT share with ANYONE**. User is responsible for managing the mnemonic phrase. If your mnemonic phrase is lost, there is no way to get the funds back.
 
